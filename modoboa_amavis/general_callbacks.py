@@ -186,27 +186,27 @@ def send_amavis_form():
 
 @events.observe("ExtraDomainForm")
 def extra_domain_form(user, domain):
-    if not user.has_perm("admin.view_domains"):
+    if not user.has_perm("modoboa_admin.view_domains"):
         return []
     return send_amavis_form()
 
 
 @events.observe('ExtraRelayDomainForm')
 def extra_relaydomain_form(user, rdomain):
-    if not user.has_perm("postfix_relay_domains.add_relaydomain"):
+    if not user.has_perm("modoboa_admin_relaydomains.add_relaydomain"):
         return []
     return send_amavis_form()
 
 
 @events.observe("FillDomainInstances")
 def fill_domain_instances(user, domain, instances):
-    if not user.has_perm("admin.view_domains"):
+    if not user.has_perm("modoboa_admin.view_domains"):
         return
     instances["amavis"] = domain
 
 
 @events.observe("FillRelayDomainInstances")
 def fill_relaydomain_instances(user, rdomain, instances):
-    if not user.has_perm("postfix_relay_domains.add_relaydomain"):
+    if not user.has_perm("modoboa_admin_relaydomains.add_relaydomain"):
         return
     instances["amavis"] = rdomain
