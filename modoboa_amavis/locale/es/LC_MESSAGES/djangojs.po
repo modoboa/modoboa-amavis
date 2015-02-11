@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Pedro Gracia <lasarux@neuroomante.com>, 2011,2013
+# Pedro Gracia <pedro.gracia@impulzia.com>, 2010, 2011
+msgid ""
+msgstr ""
+"Project-Id-Version: Modoboa\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-02-11 09:51+0100\n"
+"PO-Revision-Date: 2013-06-03 16:32+0000\n"
+"Last-Translator: Pedro Gracia <lasarux@neuroomante.com>\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/modoboa/language/"
+"es/)\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: static/modoboa_amavis/js/quarantine.js:19
+msgid "No more message to show"
+msgstr ""
+#: static/modoboa_amavis/js/quarantine.js:270
+msgid "Release this selection?"
+msgstr "¿Publicar esta selección?"
+#: static/modoboa_amavis/js/quarantine.js:274
+msgid "Delete this selection?"
+msgstr "¿Eliminar esta selección?"
+#: static/modoboa_amavis/js/quarantine.js:314
+#, fuzzy
+msgid "Mark this selection as spam?"
+msgstr "¿Publicar esta selección?"
+#: static/modoboa_amavis/js/quarantine.js:329
+#, fuzzy
+msgid "Mark this selection as non-spam?"
+msgstr "¿Publicar esta selección?"
+#: static/modoboa_amavis/js/quarantine.js:354
+#: static/modoboa_amavis/js/selfservice.js:17
+msgid "Release this message?"
+msgstr "¿Publicar este mensaje?"
+#: static/modoboa_amavis/js/quarantine.js:358
+#: static/modoboa_amavis/js/selfservice.js:21
+msgid "Delete this message?"
+msgstr "¿Eliminar este mensaje?"
+#: static/modoboa_amavis/js/quarantine.js:373
+msgid "Mark as spam?"
+msgstr ""
+#: static/modoboa_amavis/js/quarantine.js:389
+msgid "Mark as non-spam?"
+msgstr ""
+#: static/modoboa_amavis/js/quarantine.js:407
+msgid "View full headers"
+msgstr "Ver todas las cabeceras"
+#: static/modoboa_amavis/js/quarantine.js:412
+msgid "Hide full headers"
+msgstr "Esconder todas las cabeceras"
+#, fuzzy

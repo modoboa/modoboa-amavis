@@ -1,0 +1,56 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Olle Gustafsson <olle@dalnix.se>, 2013
+# Olle Gustafsson <olle@dalnix.se>, 2013,2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Modoboa\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-02-11 09:51+0100\n"
+"PO-Revision-Date: 2015-01-13 15:21+0000\n"
+"Last-Translator: Olle Gustafsson <olle@dalnix.se>\n"
+"Language-Team: Swedish (http://www.transifex.com/projects/p/modoboa/language/"
+"sv/)\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: static/modoboa_amavis/js/quarantine.js:19
+msgid "No more message to show"
+msgstr "Inga fler meddelanden att visa"
+#: static/modoboa_amavis/js/quarantine.js:270
+msgid "Release this selection?"
+msgstr "Släpp markerat urval?"
+#: static/modoboa_amavis/js/quarantine.js:274
+msgid "Delete this selection?"
+msgstr "Radera markerat urval?"
+#: static/modoboa_amavis/js/quarantine.js:314
+msgid "Mark this selection as spam?"
+msgstr "Markera detta val som skräppost?"
+#: static/modoboa_amavis/js/quarantine.js:329
+msgid "Mark this selection as non-spam?"
+msgstr "Markera detta val som icke-skräppost?"
+#: static/modoboa_amavis/js/quarantine.js:354
+#: static/modoboa_amavis/js/selfservice.js:17
+msgid "Release this message?"
+msgstr "Släpp detta meddelande?"
+#: static/modoboa_amavis/js/quarantine.js:358
+#: static/modoboa_amavis/js/selfservice.js:21
+msgid "Delete this message?"
+msgstr "Radera detta meddelande?"
+#: static/modoboa_amavis/js/quarantine.js:373
+msgid "Mark as spam?"
+msgstr "Markera som skräppost?"
+#: static/modoboa_amavis/js/quarantine.js:389
+msgid "Mark as non-spam?"
+msgstr "Markera som icke-skräppost"
+#: static/modoboa_amavis/js/quarantine.js:407
+msgid "View full headers"
+msgstr "Visa meddelandehuvud"
+#: static/modoboa_amavis/js/quarantine.js:412
+msgid "Hide full headers"
+msgstr "Göm meddelandehuvud"

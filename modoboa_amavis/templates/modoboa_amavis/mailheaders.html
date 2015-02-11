@@ -1,0 +1,8 @@
+{% extends "common/mailheaders.html" %}
+
+{% block emailheaders %}
+
+{% if qtype %}<div class="alert alert-danger"><strong>{{ qtype }}</strong> {{ qreason }}</div>{% endif %}
+{{ block.super }}
+
+{% endblock %}

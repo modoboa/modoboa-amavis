@@ -1,0 +1,56 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# TuxBrother <vrijwilligerswerk@wij.rs>, 2014
+# TuxBrother <vrijwilligerswerk@wij.rs>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Modoboa\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-02-11 09:51+0100\n"
+"PO-Revision-Date: 2014-12-31 11:42+0000\n"
+"Last-Translator: TuxBrother <vrijwilligerswerk@wij.rs>\n"
+"Language-Team: Dutch (Netherlands) (http://www.transifex.com/projects/p/"
+"modoboa/language/nl_NL/)\n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: static/modoboa_amavis/js/quarantine.js:19
+msgid "No more message to show"
+msgstr "Geen berichten meer om te weergeven"
+#: static/modoboa_amavis/js/quarantine.js:270
+msgid "Release this selection?"
+msgstr "Wilt u deze selectie loslaten?"
+#: static/modoboa_amavis/js/quarantine.js:274
+msgid "Delete this selection?"
+msgstr "Selectie verwijderen?"
+#: static/modoboa_amavis/js/quarantine.js:314
+msgid "Mark this selection as spam?"
+msgstr "Markeer deze selectie als ongewenst?"
+#: static/modoboa_amavis/js/quarantine.js:329
+msgid "Mark this selection as non-spam?"
+msgstr "Markeer deze selectie als gewenst?"
+#: static/modoboa_amavis/js/quarantine.js:354
+#: static/modoboa_amavis/js/selfservice.js:17
+msgid "Release this message?"
+msgstr "Dit bericht loslaten?"
+#: static/modoboa_amavis/js/quarantine.js:358
+#: static/modoboa_amavis/js/selfservice.js:21
+msgid "Delete this message?"
+msgstr "Dit bericht verwijderen?"
+#: static/modoboa_amavis/js/quarantine.js:373
+msgid "Mark as spam?"
+msgstr "Markeer als ongewenst?"
+#: static/modoboa_amavis/js/quarantine.js:389
+msgid "Mark as non-spam?"
+msgstr "Markeer als gewenst?"
+#: static/modoboa_amavis/js/quarantine.js:407
+msgid "View full headers"
+msgstr "Volledige headers weergeven"
+#: static/modoboa_amavis/js/quarantine.js:412
+msgid "Hide full headers"
+msgstr "Volledige headers verbergen"

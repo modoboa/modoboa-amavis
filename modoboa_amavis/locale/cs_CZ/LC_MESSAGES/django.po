@@ -1,0 +1,418 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Miroslav Abrahám <miris@kunago.com>, 2013-2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Modoboa\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-02-11 09:51+0100\n"
+"PO-Revision-Date: 2015-01-06 10:05+0000\n"
+"Last-Translator: Miroslav Abrahám <miris@kunago.com>\n"
+"Language-Team: Czech (Czech Republic) (http://www.transifex.com/projects/p/"
+"modoboa/language/cs_CZ/)\n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+#: app_settings.py:16
+msgid "Quarantine settings"
+msgstr "Nastavení karantény"
+#: app_settings.py:19
+msgid "Maximum message age"
+msgstr "Maximální stáří zprávy"
+#: app_settings.py:22
+msgid "Quarantine messages maximum age (in days) before deletion"
+msgstr "Maximální doba karantény zpráv (ve dnech) před jejich smazáním"
+#: app_settings.py:26
+msgid "Messages releasing"
+msgstr "Odblokování zpráv"
+#: app_settings.py:29
+msgid "Remove released messages"
+msgstr "Odstranit odblokované zprávy"
+#: app_settings.py:31
+msgid "Remove messages marked as released while cleaning up the database"
+msgstr ""
+"Odstranit zprávy, které jsou označeny jako odblokované, při čištění databáze"
+#: app_settings.py:36
+msgid "Amavis connection mode"
+msgstr "Režim připojení amavis"
+#: app_settings.py:39
+msgid "Mode used to access the PDP server"
+msgstr "Používaný režim pro přístup k PDP serveru"
+#: app_settings.py:44
+msgid "PDP server address"
+msgstr "Adresa PDP serveru"
+#: app_settings.py:46
+msgid "PDP server address (if inet mode)"
+msgstr "adresa PDP serveru (v režimu inet)"
+#: app_settings.py:51
+msgid "PDP server port"
+msgstr "Port PDP serveru"
+#: app_settings.py:53
+msgid "PDP server port (if inet mode)"
+msgstr "port PDP serveru (v režimu inet)"
+#: app_settings.py:57
+msgid "PDP server socket"
+msgstr "Socket PDP serveru"
+#: app_settings.py:59
+msgid "Path to the PDP server socket (if unix mode)"
+msgstr "Cesta k socketu PDP serveru (v režimu unix)"
+#: app_settings.py:63
+msgid "Allow direct release"
+msgstr "Umožnit přímé odbokování"
+#: app_settings.py:65
+msgid "Allow users to directly release their messages"
+msgstr "Umožnit napřímo uživatelům doblokovat jejich zprávy"
+#: app_settings.py:69
+msgid "Enable self-service mode"
+msgstr "Povolit samoobslužný režim"
+#: app_settings.py:71
+msgid "Activate the 'self-service' mode"
+msgstr "Aktivovat samoobslužný režim"
+#: app_settings.py:75
+msgid "Notifications sender"
+msgstr "Odesílatel upozornění"
+#: app_settings.py:77
+msgid "The e-mail address used to send notitications"
+msgstr "E-mailová adresa používaná k zasílání upozornění"
+#: app_settings.py:80 templates/modoboa_amavis/main_action_bar.html:31
+msgid "Manual learning"
+msgstr "Manuální učení"
+#: app_settings.py:83
+msgid "Enable manual learning"
+msgstr "Povolit manuální učení"
+#: app_settings.py:86
+msgid "Allow super administrators to manually train Spamassassin"
+msgstr "Povolit super správcům manuálně učit Spamassassin"
+#: app_settings.py:91
+msgid "Is Spamassassin local?"
+msgstr "Je Spamassassin lokální?"
+#: app_settings.py:94
+msgid "Tell if Spamassassin is running on the same server than modoboa"
+msgstr ""
+"Volba určující, jestli je Spamassassin provozován na stejném serveru jako "
+"Modoboa"
+#: app_settings.py:99
+msgid "Default user"
+msgstr "Výchozí uživatel"
+#: app_settings.py:102
+msgid "Name of the user owning the default bayesian database"
+msgstr "Jméno uživatele, který je vlastníkem výchozí bayesian databáze"
+#: app_settings.py:107
+msgid "Spamd address"
+msgstr "Adresa spamd"
+#: app_settings.py:109
+msgid "The IP address where spamd can be reached"
+msgstr "IP adresa, na které je možné komunikovat se spamd"
+#: app_settings.py:113
+msgid "Spamd port"
+msgstr "Port spamd"
+#: app_settings.py:115
+msgid "The TCP port spamd is listening on"
+msgstr "Port TCP, který používá spamd"
+#: app_settings.py:119
+msgid "Enable per-domain manual learning"
+msgstr "Povolit manuální účení dle jednotlivých domén"
+#: app_settings.py:122
+msgid ""
+"Allow domain administrators to train Spamassassin (within dedicated per-"
+"domain databases)"
+msgstr ""
+"Povolit správcům domén manuálně učit Spamassassin (v rámci vyhrazených "
+"databází jednotlivých domén)"
+#: app_settings.py:128
+msgid "Enable per-user manual learning"
+msgstr "Povolit manuální účetní dle jednotlivých uživatelů"
+#: app_settings.py:131
+msgid ""
+"Allow simple users to personally train Spamassassin (within a dedicated "
+"database)"
+msgstr ""
+"Povolit uživatelům manuálně učit Spamassassin (v rámci vyhrazené databáze)"
+#: app_settings.py:156 templates/modoboa_amavis/main_action_bar.html:51
+msgid "Display"
+msgstr "Zobrazení"
+#: app_settings.py:160
+msgid "Number of displayed emails per page"
+msgstr "Počet zobrazených zpráv na stránce"
+#: app_settings.py:161
+msgid "Set the maximum number of messages displayed in a page"
+msgstr "Nastavit maximální počet zobrazených zpráv na stránce"
+#: forms.py:88
+msgid "Global database"
+msgstr "Globální databáze"
+#: forms.py:94
+msgid "Domain's database"
+msgstr "Databáze domény"
+#: forms.py:96
+msgid "User's database"
+msgstr "Uživatelská databáze"
+#: general_callbacks.py:42 modo_extension.py:38
+msgid "Quarantine"
+msgstr "Karanténa"
+#: general_callbacks.py:172
+msgid "Pending requests"
+msgstr "Nevyřízené požadavky"
+#: general_callbacks.py:182
+msgid "Content filter"
+msgstr "Filtr obsahu"
+#: lib.py:64
+#, python-format
+msgid "Connection to amavis failed: %s"
+msgstr "Spojení s amavis selhalo: %s"
+#: lib.py:133
+msgid "No recipient found"
+msgstr "Žádný příjemce nebyl nalezen"
+#: management/commands/amnotify.py:58
+msgid "[modoboa] Pending release requests"
+msgstr "[modoboa] Nevyřízené požadavky na odblokování"
+#: models.py:94
+msgid "Virus filter"
+msgstr "Filtr virů"
+#: models.py:95 models.py:106 models.py:117
+msgid "yes"
+msgstr "ano"
+#: models.py:96 models.py:107 models.py:118
+msgid "no"
+msgstr "ne"
+#: models.py:97 models.py:108 models.py:119
+#: templates/modoboa_amavis/domain_content_filter.html:17
+msgid "default"
+msgstr "výchozí"
+#: models.py:100
+msgid "Bypass virus checks or not. Choose 'default' to use global settings."
+msgstr ""
+"Obcházet nebo neobcházet kontrolu zpráv na viry. Pokud zvolíte 'výchozí', "
+"bude se nastavení řídit globálním nastavením."
+#: models.py:105
+msgid "Spam filter"
+msgstr "Filtr nevyžádané pošty"
+#: models.py:111
+msgid "Bypass spam checks or not. Choose 'default' to use global settings."
+msgstr ""
+"Obcházet nebo neobcházet kontrolu zpráv na nevyžádanou poštu. Pokud zvolíte "
+"'výchozí', bude se nastavení řídit globálním nastavením."
+#: models.py:116
+msgid "Banned filter"
+msgstr "Filtr zakázané pošty"
+#: models.py:122
+msgid "Bypass banned checks or not. Choose 'default' to use global settings."
+msgstr ""
+"Obcházet nebo neobcházet kontrolu zpráv na zakázanou poštu. Pokud zvolíte "
+"'výchozí', bude se nastavení řídit globálním nastavením."
+#: models.py:184
+msgid "Spam marker"
+msgstr "Označení spamu"
+#: models.py:187
+msgid ""
+"Modify spam subject using the specified text. Choose 'default' to use global "
+"settings."
+msgstr ""
+"Upravit předmět nevyžádané zprávy uvedeným textem. Pro zachování globálního "
+"nastavení serveru zatrhněte 'výchozí'."
+#: modo_extension.py:28
+#, fuzzy
+#| msgid "Amavis connection mode"
+msgid "Amavis frontend"
+msgstr "Režim připojení amavis"
+#: modo_extension.py:30
+msgid "Simple amavis management frontend"
+msgstr "Jednoduché rozhraní pro správu amavis"
+#: templates/modoboa_amavis/domain_content_filter.html:5
+msgid "Thresholds"
+msgstr "Mezní hodnoty"
+#: templates/modoboa_amavis/domain_content_filter.html:9
+msgid "or more is spam"
+msgstr "nebo více je spam"
+#: templates/modoboa_amavis/domain_content_filter.html:15
+msgid "or more throw spam message away"
+msgstr "nebo více zahodí spam zprávu"
+#: templates/modoboa_amavis/email_list.html:11
+msgid "Score"
+msgstr "Hodnota"
+#: templates/modoboa_amavis/email_list.html:14 templatetags/amavis_tags.py:114
+msgid "To"
+msgstr "Komu"
+#: templates/modoboa_amavis/email_list.html:17
+msgid "From"
+msgstr "Od"
+#: templates/modoboa_amavis/email_list.html:20
+msgid "Subject"
+msgstr "Předmět"
+#: templates/modoboa_amavis/email_list.html:23
+msgid "Date"
+msgstr "Datum"
+#: templates/modoboa_amavis/emails_page.html:15
+msgid "Released"
+msgstr "Odblokováno"
+#: templates/modoboa_amavis/emails_page.html:17
+msgid "Marked as spam"
+msgstr "Označeno jako spam"
+#: templates/modoboa_amavis/emails_page.html:19
+msgid "Marked as non-spam"
+msgstr "Označeno jako vyžádaná správa"
+#: templates/modoboa_amavis/index.html:4
+msgid "Quarantine management"
+msgstr "Nastavení karantény"
+#: templates/modoboa_amavis/main_action_bar.html:5
+msgid "Select"
+msgstr "Vybrat"
+#: templates/modoboa_amavis/main_action_bar.html:11
+msgid "Clean"
+msgstr "Vyčistit"
+#: templates/modoboa_amavis/main_action_bar.html:12
+msgid "Spam"
+msgstr "Spam"
+#: templates/modoboa_amavis/main_action_bar.html:13
+msgid "Virus"
+msgstr "Vir"
+#: templates/modoboa_amavis/main_action_bar.html:14
+msgid "Bad Header"
+msgstr "Špatné záhlaví"
+#: templates/modoboa_amavis/main_action_bar.html:15
+msgid "Bad MIME"
+msgstr "Špatný MIME"
+#: templates/modoboa_amavis/main_action_bar.html:16
+msgid "Banned"
+msgstr "Zakázaná pošta"
+#: templates/modoboa_amavis/main_action_bar.html:20
+#: templates/modoboa_amavis/main_action_bar.html:22
+#: templatetags/amavis_tags.py:30 templatetags/amavis_tags.py:95
+msgid "Release"
+msgstr "Odblokovat"
+#: templates/modoboa_amavis/main_action_bar.html:25
+#: templates/modoboa_amavis/main_action_bar.html:27
+#: templatetags/amavis_tags.py:36 templatetags/amavis_tags.py:100
+msgid "Delete"
+msgstr "Smazat"
+#: templates/modoboa_amavis/main_action_bar.html:36
+#: templatetags/amavis_tags.py:49
+msgid "Mark as spam"
+msgstr "Označit jako spam"
+#: templates/modoboa_amavis/main_action_bar.html:37
+#: templatetags/amavis_tags.py:57
+msgid "Mark as non-spam"
+msgstr "Označit jako vyžádanou zprávu"
+#: templates/modoboa_amavis/main_action_bar.html:54
+msgid "All messages"
+msgstr "Všechny zprávy"
+#: templates/modoboa_amavis/main_action_bar.html:54
+msgid "All"
+msgstr "Vše"
+#: templates/modoboa_amavis/main_action_bar.html:57
+msgid "Clean only"
+msgstr "Pouze čisté"
+#: templates/modoboa_amavis/main_action_bar.html:60
+msgid "Spam only"
+msgstr "Pouze spamy"
+#: templates/modoboa_amavis/main_action_bar.html:63
+msgid "Virus only"
+msgstr "Pouze viry"
+#: templates/modoboa_amavis/main_action_bar.html:66
+msgid "Bad Header only"
+msgstr "Pouze špatné záhlaví"
+#: templates/modoboa_amavis/main_action_bar.html:69
+msgid "Bad MIME only"
+msgstr "Pouze špatný MIME"
+#: templates/modoboa_amavis/main_action_bar.html:72
+msgid "Banned only"
+msgstr "Pouze zakázaná pošta"
+#: templates/modoboa_amavis/notifications/pending_requests.html:1
+#, python-format
+msgid ""
+"\n"
+"%(counter)s release request is pending for action.\n"
+msgid_plural ""
+"\n"
+"%(counter)s release requests are pending for action.\n"
+msgstr[0] ""
+"\n"
+"%(counter)s požadavek na odblokování čeká na vyřízení.\n"
+msgstr[1] ""
+"\n"
+"%(counter)s požadavky na odblokování čekají na vyřízení.\n"
+msgstr[2] ""
+"\n"
+"%(counter)s požadavků na odblokování čeká na vyřízení.\n"
+#: templates/modoboa_amavis/notifications/pending_requests.html:6
+msgid "Sketch:"
+msgstr "Náhled:"
+#: templates/modoboa_amavis/notifications/pending_requests.html:8
+msgid "From:"
+msgstr "Od:"
+#: templates/modoboa_amavis/notifications/pending_requests.html:9
+msgid "To:"
+msgstr "Komu:"
+#: templates/modoboa_amavis/notifications/pending_requests.html:10
+msgid "Date:"
+msgstr "Datum:"
+#: templates/modoboa_amavis/notifications/pending_requests.html:11
+msgid "Subject:"
+msgstr "Předmět"
+#: templates/modoboa_amavis/notifications/pending_requests.html:12
+msgid "Act on this message:"
+msgstr "Úkony na zprávě:"
+#: templates/modoboa_amavis/notifications/pending_requests.html:14
+#, python-format
+msgid "Please visit %(listingurl)s for a full listing."
+msgstr "Navštivte stránku %(listingurl)s pro zobrazení kompletního seznamu."
+#: templatetags/amavis_tags.py:24
+msgid "Back"
+msgstr "Zpět"
+#: templatetags/amavis_tags.py:40
+msgid "View full headers"
+msgstr "Zobrazit úplné záhlaví"
+#: views.py:40
+msgid "Empty quarantine"
+msgstr "Vyprázdnit karanténu"
+#: views.py:163 views.py:223 views.py:227 views.py:258 views.py:263
+#: views.py:265
+msgid "Invalid request"
+msgstr "Neplatný požadavek"
+#: views.py:228
+msgid "Message deleted"
+msgstr "Zpráva smazána"
+#: views.py:245
+#, python-format
+msgid "%(count)d message deleted successfully"
+msgid_plural "%(count)d messages deleted successfully"
+msgstr[0] "%(count)d zpráva úspěšně smazána"
+msgstr[1] "%(count)d zprávy úspěšně smazány"
+msgstr[2] "%(count)d zpráv úspěšně smazáno"
+#: views.py:268
+msgid "Request sent"
+msgstr "Požadavek odeslán"
+#: views.py:274
+msgid "Message released"
+msgstr "Zprávy odblokována"
+#: views.py:301
+#, python-format
+msgid "%(count)d request sent"
+msgid_plural "%(count)d requests sent"
+msgstr[0] "%(count)d požadavek odeslán"
+msgstr[1] "%(count)d požadavky odeslány"
+msgstr[2] "%(count)d požadavků odesláno"
+#: views.py:322
+#, python-format
+msgid "%(count)d message released successfully"
+msgid_plural "%(count)d messages released successfully"
+msgstr[0] "%(count)d zpráva úspěšně odblokována"
+msgstr[1] "%(count)d zprávy úspěšně odblokovány"
+msgstr[2] "%(count)d zpráv úspěšně odblokováno"
+#: views.py:359
+#, python-format
+msgid "%(count)d message processed successfully"
+msgid_plural "%(count)d messages processed successfully"
+msgstr[0] "%(count)d zpráva úspěšně zpracována"
+msgstr[1] "%(count)d zprávy úspěšně zpracovány"
+msgstr[2] "%(count)d zpráv úspěšně zpracováno"
+#: views.py:393
+msgid "Select a database"
+msgstr "Vybrat databázi"
+#: views.py:397
+msgid "Validate"
+msgstr "Ověřit"
