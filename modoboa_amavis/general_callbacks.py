@@ -6,7 +6,7 @@ from django.template import Template, Context
 
 from modoboa.lib import events, parameters
 
-from modoboa_admin.models import DomainAlias
+from modoboa_admin.models import DomainAlias, Alias
 
 from .lib import (
     create_user_and_policy, update_user_and_policy, delete_user_and_policy,
@@ -125,12 +125,14 @@ def on_mailboxalias_created(user, alias):
 
 
 @events.observe("MailboxAliasDeleted")
-def on_mailboxalias_deleted(alias):
+def on_mailboxalias_deleted(aliases):
     """Clean amavis database when an alias is removed."""
     if parameters.get_admin("MANUAL_LEARNING") == "no":
         return
-    if Users.objects.filter(email=alias.full_address).exists():
-        Users.objects.delete(email=alias.full_address)
+    if isinstance(aliases, Alias):
+        aliases = [aliases]
+    aliases = [alias.full_address for alias in aliases]
+    Users.objects.filter(email__in=aliases).delete()
 
 
 @events.observe("GetStaticContent")
