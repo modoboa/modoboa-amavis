@@ -10,6 +10,7 @@ from modoboa.core.management.commands import CloseConnectionMixin
 from modoboa.lib import parameters
 
 from ...models import Msgrcpt, Msgs, Maddr
+from ...modo_extension import Amavis
 
 
 class Command(BaseCommand, CloseConnectionMixin):
@@ -33,6 +34,7 @@ class Command(BaseCommand, CloseConnectionMixin):
         print msg
 
     def handle(self, *args, **options):
+        Amavis.load()
         if options["debug"]:
             import logging
             l = logging.getLogger("django.db.backends")

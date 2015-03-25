@@ -15,6 +15,7 @@ from modoboa.lib.email_utils import sendmail_simple
 from modoboa_admin.models import Domain
 
 from ...models import Msgrcpt
+from ...modo_extension import Amavis
 from ...sql_connector import get_connector
 
 
@@ -39,6 +40,7 @@ class Command(BaseCommand, CloseConnectionMixin):
     def handle(self, *args, **options):
         if options["baseurl"] is None:
             raise CommandError("You must provide the --baseurl option")
+        Amavis.load()
         self.options = options
         self.notify_admins_pending_requests()
 
