@@ -43,11 +43,11 @@ class Command(BaseCommand, CloseConnectionMixin):
         self.verbose = options["verbose"]
 
         max_messages_age = int(parameters.get_admin("MAX_MESSAGES_AGE",
-                                                    app="amavis"))
+                                                    app="modoboa_amavis"))
 
         flags = ['D']
         if parameters.get_admin("RELEASED_MSGS_CLEANUP",
-                                app="amavis") == "yes":
+                                app="modoboa_amavis") == "yes":
             flags += ['R']
 
         self.__vprint("Deleting marked messages...")

@@ -67,7 +67,7 @@ class Command(BaseCommand, CloseConnectionMixin):
 
     def notify_admins_pending_requests(self):
         self.sender = parameters.get_admin("NOTIFICATIONS_SENDER",
-                                           app="amavis")
+                                           app="modoboa_amavis")
         self.baseurl = self.options["baseurl"].strip("/")
         self.listingurl = self.baseurl \
             + reverse("modoboa_amavis:_mail_list") \
