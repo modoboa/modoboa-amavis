@@ -252,10 +252,14 @@ Quarantine.prototype = {
             return;
         }
         var selection = this.get_current_selection();
+        var data = {
+            action: name,
+            selection: selection.join(",")
+        };
 
         $.ajax({
             url: $link.attr("href"),
-            data: "action=" + name + "&selection=" + selection.join(","),
+            data: data,
             type: 'POST',
             dataType: 'json'
         }).done(
@@ -341,7 +345,7 @@ Quarantine.prototype = {
             url: $link.attr("href"),
             dataType: 'json',
             type: 'POST',
-            data: {rcpt: get_parameter_by_name($link.attr("href"), 'rcpt')}
+            data: {rcpt: get_parameter_by_name($link.attr("href"), 'rcpt', true)}
         }).done(
             $.proxy(this.action_cb, this)
         ).fail(function(jqxhr) {
