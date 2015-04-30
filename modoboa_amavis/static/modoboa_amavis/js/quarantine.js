@@ -464,7 +464,8 @@ Quarantine.prototype = {
         this.set_msgtype();
         $("#emails").htmltable({
             row_selected_event: this.activate_buttons,
-            row_unselected_event: $.proxy(this.deactivate_buttons, this)
+            row_unselected_event: $.proxy(this.deactivate_buttons, this),
+            keep_selection: true
         });
         this.htmltable = $("#emails").data("htmltable");
         this.deactivate_buttons();
