@@ -57,7 +57,7 @@ def read(fname):
 
 setup(
     name="modoboa-amavis",
-    version='1.0.0',
+    version='1.0.1',
     url='http://modoboa.org/',
     license='MIT',
     description="The amavis frontend of Modoboa",
@@ -66,6 +66,7 @@ setup(
     author_email='tonio@ngyn.org',
     packages=find_packages(),
     include_package_data=True,
+    zip_safe=False,
     install_requires=parse_requirements(PIP_REQUIRES),
     dependency_links=parse_dependency_links(PIP_REQUIRES),
     classifiers=['Development Status :: 5 - Production/Stable',
