@@ -19,38 +19,51 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: static/modoboa_amavis/js/quarantine.js:19
 msgid "No more message to show"
 msgstr "Keine weiteren Nachrichten"
+
 #: static/modoboa_amavis/js/quarantine.js:270
 msgid "Release this selection?"
-msgstr "Diese Auswahl freilassen?"
+msgstr "Diese Auswahl freigeben?"
+
 #: static/modoboa_amavis/js/quarantine.js:274
 msgid "Delete this selection?"
 msgstr "Diese Auswahl löschen?"
+
 #: static/modoboa_amavis/js/quarantine.js:314
 msgid "Mark this selection as spam?"
 msgstr "Diese Auswahl als Spam markieren?"
+
 #: static/modoboa_amavis/js/quarantine.js:329
 msgid "Mark this selection as non-spam?"
 msgstr "Diese Auswahl als kein Spam markieren?"
+
 #: static/modoboa_amavis/js/quarantine.js:354
+
 #: static/modoboa_amavis/js/selfservice.js:17
 msgid "Release this message?"
-msgstr "Diese Nachricht freilassen?"
+msgstr "Diese Nachricht freigeben?"
+
 #: static/modoboa_amavis/js/quarantine.js:358
+
 #: static/modoboa_amavis/js/selfservice.js:21
 msgid "Delete this message?"
 msgstr "Diese Nachricht löschen?"
+
 #: static/modoboa_amavis/js/quarantine.js:373
 msgid "Mark as spam?"
 msgstr "Als Spam markieren?"
+
 #: static/modoboa_amavis/js/quarantine.js:389
 msgid "Mark as non-spam?"
 msgstr "Als kein Spam markieren?"
+
 #: static/modoboa_amavis/js/quarantine.js:407
 msgid "View full headers"
-msgstr "Vollansicht Header anzeigen"
+msgstr "Alle Header anzeigen"
+
 #: static/modoboa_amavis/js/quarantine.js:412
 msgid "Hide full headers"
-msgstr "Vollansicht Header ausblenden"
+msgstr "Einfache Header anzeigen"
