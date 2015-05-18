@@ -370,7 +370,7 @@ Quarantine.prototype = {
     mark_as_spam: function(e) {
         if (this.options.check_learning_rcpt) {
             var $link = get_target(e, "a");
-            var selection = get_parameter_by_name($link.attr("href"), "rcpt") +
+            var selection = get_parameter_by_name($link.attr("href"), "rcpt", true) +
                 " " + $link.attr("data-mail-id");
             this.show_select_rcpt_form(e, "spam", [selection]);
         } else {
@@ -386,7 +386,7 @@ Quarantine.prototype = {
     mark_as_ham: function(e) {
         if (this.options.check_learning_rcpt) {
             var $link = get_target(e, "a");
-            var selection = get_parameter_by_name($link.attr("href"), "rcpt") +
+            var selection = get_parameter_by_name($link.attr("href"), "rcpt", true) +
                 " " + $link.attr("data-mail-id");
             this.show_select_rcpt_form(e, "ham", [selection]);
         } else {
