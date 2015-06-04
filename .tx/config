@@ -1,0 +1,14 @@
+[main]
+host = https://www.transifex.com
+
+[modoboa.modoboa-amavis-djangopo]
+file_filter = modoboa_amavis/locale/<lang>/LC_MESSAGES/django.po
+source_file = modoboa_amavis/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
+
+[modoboa.modoboa-amavis-djangojspo]
+file_filter = modoboa_amavis/locale/<lang>/LC_MESSAGES/djangojs.po
+source_file = modoboa_amavis/locale/en/LC_MESSAGES/djangojs.po
+source_lang = en
+type = PO
