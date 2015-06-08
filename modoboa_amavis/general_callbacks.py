@@ -15,25 +15,6 @@ from .lib import (
 from .models import Policy, Users
 
 
-def create_relay_domains_records():
-    """Create records for existing relay domains."""
-    from modoboa.extensions.postfix_relay_domains.models import RelayDomain
-
-    for rdom in RelayDomain.objects.all():
-        policy = create_user_and_policy("@{0}".format(rdom.name))
-        for rdomalias in rdom.relaydomainalias_set.all():
-            rdomalias_pattern = "@{0}".format(rdomalias.name)
-            create_user_and_use_policy(rdomalias_pattern, policy)
-
-
-@events.observe("InitialDataLoaded")
-def load_relay_domains_dependant_data(name):
-    """Load relay domains dependant data."""
-    if name != "postfix_relay_domains":
-        return
-    create_relay_domains_records()
-
-
 @events.observe("UserMenuDisplay")
 def menu(target, user):
     if target == "top_menu":
@@ -193,22 +174,8 @@ def extra_domain_form(user, domain):
     return send_amavis_form()
 
 
-@events.observe('ExtraRelayDomainForm')
-def extra_relaydomain_form(user, rdomain):
-    if not user.has_perm("modoboa_admin_relaydomains.add_relaydomain"):
-        return []
-    return send_amavis_form()
-
-
 @events.observe("FillDomainInstances")
 def fill_domain_instances(user, domain, instances):
     if not user.has_perm("modoboa_admin.view_domains"):
         return
     instances["amavis"] = domain
-
-
-@events.observe("FillRelayDomainInstances")
-def fill_relaydomain_instances(user, rdomain, instances):
-    if not user.has_perm("modoboa_admin_relaydomains.add_relaydomain"):
-        return
-    instances["amavis"] = rdomain

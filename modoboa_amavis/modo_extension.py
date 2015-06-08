@@ -45,9 +45,4 @@ class Amavis(ModoExtension):
                 domalias_pattern = "@{0}".format(domalias.name)
                 create_user_and_use_policy(domalias_pattern, policy)
 
-        if not exts_pool.is_extension_installed(
-                "modoboa.extensions.postfix_relay_domains"):
-            return
-        general_callbacks.create_relay_domains_records()
-
 exts_pool.register_extension(Amavis)
