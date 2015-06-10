@@ -290,7 +290,7 @@ Quarantine.prototype = {
         }
         var url = this.options.learning_recipient_url +
             "?type=" + ltype + "&selection=" +
-            selection.join(","); 
+            encodeURIComponent(selection.join(","));
         var $this = this;
 
         modalbox(evt, null, url, function() {
