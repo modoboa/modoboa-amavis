@@ -121,7 +121,8 @@ class SpamassassinClient(object):
 
     def _get_mailbox_from_rcpt(self, rcpt):
         """Retrieve a mailbox from a recipient address."""
-        local_part, domname = split_mailbox(rcpt)
+        local_part, domname, extension = (
+            split_mailbox(rcpt, return_extension=True))
         try:
             mailbox = Mailbox.objects.select_related("domain").get(
                 address=local_part, domain__name=domname)
