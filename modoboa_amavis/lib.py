@@ -341,6 +341,8 @@ def setup_manual_learning_for_mbox(mbox):
     pname = mbox.full_address[:32]
     if not Policy.objects.filter(policy_name=pname).exists():
         policy = create_user_and_policy(pname)
+        policy.sa_username = mbox.full_address
+        policy.save()
         for alias in mbox.alias_addresses:
             create_user_and_use_policy(alias, policy)
         result = True
