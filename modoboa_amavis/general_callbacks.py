@@ -92,10 +92,20 @@ def on_mailboxalias_created(user, alias):
     """
     if not manual_learning_enabled(user) or alias.type != "alias":
         return
+    mbox = alias.mboxes.first()
+    if mbox is None:
+        # Try to follow the alias chain until we find a mailbox...
+        temp_alias = alias
+        while True:
+            target_alias = temp_alias.aliases.first()
+            if target_alias is None or target_alias.type != "alias":
+                return
+            mbox = target_alias.mboxes.first()
+            if mbox is not None:
+                break
+            temp_alias = target_alias
     try:
-        policy = Policy.objects.get(
-            policy_name=alias.mboxes.all()[0].full_address
-        )
+        policy = Policy.objects.get(policy_name=mbox.full_address)
     except Policy.DoesNotExist:
         return
     else:
