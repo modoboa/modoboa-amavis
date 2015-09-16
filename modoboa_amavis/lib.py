@@ -128,13 +128,15 @@ class SpamassassinClient(object):
                 address=local_part, domain__name=domname)
         except Mailbox.DoesNotExist:
             try:
-                alias = Alias.objects.select_related("domain").get(
-                    address=local_part, domain__name=domname)
+                alias = Alias.objects.filter(
+                    address="{}@{}".format(local_part, domname),
+                    aliasrecipient__r_mailbox__isnull=False)
             except Alias.DoesNotExist:
                 raise InternalError(_("No recipient found"))
             if alias.type != "alias":
                 return None
-            mailbox = alias.mboxes.all()[0]
+            mailbox = alias.aliasrecipient_set.filter(
+                r_mailbox__isnull=False).first()
         return mailbox
 
     def _learn(self, rcpt, msg, mtype):

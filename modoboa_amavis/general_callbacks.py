@@ -92,24 +92,27 @@ def on_mailboxalias_created(user, alias):
     """
     if not manual_learning_enabled(user) or alias.type != "alias":
         return
-    mbox = alias.mboxes.first()
+    mbox = (
+        alias.aliasrecipient_set.filter(r_mailbox__isnull=False).first()
+        .r_mailbox
+    )
     if mbox is None:
         # Try to follow the alias chain until we find a mailbox...
-        temp_alias = alias
         while True:
-            target_alias = temp_alias.aliases.first()
+            target_alias = alias.aliasrecipient_set.filter(
+                r_alias__isnull=False).first().r_alias
             if target_alias is None or target_alias.type != "alias":
                 return
-            mbox = target_alias.mboxes.first()
+            mbox = target_alias.aliasrecipient_set.filter(
+                r_mailbox__isnull=False).first().r_mailbox
             if mbox is not None:
                 break
-            temp_alias = target_alias
     try:
         policy = Policy.objects.get(policy_name=mbox.full_address)
     except Policy.DoesNotExist:
         return
     else:
-        email = alias.full_address
+        email = alias.address
         Users.objects.create(
             email=email, policy=policy, fullname=email, priority=7
         )
@@ -122,7 +125,7 @@ def on_mailboxalias_deleted(aliases):
         return
     if isinstance(aliases, Alias):
         aliases = [aliases]
-    aliases = [alias.full_address for alias in aliases]
+    aliases = [alias.address for alias in aliases]
     Users.objects.filter(email__in=aliases).delete()
 
 
