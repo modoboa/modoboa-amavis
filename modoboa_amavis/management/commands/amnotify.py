@@ -74,9 +74,9 @@ class Command(BaseCommand, CloseConnectionMixin):
             + "?viewrequests=1"
 
         for da in User.objects.filter(groups__name="DomainAdmins"):
-            if not da.mailbox_set.count():
+            if not hasattr(da, "mailbox"):
                 continue
-            rcpt = da.mailbox_set.all()[0].full_address
+            rcpt = da.mailbox.full_address
             reqs = get_connector().get_domains_pending_requests(
                 Domain.objects.get_for_admin(da)
             )
@@ -89,7 +89,7 @@ class Command(BaseCommand, CloseConnectionMixin):
                 print "No release request currently pending"
             return
         for su in User.objects.filter(is_superuser=True):
-            if not su.mailbox_set.count():
+            if not hasattr(su, "mailbox"):
                 continue
-            rcpt = su.mailbox_set.all()[0].full_address
+            rcpt = su.mailbox.full_address
             self.send_pr_notification(rcpt, reqs)

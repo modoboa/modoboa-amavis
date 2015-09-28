@@ -65,8 +65,8 @@ class SQLconnector(object):
         """
         if self.user.group == 'SimpleUsers':
             rcpts = [self.user.email]
-            if self.user.mailbox_set.count():
-                rcpts += self.user.mailbox_set.all()[0].alias_addresses
+            if hasattr(self.user, "mailbox"):
+                rcpts += self.user.mailbox.alias_addresses
             return flt & Q(rid__email__in=rcpts)
         elif not self.user.is_superuser:
             doms = Domain.objects.get_for_admin(self.user)
@@ -240,8 +240,8 @@ class PgSQLconnector(SQLconnector):
         self._where = []
         if self.user.group == 'SimpleUsers':
             rcpts = [self.user.email]
-            if self.user.mailbox_set.count():
-                rcpts += self.user.mailbox_set.all()[0].alias_addresses
+            if hasattr(self.user, "mailbox"):
+                rcpts += self.user.mailbox.alias_addresses
             self._where.append(
                 "convert_from(maddr.email, 'UTF8') IN (%s)"
                 % (','.join(["'%s'" % rcpt for rcpt in rcpts])))
