@@ -26,7 +26,7 @@ class Amavis(ModoExtension):
 
     name = "modoboa_amavis"
     label = ugettext_lazy("Amavis frontend")
-    version = "1.0.2"
+    version = "1.0.3"
     description = ugettext_lazy("Simple amavis management frontend")
     url = "quarantine"
     available_for_topredirection = True
