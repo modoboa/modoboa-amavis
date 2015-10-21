@@ -1,23 +1,23 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Arvedui <arvedui@posteo.de>, 2014
+# controlc.de, 2015
 # Patrick Koetter <p@state-of-mind.de>, 2010
 msgid ""
 msgstr ""
 "Project-Id-Version: Modoboa\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-11 09:51+0100\n"
-"PO-Revision-Date: 2014-12-03 11:02+0000\n"
-"Last-Translator: Arvedui <arvedui@posteo.de>\n"
-"Language-Team: German (http://www.transifex.com/projects/p/modoboa/language/"
-"de/)\n"
-"Language: de\n"
+"PO-Revision-Date: 2015-07-09 14:30+0000\n"
+"Last-Translator: controlc.de\n"
+"Language-Team: German (http://www.transifex.com/tonio/modoboa/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: app_settings.py:16
@@ -30,9 +30,7 @@ msgstr "Maximales Alter einer Nachricht"
 
 #: app_settings.py:22
 msgid "Quarantine messages maximum age (in days) before deletion"
-msgstr ""
-"Maximales Alter von Nachrichten in der Quarantäne bevor sie "
-"gelöscht werden (in Tagen)"
+msgstr "Maximales Alter von Nachrichten in der Quarantäne bevor sie gelöscht werden (in Tagen)"
 
 #: app_settings.py:26
 msgid "Messages releasing"
@@ -100,8 +98,7 @@ msgstr "Absender von Benachrichtigungen"
 
 #: app_settings.py:77
 msgid "The e-mail address used to send notitications"
-msgstr ""
-"Die Mailadresse, die verwendet wird, um Benachrichtigungen zu versenden"
+msgstr "Die Mailadresse, die verwendet wird, um Benachrichtigungen zu versenden"
 
 #: app_settings.py:80 templates/modoboa_amavis/main_action_bar.html:31
 msgid "Manual learning"
@@ -155,9 +152,7 @@ msgstr "Aktiviere manuelles lernen pro Domain."
 msgid ""
 "Allow domain administrators to train Spamassassin (within dedicated per-"
 "domain databases)"
-msgstr ""
-"Erlaubt Domainadministratoren Spamassassin zu trainieren (mit dedizierter "
-"Datenbank für jede Domain)"
+msgstr "Erlaubt Domainadministratoren Spamassassin zu trainieren (mit dedizierter Datenbank für jede Domain)"
 
 #: app_settings.py:128
 msgid "Enable per-user manual learning"
@@ -167,9 +162,7 @@ msgstr "Aktiviere manuelles lernen für normale User"
 msgid ""
 "Allow simple users to personally train Spamassassin (within a dedicated "
 "database)"
-msgstr ""
-"Erlaube normalen Usern Spamassassin zu trainieren (mit dedizierter Datenbank "
-"für jeden User)"
+msgstr "Erlaube normalen Usern Spamassassin zu trainieren (mit dedizierter Datenbank für jeden User)"
 
 #: app_settings.py:156 templates/modoboa_amavis/main_action_bar.html:51
 msgid "Display"
@@ -181,9 +174,7 @@ msgstr "Anzahl dargestellter Nachrichten pro Seite"
 
 #: app_settings.py:161
 msgid "Set the maximum number of messages displayed in a page"
-msgstr ""
-"Legt die maximale Anzahl von Nachrichten fest, die in einer Seite "
-"dargestellt werden"
+msgstr "Legt die maximale Anzahl von Nachrichten fest, die in einer Seite dargestellt werden"
 
 #: forms.py:88
 msgid "Global database"
@@ -235,15 +226,13 @@ msgid "no"
 msgstr "Nein"
 
 #: models.py:97 models.py:108 models.py:119
-
 #: templates/modoboa_amavis/domain_content_filter.html:17
 msgid "default"
 msgstr "Standard"
 
 #: models.py:100
 msgid "Bypass virus checks or not. Choose 'default' to use global settings."
-msgstr ""
-"Virus-Prüfungen umgehen. Leer lassen um den Domain-Standard zu verwenden."
+msgstr "Virus-Prüfungen umgehen. Leer lassen um den Domain-Standard zu verwenden."
 
 #: models.py:105
 msgid "Spam filter"
@@ -251,8 +240,7 @@ msgstr "Spam-Filter"
 
 #: models.py:111
 msgid "Bypass spam checks or not. Choose 'default' to use global settings."
-msgstr ""
-"Spam-Prüfungen umgehen. Leer lassen um den Domain-Standard zu verwenden."
+msgstr "Spam-Prüfungen umgehen. Leer lassen um den Domain-Standard zu verwenden."
 
 #: models.py:116
 msgid "Banned filter"
@@ -260,8 +248,7 @@ msgstr "Filter für unerwünschte Dateien"
 
 #: models.py:122
 msgid "Bypass banned checks or not. Choose 'default' to use global settings."
-msgstr ""
-"Unerwünschte Dateien. Leer lassen um den Domain-Standard zu verwenden."
+msgstr "Unerwünschte Dateien. Leer lassen um den Domain-Standard zu verwenden."
 
 #: models.py:184
 msgid "Spam marker"
@@ -269,15 +256,11 @@ msgstr "Spam-Markierung"
 
 #: models.py:187
 msgid ""
-"Modify spam subject using the specified text. Choose 'default' to use global "
-"settings."
-msgstr ""
-"Betreff-Zeile einer Spam-Nachricht mit dem angegebenen Text ergänzen. "
-"Wählen Sie 'Standard' für den systemweiten Standard."
+"Modify spam subject using the specified text. Choose 'default' to use global"
+" settings."
+msgstr "Betreff-Zeile einer Spam-Nachricht mit dem angegebenen Text ergänzen. Wählen Sie 'Standard' für den systemweiten Standard."
 
 #: modo_extension.py:28
-#, fuzzy
-#| msgid "Amavis connection mode"
 msgid "Amavis frontend"
 msgstr "Amavis Frontend"
 
@@ -362,29 +345,23 @@ msgid "Banned"
 msgstr "Unerwünschte Dateien"
 
 #: templates/modoboa_amavis/main_action_bar.html:20
-
 #: templates/modoboa_amavis/main_action_bar.html:22
-
 #: templatetags/amavis_tags.py:30 templatetags/amavis_tags.py:95
 msgid "Release"
 msgstr "Freigeben"
 
 #: templates/modoboa_amavis/main_action_bar.html:25
-
 #: templates/modoboa_amavis/main_action_bar.html:27
-
 #: templatetags/amavis_tags.py:36 templatetags/amavis_tags.py:100
 msgid "Delete"
 msgstr "Löschen"
 
 #: templates/modoboa_amavis/main_action_bar.html:36
-
 #: templatetags/amavis_tags.py:49
 msgid "Mark as spam"
 msgstr "Als Spam markieren."
 
 #: templates/modoboa_amavis/main_action_bar.html:37
-
 #: templatetags/amavis_tags.py:57
 msgid "Mark as non-spam"
 msgstr "Als kein Spam markieren."
@@ -429,12 +406,8 @@ msgid ""
 msgid_plural ""
 "\n"
 "%(counter)s release requests are pending for action.\n"
-msgstr[0] ""
-"\n"
-"%(counter)s Freigabe-Anforderung wartet auf sie.\n"
-msgstr[1] ""
-"\n"
-"%(counter)s Freigabe-Anforderungen warten auf sie.\n"
+msgstr[0] "\n%(counter)s Freigabe-Anforderung wartet auf sie.\n"
+msgstr[1] "\n%(counter)s Freigabe-Anforderungen warten auf sie.\n"
 
 #: templates/modoboa_amavis/notifications/pending_requests.html:6
 msgid "Sketch:"
@@ -463,8 +436,7 @@ msgstr "Reaktion auf diese Nachricht:"
 #: templates/modoboa_amavis/notifications/pending_requests.html:14
 #, python-format
 msgid "Please visit %(listingurl)s for a full listing."
-msgstr ""
-"Bitte besuchen Sie %(listingurl)s um eine vollständige Ausgabe zu erhalten."
+msgstr "Bitte besuchen Sie %(listingurl)s um eine vollständige Ausgabe zu erhalten."
 
 #: templatetags/amavis_tags.py:24
 msgid "Back"
@@ -479,7 +451,6 @@ msgid "Empty quarantine"
 msgstr "Quarantäne leeren"
 
 #: views.py:163 views.py:223 views.py:227 views.py:258 views.py:263
-
 #: views.py:265
 msgid "Invalid request"
 msgstr "Ungültige Anfrage"
@@ -531,8 +502,3 @@ msgstr "Wähle eine Datenbank"
 #: views.py:397
 msgid "Validate"
 msgstr "Bestätigen"
-#, fuzzy
-#, fuzzy
-#, fuzzy
-#, fuzzy
-#, fuzzy
