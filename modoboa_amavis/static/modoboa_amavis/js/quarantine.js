@@ -259,6 +259,7 @@ Quarantine.prototype = {
 
         $.ajax({
             url: $link.attr("href"),
+            global: false,
             data: data,
             type: 'POST',
             dataType: 'json'
@@ -343,6 +344,7 @@ Quarantine.prototype = {
         }
         $.ajax({
             url: $link.attr("href"),
+            global: false,
             dataType: 'json',
             type: 'POST',
             data: {rcpt: get_parameter_by_name($link.attr("href"), 'rcpt', true)}

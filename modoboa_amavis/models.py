@@ -65,7 +65,7 @@ class Msgs(models.Model):
 
 class Msgrcpt(models.Model):
     partition_tag = models.IntegerField(null=True, blank=True)
-    mail = models.ForeignKey(Msgs, primary_key=True)
+    mail = models.OneToOneField(Msgs, primary_key=True)
     rid = models.ForeignKey(Maddr, db_column='rid')
     rseqnum = models.IntegerField(default=0)
     is_local = models.CharField(max_length=3)
@@ -203,7 +203,7 @@ class Policy(models.Model):
 
 class Quarantine(models.Model):
     partition_tag = models.IntegerField(null=True, blank=True)
-    mail = models.ForeignKey(Msgs, primary_key=True)
+    mail = models.OneToOneField(Msgs, primary_key=True)
     chunk_ind = models.IntegerField()
     mail_text = models.BinaryField()
 

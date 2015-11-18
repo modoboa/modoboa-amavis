@@ -55,9 +55,9 @@ class SQLconnector(object):
         """
         from django.db import connections, transaction
 
-        cursor = connections['amavis'].cursor()
-        cursor.execute(query, args)
-        transaction.commit_unless_managed(using='amavis')
+        with transaction.atomic():
+            cursor = connections['amavis'].cursor()
+            cursor.execute(query, args)
 
     def _apply_msgrcpt_filters(self, flt):
         """Apply filters based on user's role.
