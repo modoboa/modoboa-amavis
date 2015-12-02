@@ -11,10 +11,9 @@ Provides:
 
 from django.utils.translation import ugettext_lazy
 
+from modoboa.admin.models import Domain
 from modoboa.core.extensions import ModoExtension, exts_pool
 from modoboa.lib import parameters
-
-from modoboa_admin.models import Domain
 
 from . import general_callbacks
 from .lib import create_user_and_policy, create_user_and_use_policy

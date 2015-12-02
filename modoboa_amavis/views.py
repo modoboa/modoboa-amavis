@@ -13,14 +13,13 @@ from django.utils.translation import ugettext as _, ungettext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
+from modoboa.admin.models import Mailbox, Domain
 from modoboa.lib import parameters
 from modoboa.lib.exceptions import BadRequest
 from modoboa.lib.paginator import Paginator
 from modoboa.lib.web_utils import (
     getctx, render_to_json_response, _render_to_string
 )
-
-from modoboa_admin.models import Mailbox, Domain
 
 from .templatetags.amavis_tags import (
     quar_menu, viewm_menu

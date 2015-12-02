@@ -9,13 +9,12 @@ import struct
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
+from modoboa.admin.models import Mailbox, Alias
 from modoboa.lib import parameters
 from modoboa.lib.email_utils import split_mailbox
 from modoboa.lib.exceptions import InternalError
 from modoboa.lib.sysutils import exec_cmd
 from modoboa.lib.web_utils import NavigationParameters
-
-from modoboa_admin.models import Mailbox, Alias
 
 from .models import Users, Policy
 

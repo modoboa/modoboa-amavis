@@ -4,9 +4,8 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.template import Template, Context
 
+from modoboa.admin import models as admin_models
 from modoboa.lib import events, parameters
-
-from modoboa_admin.models import DomainAlias, Alias
 
 from .lib import (
     create_user_and_policy, update_user_and_policy, delete_user_and_policy,
@@ -28,36 +27,36 @@ def menu(target, user):
 
 @events.observe("DomainCreated")
 def on_domain_created(user, domain):
-    create_user_and_policy("@{0}".format(domain.name))
+    create_user_and_policy(u"@{0}".format(domain.name))
 
 
 @events.observe("DomainModified")
 def on_domain_modified(domain):
     update_user_and_policy(
-        "@{0}".format(domain.oldname),
-        "@{0}".format(domain.name)
+        u"@{0}".format(domain.oldname),
+        u"@{0}".format(domain.name)
     )
 
 
 @events.observe("DomainDeleted")
 def on_domain_deleted(domain):
-    delete_user_and_policy("@{0}".format(domain.name))
+    delete_user_and_policy(u"@{0}".format(domain.name))
 
 
 @events.observe("DomainAliasCreated")
 def on_domain_alias_created(user, domainalias):
     create_user_and_use_policy(
-        "@{0}".format(domainalias.name),
-        "@{0}".format(domainalias.target.name)
+        u"@{0}".format(domainalias.name),
+        u"@{0}".format(domainalias.target.name)
     )
 
 
 @events.observe("DomainAliasDeleted")
 def on_domain_alias_deleted(domainaliases):
-    if isinstance(domainaliases, DomainAlias):
+    if isinstance(domainaliases, admin_models.DomainAlias):
         domainaliases = [domainaliases]
     for domainalias in domainaliases:
-        delete_user("@{0}".format(domainalias.name))
+        delete_user(u"@{0}".format(domainalias.name))
 
 
 @events.observe("MailboxModified")
@@ -81,7 +80,11 @@ def on_mailbox_deleted(mailbox):
     """Clean amavis database when a mailbox is removed."""
     if parameters.get_admin("MANUAL_LEARNING") == "no":
         return
-    delete_user_and_policy("@{0}".format(mailbox.full_address))
+    if isinstance(mailbox, admin_models.Mailbox):
+        delete_user_and_policy(u"@{0}".format(mailbox.full_address))
+        return
+    for mb in mailbox:
+        delete_user_and_policy(u"@{0}".format(mb.full_address))
 
 
 @events.observe("MailboxAliasCreated")
@@ -123,7 +126,7 @@ def on_mailboxalias_deleted(aliases):
     """Clean amavis database when an alias is removed."""
     if parameters.get_admin("MANUAL_LEARNING") == "no":
         return
-    if isinstance(aliases, Alias):
+    if isinstance(aliases, admin_models.Alias):
         aliases = [aliases]
     aliases = [alias.address for alias in aliases]
     Users.objects.filter(email__in=aliases).delete()
@@ -182,13 +185,13 @@ def send_amavis_form():
 
 @events.observe("ExtraDomainForm")
 def extra_domain_form(user, domain):
-    if not user.has_perm("modoboa_admin.view_domains"):
+    if not user.has_perm("admin.view_domains"):
         return []
     return send_amavis_form()
 
 
 @events.observe("FillDomainInstances")
 def fill_domain_instances(user, domain, instances):
-    if not user.has_perm("modoboa_admin.view_domains"):
+    if not user.has_perm("admin.view_domains"):
         return
     instances["amavis"] = domain

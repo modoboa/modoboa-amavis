@@ -7,12 +7,11 @@ from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
+from modoboa.admin.models import Domain
 from modoboa.core.management.commands import CloseConnectionMixin
 from modoboa.core.models import User
 from modoboa.lib import parameters
 from modoboa.lib.email_utils import sendmail_simple
-
-from modoboa_admin.models import Domain
 
 from ...models import Msgrcpt
 from ...modo_extension import Amavis
