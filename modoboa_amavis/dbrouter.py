@@ -1,4 +1,5 @@
 class AmavisRouter(object):
+
     """A router to control all database operations on models in
     the amavis application"""
 
@@ -27,4 +28,13 @@ class AmavisRouter(object):
             return model._meta.app_label == 'modoboa_amavis'
         elif model._meta.app_label == 'modoboa_amavis':
             return False
+        return None
+
+    def allow_migrate(self, db, app_label, model=None, **hints):
+        """
+        Make sure the auth app only appears in the 'amavis'
+        database.
+        """
+        if app_label == 'modoboa_amavis':
+            return db == 'amavis'
         return None
