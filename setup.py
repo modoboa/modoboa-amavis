@@ -57,7 +57,7 @@ def read(fname):
 
 setup(
     name="modoboa-amavis",
-    version='1.0.4',
+    version='1.0.5',
     url='http://modoboa.org/',
     license='MIT',
     description="The amavis frontend of Modoboa",
