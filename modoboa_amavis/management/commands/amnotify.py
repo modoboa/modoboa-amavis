@@ -8,7 +8,6 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 from modoboa.admin.models import Domain
-from modoboa.core.management.commands import CloseConnectionMixin
 from modoboa.core.models import User
 from modoboa.lib import parameters
 from modoboa.lib.email_utils import sendmail_simple
@@ -18,7 +17,7 @@ from ...modo_extension import Amavis
 from ...sql_connector import get_connector
 
 
-class Command(BaseCommand, CloseConnectionMixin):
+class Command(BaseCommand):
     help = 'Amavis notification tool'
 
     sender = None

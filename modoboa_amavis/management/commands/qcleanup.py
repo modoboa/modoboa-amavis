@@ -6,14 +6,13 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand
 
-from modoboa.core.management.commands import CloseConnectionMixin
 from modoboa.lib import parameters
 
 from ...models import Msgrcpt, Msgs, Maddr
 from ...modo_extension import Amavis
 
 
-class Command(BaseCommand, CloseConnectionMixin):
+class Command(BaseCommand):
     args = ''
     help = 'Amavis quarantine cleanup'
 
