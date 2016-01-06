@@ -65,7 +65,7 @@ class Msgs(models.Model):
 
 class Msgrcpt(models.Model):
     partition_tag = models.IntegerField(null=True, blank=True)
-    mail = models.OneToOneField(Msgs, primary_key=True)
+    mail = models.ForeignKey(Msgs, primary_key=True)
     rid = models.ForeignKey(Maddr, db_column='rid')
     rseqnum = models.IntegerField(default=0)
     is_local = models.CharField(max_length=3)
@@ -123,12 +123,14 @@ class Policy(models.Model):
             "settings."
         )
     )
-    bypass_header_checks = models.CharField(max_length=3, blank=True, null=True)
+    bypass_header_checks = models.CharField(
+        max_length=3, blank=True, null=True)
     virus_quarantine_to = models.CharField(
         max_length=192,
         blank=True,
         null=True)
-    spam_quarantine_to = models.CharField(max_length=192, blank=True, null=True)
+    spam_quarantine_to = models.CharField(
+        max_length=192, blank=True, null=True)
     banned_quarantine_to = models.CharField(
         max_length=192,
         blank=True,
@@ -184,14 +186,15 @@ class Policy(models.Model):
         ugettext_lazy("Spam marker"), default=None,
         max_length=192, blank=True, null=True,
         help_text=ugettext_lazy(
-            "Modify spam subject using the specified text. Choose 'default' to "
-            "use global settings."
+            "Modify spam subject using the specified text. "
+            "Choose 'default' to use global settings."
         )
     )
     spam_subject_tag3 = models.CharField(max_length=192, blank=True, null=True)
     message_size_limit = models.IntegerField(null=True, blank=True)
     banned_rulenames = models.CharField(max_length=192, blank=True, null=True)
-    disclaimer_options = models.CharField(max_length=192, blank=True, null=True)
+    disclaimer_options = models.CharField(
+        max_length=192, blank=True, null=True)
     forward_method = models.CharField(max_length=192, blank=True, null=True)
     sa_userconf = models.CharField(max_length=192, blank=True, null=True)
     sa_username = models.CharField(max_length=192, blank=True, null=True)
@@ -203,7 +206,7 @@ class Policy(models.Model):
 
 class Quarantine(models.Model):
     partition_tag = models.IntegerField(null=True, blank=True)
-    mail = models.OneToOneField(Msgs, primary_key=True)
+    mail = models.ForeignKey(Msgs, primary_key=True)
     chunk_ind = models.IntegerField()
     mail_text = models.BinaryField()
 
