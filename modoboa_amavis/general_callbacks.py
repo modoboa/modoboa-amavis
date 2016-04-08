@@ -95,21 +95,27 @@ def on_mailboxalias_created(user, alias):
     """
     if not manual_learning_enabled(user) or alias.type != "alias":
         return
-    mbox = (
+    alr = (
         alias.aliasrecipient_set.filter(r_mailbox__isnull=False).first()
-        .r_mailbox
     )
-    if mbox is None:
+    if alr:
+        mbox = alr.r_mailbox
+    else:
         # Try to follow the alias chain until we find a mailbox...
         while True:
-            target_alias = alias.aliasrecipient_set.filter(
-                r_alias__isnull=False).first().r_alias
+            alr = alias.aliasrecipient_set.filter(
+                r_alias__isnull=False).first()
+            if alr is None:
+                return
+            target_alias = alr.r_alias
             if target_alias is None or target_alias.type != "alias":
                 return
-            mbox = target_alias.aliasrecipient_set.filter(
-                r_mailbox__isnull=False).first().r_mailbox
-            if mbox is not None:
-                break
+            alr = target_alias.aliasrecipient_set.filter(
+                r_mailbox__isnull=False).first()
+            if alr is None:
+                return
+            mbox = alr.r_mailbox
+            break
     try:
         policy = Policy.objects.get(policy_name=mbox.full_address)
     except Policy.DoesNotExist:

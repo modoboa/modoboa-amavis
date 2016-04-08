@@ -251,6 +251,7 @@ def delete(request, mail_id):
 
 
 def release_selfservice(request, mail_id):
+    """Release view, self-service mode."""
     rcpt = request.GET.get("rcpt", None)
     secret_id = request.GET.get("secret_id", None)
     if rcpt is None or secret_id is None:
