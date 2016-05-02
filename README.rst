@@ -17,17 +17,21 @@ Edit the settings.py file of your modoboa instance and add
 ``modoboa_amavis`` inside the ``MODOBOA_APPS`` variable like this::
 
     MODOBOA_APPS = (
-      'modoboa',
-      'modoboa.core',
-      'modoboa.lib',
-      'modoboa.admin',
-      'modoboa.relaydomains',
-      'modoboa.limits',
+        'modoboa',
+        'modoboa.core',
+        'modoboa.lib',
+        'modoboa.admin',
+        'modoboa.relaydomains',
+        'modoboa.limits',
     
-      # Extensions here
-      # ...
-      'modoboa_amavis',
+        # Extensions here
+        # ...
+        'modoboa_amavis',
     )
+
+Then, add the following at the end of the file::
+
+  from modoboa_amavis.settings import *      
 
 Run the following commands to setup the database tables::
 
