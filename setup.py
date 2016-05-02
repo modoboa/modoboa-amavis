@@ -4,6 +4,9 @@ import re
 import os
 from setuptools import setup, find_packages
 
+from modoboa_amavis import __version__
+
+
 ROOT = os.path.dirname(__file__)
 
 
@@ -57,7 +60,7 @@ def read(fname):
 
 setup(
     name="modoboa-amavis",
-    version='1.0.6',
+    version=__version__,
     url='http://modoboa.org/',
     license='MIT',
     description="The amavis frontend of Modoboa",
