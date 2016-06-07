@@ -159,6 +159,10 @@ class SpamassassinClient(object):
                         self._setup_cache[username] = True
         else:
             username = self._username
+            if username not in self._setup_cache:
+                mbox = self._get_mailbox_from_rcpt(username)
+                if mbox and setup_manual_learning_for_mbox(mbox):
+                    self._setup_cache[username] = True
         if username not in self._username_cache:
             self._username_cache.append(username)
         cmd = self._learn_cmd.format(mtype, username)
