@@ -144,7 +144,7 @@ def on_mailboxalias_deleted(aliases):
 
 @events.observe("GetStaticContent")
 def extra_static_content(caller, st_type, user):
-    if user.group == "SimpleUsers" or st_type != "js":
+    if user.role == "SimpleUsers" or st_type != "js":
         return []
 
     if caller == 'domains':
@@ -167,7 +167,7 @@ def check_for_pending_requests(request, include_all):
     from .sql_connector import get_connector
 
     if parameters.get_admin("USER_CAN_RELEASE") == "yes" \
-            or request.user.group == "SimpleUsers":
+            or request.user.role == "SimpleUsers":
         return []
 
     nbrequests = get_connector(user=request.user).get_pending_requests()

@@ -62,7 +62,7 @@ class SQLconnector(object):
         """Apply filters based on user's role.
 
         """
-        if self.user.group == 'SimpleUsers':
+        if self.user.role == 'SimpleUsers':
             rcpts = [self.user.email]
             if hasattr(self.user, "mailbox"):
                 rcpts += self.user.mailbox.alias_addresses
@@ -237,7 +237,7 @@ class PgSQLconnector(SQLconnector):
     def _apply_msgrcpt_filters(self, flt):
         """Return filters based on user's role. """
         self._where = []
-        if self.user.group == 'SimpleUsers':
+        if self.user.role == 'SimpleUsers':
             rcpts = [self.user.email]
             if hasattr(self.user, "mailbox"):
                 rcpts += self.user.mailbox.alias_addresses

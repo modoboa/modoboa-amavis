@@ -84,7 +84,7 @@ class LearningRecipientForm(forms.Form):
         """Constructor."""
         super(LearningRecipientForm, self).__init__(*args, **kwargs)
         choices = []
-        if user.group == "SuperAdmins":
+        if user.role == "SuperAdmins":
             choices.append(("global", _("Global database")))
         domain_level_learning = parameters.get_admin(
             "DOMAIN_LEVEL_LEARNING") == "yes"

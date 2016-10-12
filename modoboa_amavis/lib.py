@@ -98,7 +98,7 @@ class SpamassassinClient(object):
         self._recipient_db = recipient_db
         self._setup_cache = {}
         self._username_cache = []
-        if user.group == "SimpleUsers":
+        if user.role == "SimpleUsers":
             user_level_learning = parameters.get_admin("USER_LEVEL_LEARNING")
             if user_level_learning == "yes":
                 self._username = user.email
@@ -313,7 +313,7 @@ def manual_learning_enabled(user):
     :return: True if learning is enabled, False otherwise.
     """
     manual_learning = parameters.get_admin("MANUAL_LEARNING") == "yes"
-    if manual_learning and user.group != 'SuperAdmins':
+    if manual_learning and user.role != 'SuperAdmins':
         domain_level_learning = parameters.get_admin(
             "DOMAIN_LEVEL_LEARNING") == "yes"
         user_level_learning = parameters.get_admin(

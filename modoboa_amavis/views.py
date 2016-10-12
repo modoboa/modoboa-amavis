@@ -85,7 +85,7 @@ def _listing(request):
 
     Called the first time the listing page is displayed.
     """
-    if not request.user.is_superuser and request.user.group != 'SimpleUsers':
+    if not request.user.is_superuser and request.user.role != 'SimpleUsers':
         if not Domain.objects.get_for_admin(request.user).count():
             return empty_quarantine()
 
@@ -111,7 +111,7 @@ def index(request):
     """Default view."""
     check_learning_rcpt = "false"
     if parameters.get_admin("MANUAL_LEARNING") == "yes":
-        if request.user.group != "SimpleUsers":
+        if request.user.role != "SimpleUsers":
             user_level_learning = parameters.get_admin(
                 "USER_LEVEL_LEARNING") == "yes"
             domain_level_learning = parameters.get_admin(
@@ -205,7 +205,7 @@ def check_mail_id(request, mail_id):
 def get_user_valid_addresses(user):
     """Retrieve all valid addresses of a user."""
     valid_addresses = []
-    if user.group == 'SimpleUsers':
+    if user.role == 'SimpleUsers':
         valid_addresses.append(user.email)
         try:
             mb = Mailbox.objects.get(user=user)
@@ -292,7 +292,7 @@ def release(request, mail_id):
         if valid_addresses and r not in valid_addresses:
             continue
         msgrcpts += [connector.get_recipient_message(r, i)]
-    if request.user.group == "SimpleUsers" and \
+    if request.user.role == "SimpleUsers" and \
        parameters.get_admin("USER_CAN_RELEASE") == "no":
         for msgrcpt in msgrcpts:
             connector.set_msgrcpt_status(
@@ -341,7 +341,7 @@ def mark_messages(request, selection, mtype, recipient_db=None):
         return render_to_json_response({"status": "ok"})
     if recipient_db is None:
         recipient_db = (
-            "user" if request.user.group == "SimpleUsers" else "global"
+            "user" if request.user.role == "SimpleUsers" else "global"
         )
     selection = check_mail_id(request, selection)
     connector = get_connector()
