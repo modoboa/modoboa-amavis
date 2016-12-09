@@ -6,7 +6,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand
 
-from modoboa.lib import parameters
+from modoboa.parameters import tools as param_tools
 
 from ...models import Msgrcpt, Msgs, Maddr
 from ...modo_extension import Amavis
@@ -41,13 +41,11 @@ class Command(BaseCommand):
             l.addHandler(logging.StreamHandler())
         self.verbose = options["verbose"]
 
-        max_messages_age = int(parameters.get_admin("MAX_MESSAGES_AGE",
-                                                    app="modoboa_amavis"))
+        conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
 
-        flags = ['D']
-        if parameters.get_admin("RELEASED_MSGS_CLEANUP",
-                                app="modoboa_amavis") == "yes":
-            flags += ['R']
+        flags = ["D"]
+        if conf["released_msgs_cleanup"]:
+            flags += ["R"]
 
         self.__vprint("Deleting marked messages...")
         ids = Msgrcpt.objects.filter(rs__in=flags).values("mail_id").distinct()
@@ -56,8 +54,9 @@ class Command(BaseCommand):
                 msg.delete()
 
         self.__vprint(
-            "Deleting messages older than %d days..." % max_messages_age)
-        limit = int(time.time()) - (max_messages_age * 24 * 3600)
+            "Deleting messages older than %d days...".format(
+                conf["max_messages_age"]))
+        limit = int(time.time()) - (conf["max_messages_age"] * 24 * 3600)
         Msgs.objects.filter(time_num__lt=limit).delete()
 
         self.__vprint("Deleting unreferenced e-mail addresses...")

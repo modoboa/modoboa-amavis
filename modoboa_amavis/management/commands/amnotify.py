@@ -9,8 +9,8 @@ from django.utils.translation import ugettext as _
 
 from modoboa.admin.models import Domain
 from modoboa.core.models import User
-from modoboa.lib import parameters
 from modoboa.lib.email_utils import sendmail_simple
+from modoboa.parameters import tools as param_tools
 
 from ...models import Msgrcpt
 from ...modo_extension import Amavis
@@ -27,10 +27,13 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option("--baseurl", type="string", default=None,
                     help="The scheme and hostname used to access Modoboa"),
-        make_option("--smtp_host", type="string", default="localhost",
-                    help="The address of the SMTP server used to send notifications"),
-        make_option("--smtp_port", type="int", default=25,
-                    help="The listening port of the SMTP server used to send notifications"),
+        make_option(
+            "--smtp_host", type="string", default="localhost",
+            help="The address of the SMTP server used to send notifications"),
+        make_option(
+            "--smtp_port", type="int", default=25,
+            help=("The listening port of the SMTP server used to send "
+                  "notifications")),
         make_option("--verbose", action="store_true",
                     help="Activate verbose mode")
     )
@@ -64,8 +67,8 @@ class Command(BaseCommand):
             print msg
 
     def notify_admins_pending_requests(self):
-        self.sender = parameters.get_admin("NOTIFICATIONS_SENDER",
-                                           app="modoboa_amavis")
+        self.sender = param_tools.get_global_parameter(
+            "notifications_sender", app="modoboa_amavis")
         self.baseurl = self.options["baseurl"].strip("/")
         self.listingurl = self.baseurl \
             + reverse("modoboa_amavis:_mail_list") \

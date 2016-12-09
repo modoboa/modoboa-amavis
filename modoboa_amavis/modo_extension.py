@@ -13,15 +13,14 @@ from django.utils.translation import ugettext_lazy
 
 from modoboa.admin.models import Domain
 from modoboa.core.extensions import ModoExtension, exts_pool
-from modoboa.lib import parameters
+from modoboa.parameters import tools as param_tools
 
 from . import __version__
-from . import general_callbacks
 from .lib import create_user_and_policy, create_user_and_use_policy
+from . import forms
 
 
 class Amavis(ModoExtension):
-
     """The Amavis extension."""
 
     name = "modoboa_amavis"
@@ -32,10 +31,9 @@ class Amavis(ModoExtension):
     available_for_topredirection = True
 
     def load(self):
-        from .app_settings import ParametersForm, UserSettings
-
-        parameters.register(ParametersForm, "Amavis")
-        parameters.register(UserSettings, ugettext_lazy("Quarantine"))
+        param_tools.registry.add("global", forms.ParametersForm, "Amavis")
+        param_tools.registry.add(
+            "user", forms.UserSettings, ugettext_lazy("Quarantine"))
 
     def load_initial_data(self):
         """Create records for existing domains and co."""

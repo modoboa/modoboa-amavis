@@ -6,20 +6,19 @@ import email
 
 import chardet
 
-from django.shortcuts import render
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import render
 from django.template import loader, Context
 from django.utils.translation import ugettext as _, ungettext
-from django.core.urlresolvers import reverse
+
 from django.contrib.auth.decorators import login_required
 
 from modoboa.admin.models import Mailbox, Domain
-from modoboa.lib import parameters
 from modoboa.lib.exceptions import BadRequest
 from modoboa.lib.paginator import Paginator
-from modoboa.lib.web_utils import (
-    getctx, render_to_json_response, _render_to_string
-)
+from modoboa.lib.web_utils import getctx, render_to_json_response
+from modoboa.parameters import tools as param_tools
 
 from .templatetags.amavis_tags import (
     quar_menu, viewm_menu
@@ -45,7 +44,7 @@ def get_listing_pages(request, connector):
     """Return listing pages."""
     paginator = Paginator(
         connector.messages_count(),
-        int(parameters.get_user(request.user, "MESSAGES_PER_PAGE"))
+        request.user.parameters.get_value("messages_per_page")
     )
     page_id = int(connector.navparams.get("page"))
     page = paginator.getpage(page_id)
@@ -73,9 +72,10 @@ def listing_page(request):
         context = {"length": 0}
         navparams["page"] = previous_page_id
     else:
-        context["rows"] = _render_to_string(
-            request, "modoboa_amavis/emails_page.html", {
-                "email_list": context["rows"]}
+        context["rows"] = loader.render_to_string(
+            "modoboa_amavis/emails_page.html", {
+                "email_list": context["rows"]
+            }, request
         )
     return render_to_json_response(context)
 
@@ -97,9 +97,10 @@ def _listing(request):
     context = get_listing_pages(request, connector)
     if context is None:
         return empty_quarantine()
-    context["listing"] = _render_to_string(
-        request, "modoboa_amavis/email_list.html", {
-            "email_list": context["rows"]}
+    context["listing"] = loader.render_to_string(
+        "modoboa_amavis/email_list.html", {
+            "email_list": context["rows"]
+        }, request
     )
     del context["rows"]
     if request.session.get('location', 'listing') != 'listing':
@@ -112,13 +113,10 @@ def _listing(request):
 def index(request):
     """Default view."""
     check_learning_rcpt = "false"
-    if parameters.get_admin("MANUAL_LEARNING") == "yes":
+    conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
+    if conf["manual_learning"]:
         if request.user.role != "SimpleUsers":
-            user_level_learning = parameters.get_admin(
-                "USER_LEVEL_LEARNING") == "yes"
-            domain_level_learning = parameters.get_admin(
-                "DOMAIN_LEVEL_LEARNING") == "yes"
-            if user_level_learning or domain_level_learning:
+            if conf["user_level_learning"] or conf["domain_level_learning"]:
                 check_learning_rcpt = "true"
     return render(request, "modoboa_amavis/index.html", dict(
         selection="quarantine", check_learning_rcpt=check_learning_rcpt
@@ -259,14 +257,14 @@ def release_selfservice(request, mail_id):
         raise BadRequest(_("Invalid request"))
     if secret_id != str(msgrcpt.mail.secret_id):
         raise BadRequest(_("Invalid request"))
-    if parameters.get_admin("USER_CAN_RELEASE") == "no":
-        connector.set_msgrcpt_status(rcpt, mail_id, 'p')
+    if not param_tools.get_global_parameter("user_can_release"):
+        connector.set_msgrcpt_status(rcpt, mail_id, "p")
         msg = _("Request sent")
     else:
         amr = AMrelease()
         result = amr.sendreq(mail_id, secret_id, rcpt)
         if result:
-            connector.set_msgrcpt_status(rcpt, mail_id, 'R')
+            connector.set_msgrcpt_status(rcpt, mail_id, "R")
             msg = _("Message released")
         else:
             raise BadRequest(result)
@@ -289,7 +287,7 @@ def release(request, mail_id):
             continue
         msgrcpts += [connector.get_recipient_message(r, i)]
     if request.user.role == "SimpleUsers" and \
-       parameters.get_admin("USER_CAN_RELEASE") == "no":
+       not param_tools.get_global_parameter("user_can_release"):
         for msgrcpt in msgrcpts:
             connector.set_msgrcpt_status(
                 msgrcpt.rid.email, msgrcpt.mail.mail_id, 'p'
@@ -309,7 +307,8 @@ def release(request, mail_id):
             rcpt.mail.mail_id, rcpt.mail.secret_id, rcpt.rid.email
         )
         if result:
-            connector.set_msgrcpt_status(rcpt.rid.email, rcpt.mail.mail_id, 'R')
+            connector.set_msgrcpt_status(
+                rcpt.rid.email, rcpt.mail.mail_id, "R")
         else:
             error = result
             break
