@@ -9,7 +9,7 @@ import struct
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
-from modoboa.admin.models import Mailbox, Alias
+from modoboa.admin import models as admin_models
 from modoboa.lib import parameters
 from modoboa.lib.email_utils import split_mailbox
 from modoboa.lib.exceptions import InternalError
@@ -123,10 +123,10 @@ class SpamassassinClient(object):
         local_part, domname, extension = (
             split_mailbox(rcpt, return_extension=True))
         try:
-            mailbox = Mailbox.objects.select_related("domain").get(
-                address=local_part, domain__name=domname)
-        except Mailbox.DoesNotExist:
-            alias = Alias.objects.filter(
+            mailbox = admin_models.Mailbox.objects.select_related(
+                "domain").get(address=local_part, domain__name=domname)
+        except admin_models.Mailbox.DoesNotExist:
+            alias = admin_models.Alias.objects.filter(
                 address="{}@{}".format(local_part, domname),
                 aliasrecipient__r_mailbox__isnull=False).first()
             if not alias:
@@ -137,24 +137,37 @@ class SpamassassinClient(object):
                 r_mailbox__isnull=False).first()
         return mailbox
 
+    def _get_domain_from_rcpt(self, rcpt):
+        """Retrieve a domain from a recipient address."""
+        local_part, domname = split_mailbox(rcpt)
+        domain = admin_models.Domain.objects.filter(name=domname).first()
+        if not domain:
+            raise InternalError(_("Local domain not found"))
+        return domain
+
     def _learn(self, rcpt, msg, mtype):
         """Internal method to call the learning command."""
         if self._username is None:
             if self._recipient_db == "global":
                 username = self._default_username
+            elif self._recipient_db == "domain":
+                domain = self._get_domain_from_rcpt(rcpt)
+                username = domain.name
+                condition = (
+                    username not in self._setup_cache and
+                    setup_manual_learning_for_domain(domain))
+                if condition:
+                    self._setup_cache[username] = True
             else:
                 mbox = self._get_mailbox_from_rcpt(rcpt)
                 if mbox is None:
                     username = self._default_username
-                if self._recipient_db == "domain":
-                    username = mbox.domain.name
-                    if username not in self._setup_cache and \
-                       setup_manual_learning_for_domain(mbox.domain):
-                        self._setup_cache[username] = True
                 else:
                     username = mbox.full_address
-                    if username not in self._setup_cache and \
-                       setup_manual_learning_for_mbox(mbox):
+                    condition = (
+                        username not in self._setup_cache and
+                        setup_manual_learning_for_mbox(mbox))
+                    if condition:
                         self._setup_cache[username] = True
         else:
             username = self._username
