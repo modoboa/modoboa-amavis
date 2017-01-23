@@ -344,7 +344,7 @@ def setup_manual_learning_for_domain(domain):
     """
     if Policy.objects.filter(sa_username=domain.name).exists():
         return False
-    policy = Policy.objects.get(policy_name=domain.name[:32])
+    policy = Policy.objects.get(policy_name="@{}".format(domain.name[:32]))
     policy.sa_username = domain.name
     policy.save()
     return True
