@@ -35,6 +35,9 @@ def selfservice(ssfunc=None):
     def decorator(f):
         @wraps(f)
         def wrapped_f(request, *args, **kwargs):
+            secret_id = request.GET.get("secret_id")
+            if not secret_id and request.user.is_authenticated():
+                return f(request, *args, **kwargs)
             if parameters.get_admin("SELF_SERVICE") == "no":
                 return redirect_to_login(
                     reverse("modoboa_amavis:index")
