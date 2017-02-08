@@ -8,7 +8,7 @@ import chardet
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
-from django.template import Template, Context
+from django.template import loader, Context
 from django.utils.translation import ugettext as _, ungettext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -74,7 +74,8 @@ def listing_page(request):
         navparams["page"] = previous_page_id
     else:
         context["rows"] = _render_to_string(
-            request, "modoboa_amavis/emails_page.html", {"email_list": context["rows"]}
+            request, "modoboa_amavis/emails_page.html", {
+                "email_list": context["rows"]}
         )
     return render_to_json_response(context)
 
@@ -97,7 +98,8 @@ def _listing(request):
     if context is None:
         return empty_quarantine()
     context["listing"] = _render_to_string(
-        request, "modoboa_amavis/email_list.html", {"email_list": context["rows"]}
+        request, "modoboa_amavis/email_list.html", {
+            "email_list": context["rows"]}
     )
     del context["rows"]
     if request.session.get('location', 'listing') != 'listing':
@@ -146,12 +148,8 @@ def viewmail_selfservice(request, mail_id,
     secret_id = request.GET.get("secret_id", "")
     if rcpt is None:
         raise Http404
-    content = Template("""
-<iframe src="{% url 'modoboa_amavis:mailcontent_get' mail_id %}" id="mailcontent"></iframe>
-""").render(Context(dict(mail_id=mail_id)))
-
     return render(request, tplname, dict(
-        mail_id=mail_id, rcpt=rcpt, secret_id=secret_id, content=content
+        mail_id=mail_id, rcpt=rcpt, secret_id=secret_id
     ))
 
 
@@ -166,10 +164,8 @@ def viewmail(request, mail_id):
         mb = request.user.mailbox
         if rcpt == mb.full_address or rcpt in mb.alias_addresses:
             get_connector().set_msgrcpt_status(rcpt, mail_id, 'V')
-
-    content = Template("""
-<iframe src="{{ url }}" id="mailcontent"></iframe>
-""").render(Context({"url": reverse("modoboa_amavis:mailcontent_get", args=[mail_id])}))
+    content = loader.get_template("modoboa_amavis/_email_display.html").render(
+        Context({"mail_id": mail_id}))
     menu = viewm_menu(request.user, mail_id, rcpt)
     ctx = getctx("ok", menu=menu, listing=content)
     request.session['location'] = 'viewmail'

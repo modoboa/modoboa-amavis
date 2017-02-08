@@ -14,7 +14,7 @@
   <body>
     <div id="fixed_content">
       <div id="menubar">{% viewm_menu_simple user mail_id rcpt secret_id %}</div>
-      <div id="listing">{{ content }}</div>
+      <div id="listing">{% include "modoboa_amavis/_email_display.html" %}</div>
     </div>
 
     <script src="{% static 'jquery/jquery.min.js' %}" type="text/javascript"></script>

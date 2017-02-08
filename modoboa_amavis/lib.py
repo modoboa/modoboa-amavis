@@ -9,6 +9,8 @@ import struct
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
+from django.contrib.auth.views import redirect_to_login
+
 from modoboa.admin import models as admin_models
 from modoboa.lib import parameters
 from modoboa.lib.email_utils import split_mailbox
@@ -33,10 +35,7 @@ def selfservice(ssfunc=None):
     def decorator(f):
         @wraps(f)
         def wrapped_f(request, *args, **kwargs):
-            if request.user.is_authenticated():
-                return f(request, *args, **kwargs)
             if parameters.get_admin("SELF_SERVICE") == "no":
-                from django.contrib.auth.views import redirect_to_login
                 return redirect_to_login(
                     reverse("modoboa_amavis:index")
                 )
