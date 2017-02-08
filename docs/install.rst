@@ -1,12 +1,6 @@
-modoboa-amavis
-==============
-
-|landscape|
-
-The `amavis <http://www.amavis.org/>`_ frontend of Modoboa.
-
-Installation
-------------
+#######
+Install
+#######
 
 Install this extension system-wide or inside a virtual environment by
 running the following command::
@@ -42,7 +36,3 @@ Run the following commands to setup the database tables::
     
 Finally, restart the python process running modoboa (uwsgi, gunicorn,
 apache, whatever).
-
-.. |landscape| image:: https://landscape.io/github/modoboa/modoboa-amavis/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/modoboa/modoboa-amavis/master
-   :alt: Code Health
