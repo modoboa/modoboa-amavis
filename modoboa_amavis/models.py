@@ -38,7 +38,7 @@ class Mailaddr(models.Model):
 class Msgs(models.Model):
     partition_tag = models.IntegerField(null=True, blank=True)
     mail_id = models.CharField(max_length=12, primary_key=True)
-    secret_id = models.CharField(max_length=12, blank=True)
+    secret_id = models.BinaryField()
     am_id = models.CharField(max_length=60)
     time_num = models.IntegerField()
     time_iso = models.CharField(max_length=48)

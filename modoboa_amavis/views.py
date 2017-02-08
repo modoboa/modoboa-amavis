@@ -146,7 +146,7 @@ def viewmail_selfservice(request, mail_id,
     secret_id = request.GET.get("secret_id", "")
     if rcpt is None:
         raise Http404
-    content = Template("""{% load url from future %}
+    content = Template("""
 <iframe src="{% url 'modoboa_amavis:mailcontent_get' mail_id %}" id="mailcontent"></iframe>
 """).render(Context(dict(mail_id=mail_id)))
 
@@ -261,7 +261,7 @@ def release_selfservice(request, mail_id):
         msgrcpt = connector.get_recipient_message(rcpt, mail_id)
     except Msgrcpt.DoesNotExist:
         raise BadRequest(_("Invalid request"))
-    if secret_id != msgrcpt.mail.secret_id:
+    if secret_id != str(msgrcpt.mail.secret_id):
         raise BadRequest(_("Invalid request"))
     if parameters.get_admin("USER_CAN_RELEASE") == "no":
         connector.set_msgrcpt_status(rcpt, mail_id, 'p')
