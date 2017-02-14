@@ -1,6 +1,4 @@
-#!/usr/bin/env python
 # coding: utf-8
-from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import render_to_string
@@ -24,19 +22,20 @@ class Command(BaseCommand):
     baseurl = None
     listingurl = None
 
-    option_list = BaseCommand.option_list + (
-        make_option("--baseurl", type="string", default=None,
-                    help="The scheme and hostname used to access Modoboa"),
-        make_option(
-            "--smtp_host", type="string", default="localhost",
-            help="The address of the SMTP server used to send notifications"),
-        make_option(
-            "--smtp_port", type="int", default=25,
+    def add_arguments(self, parser):
+        """Add extra arguments to command line."""
+        parser.add_argument(
+            "--baseurl", type=str, default=None,
+            help="The scheme and hostname used to access Modoboa")
+        parser.add_argument(
+            "--smtp_host", type=str, default="localhost",
+            help="The address of the SMTP server used to send notifications")
+        parser.add_argument(
+            "--smtp_port", type=int, default=25,
             help=("The listening port of the SMTP server used to send "
-                  "notifications")),
-        make_option("--verbose", action="store_true",
-                    help="Activate verbose mode")
-    )
+                  "notifications"))
+        parser.add_argument("--verbose", action="store_true",
+                            help="Activate verbose mode")
 
     def handle(self, *args, **options):
         if options["baseurl"] is None:

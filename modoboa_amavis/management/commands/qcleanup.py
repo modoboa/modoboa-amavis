@@ -2,7 +2,6 @@
 # coding: utf-8
 
 import time
-from optparse import make_option
 
 from django.core.management.base import BaseCommand
 
@@ -13,19 +12,17 @@ from ...modo_extension import Amavis
 
 
 class Command(BaseCommand):
-    args = ''
-    help = 'Amavis quarantine cleanup'
+    args = ""
+    help = "Amavis quarantine cleanup"
 
-    option_list = BaseCommand.option_list + (
-        make_option('--debug',
-                    action='store_true',
-                    default=False,
-                    help='Activate debug output'),
-        make_option('--verbose',
-                    action='store_true',
-                    default=False,
-                    help='Display informational messages')
-    )
+    def add_arguments(self, parser):
+        """Add extra arguments to command line."""
+        parser.add_argument(
+            "--debug", action="store_true", default=False,
+            help="Activate debug output")
+        parser.add_argument(
+            "--verbose", action="store_true", default=False,
+            help="Display informational messages")
 
     def __vprint(self, msg):
         if not self.verbose:
