@@ -32,6 +32,7 @@ class DomainTestCase(ModoTestCase):
             "type": "domain",
             "enabled": domain.enabled,
             "quota": domain.quota,
+            "default_mailbox_quota": domain.default_mailbox_quota,
             "aliases_1": "dalias.test"
         }
         self.ajax_post(
@@ -83,6 +84,7 @@ class DomainTestCase(ModoTestCase):
             "type": "domain",
             "enabled": domain.enabled,
             "quota": domain.quota,
+            "default_mailbox_quota": domain.default_mailbox_quota,
             "bypass_virus_checks": "Y",
             "spam_subject_tag2_act": False,
             "spam_subject_tag2": custom_title

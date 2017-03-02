@@ -22,19 +22,11 @@ class AmavisRouter(object):
             return True
         return None
 
-    def allow_syncdb(self, db, model):
-        """Make sure the amavis app only appears on the 'amavis' db."""
-        if db == 'amavis':
-            return model._meta.app_label == 'modoboa_amavis'
-        elif model._meta.app_label == 'modoboa_amavis':
-            return False
-        return None
-
     def allow_migrate(self, db, app_label, model=None, **hints):
         """
         Make sure the auth app only appears in the 'amavis'
         database.
         """
-        if app_label == 'modoboa_amavis':
-            return db == 'amavis'
+        if db == "amavis":
+            return app_label == "modoboa_amavis"
         return None
