@@ -1,7 +1,7 @@
 modoboa-amavis
 ==============
 
-|landscape|
+|landscape| |codecov|
 
 The `amavis <http://www.amavis.org/>`_ frontend of Modoboa.
 
@@ -46,3 +46,6 @@ apache, whatever).
 .. |landscape| image:: https://landscape.io/github/modoboa/modoboa-amavis/master/landscape.svg?style=flat
    :target: https://landscape.io/github/modoboa/modoboa-amavis/master
    :alt: Code Health
+
+.. |codecov| image:: https://codecov.io/gh/modoboa/modoboa-amavis/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/modoboa/modoboa-amavis
