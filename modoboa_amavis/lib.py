@@ -12,11 +12,11 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.views import redirect_to_login
 
 from modoboa.admin import models as admin_models
-from modoboa.lib import parameters
 from modoboa.lib.email_utils import split_mailbox
 from modoboa.lib.exceptions import InternalError
 from modoboa.lib.sysutils import exec_cmd
 from modoboa.lib.web_utils import NavigationParameters
+from modoboa.parameters import tools as param_tools
 
 from .models import Users, Policy
 
@@ -38,7 +38,7 @@ def selfservice(ssfunc=None):
             secret_id = request.GET.get("secret_id")
             if not secret_id and request.user.is_authenticated():
                 return f(request, *args, **kwargs)
-            if parameters.get_admin("SELF_SERVICE") == "no":
+            if not param_tools.get_global_parameter("self_service"):
                 return redirect_to_login(
                     reverse("modoboa_amavis:index")
                 )
@@ -49,17 +49,14 @@ def selfservice(ssfunc=None):
 
 class AMrelease(object):
     def __init__(self):
-        mode = parameters.get_admin("AM_PDP_MODE")
+        conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
         try:
-            if mode == "inet":
-                host = parameters.get_admin('AM_PDP_HOST')
-                port = parameters.get_admin('AM_PDP_PORT')
+            if conf["am_pdp_mode"] == "inet":
                 self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.sock.connect((host, int(port)))
+                self.sock.connect((conf["am_pdp_host"], conf["am_pdp_port"]))
             else:
-                path = parameters.get_admin('AM_PDP_SOCKET')
                 self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-                self.sock.connect(path)
+                self.sock.connect(conf["am_pdp_socket"])
         except socket.error, err:
             raise InternalError(
                 _("Connection to amavis failed: %s" % str(err))
@@ -90,19 +87,18 @@ recipient=%s
 
 
 class SpamassassinClient(object):
-
     """A stupid spamassassin client."""
 
     def __init__(self, user, recipient_db):
         """Constructor."""
-        self._sa_is_local = parameters.get_admin("SA_IS_LOCAL")
-        self._default_username = parameters.get_admin("DEFAULT_USER")
+        conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
+        self._sa_is_local = conf["sa_is_local"]
+        self._default_username = conf["default_user"]
         self._recipient_db = recipient_db
         self._setup_cache = {}
         self._username_cache = []
         if user.role == "SimpleUsers":
-            user_level_learning = parameters.get_admin("USER_LEVEL_LEARNING")
-            if user_level_learning == "yes":
+            if conf["user_level_learning"]:
                 self._username = user.email
         else:
             self._username = None
@@ -113,8 +109,7 @@ class SpamassassinClient(object):
             self._expected_exit_codes = [0]
         else:
             self._learn_cmd = "spamc -d {0} -p {1}".format(
-                parameters.get_admin("SPAMD_ADDRESS"),
-                parameters.get_admin("SPAMD_PORT")
+                conf["spamd_address"], conf["spamd_port"]
             )
             self._learn_cmd += " -L {0} -u {1}"
             self._learn_cmd_kwargs = {}
@@ -326,17 +321,15 @@ def manual_learning_enabled(user):
 
     :return: True if learning is enabled, False otherwise.
     """
-    manual_learning = parameters.get_admin("MANUAL_LEARNING") == "yes"
-    if manual_learning and user.role != 'SuperAdmins':
-        domain_level_learning = parameters.get_admin(
-            "DOMAIN_LEVEL_LEARNING") == "yes"
-        user_level_learning = parameters.get_admin(
-            "USER_LEVEL_LEARNING") == "yes"
+    conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
+    if conf["manual_learning"] and user.role != "SuperAdmins":
         if user.has_perm("admin.view_domains"):
-            manual_learning = domain_level_learning or user_level_learning
+            manual_learning = (
+                conf["domain_level_learning"] or conf["user_level_learning"])
         else:
-            manual_learning = user_level_learning
-    return manual_learning
+            manual_learning = conf["user_level_learning"]
+        return manual_learning
+    return False
 
 
 def setup_manual_learning_for_domain(domain):

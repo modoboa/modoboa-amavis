@@ -2,30 +2,27 @@
 # coding: utf-8
 
 import time
-from optparse import make_option
 
 from django.core.management.base import BaseCommand
 
-from modoboa.lib import parameters
+from modoboa.parameters import tools as param_tools
 
 from ...models import Msgrcpt, Msgs, Maddr
 from ...modo_extension import Amavis
 
 
 class Command(BaseCommand):
-    args = ''
-    help = 'Amavis quarantine cleanup'
+    args = ""
+    help = "Amavis quarantine cleanup"
 
-    option_list = BaseCommand.option_list + (
-        make_option('--debug',
-                    action='store_true',
-                    default=False,
-                    help='Activate debug output'),
-        make_option('--verbose',
-                    action='store_true',
-                    default=False,
-                    help='Display informational messages')
-    )
+    def add_arguments(self, parser):
+        """Add extra arguments to command line."""
+        parser.add_argument(
+            "--debug", action="store_true", default=False,
+            help="Activate debug output")
+        parser.add_argument(
+            "--verbose", action="store_true", default=False,
+            help="Display informational messages")
 
     def __vprint(self, msg):
         if not self.verbose:
@@ -41,13 +38,11 @@ class Command(BaseCommand):
             l.addHandler(logging.StreamHandler())
         self.verbose = options["verbose"]
 
-        max_messages_age = int(parameters.get_admin("MAX_MESSAGES_AGE",
-                                                    app="modoboa_amavis"))
+        conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
 
-        flags = ['D']
-        if parameters.get_admin("RELEASED_MSGS_CLEANUP",
-                                app="modoboa_amavis") == "yes":
-            flags += ['R']
+        flags = ["D"]
+        if conf["released_msgs_cleanup"]:
+            flags += ["R"]
 
         self.__vprint("Deleting marked messages...")
         ids = Msgrcpt.objects.filter(rs__in=flags).values("mail_id").distinct()
@@ -56,8 +51,9 @@ class Command(BaseCommand):
                 msg.delete()
 
         self.__vprint(
-            "Deleting messages older than %d days..." % max_messages_age)
-        limit = int(time.time()) - (max_messages_age * 24 * 3600)
+            "Deleting messages older than %d days...".format(
+                conf["max_messages_age"]))
+        limit = int(time.time()) - (conf["max_messages_age"] * 24 * 3600)
         Msgs.objects.filter(time_num__lt=limit).delete()
 
         self.__vprint("Deleting unreferenced e-mail addresses...")

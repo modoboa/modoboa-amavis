@@ -1,6 +1,4 @@
-#!/usr/bin/env python
 # coding: utf-8
-from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import render_to_string
@@ -9,8 +7,8 @@ from django.utils.translation import ugettext as _
 
 from modoboa.admin.models import Domain
 from modoboa.core.models import User
-from modoboa.lib import parameters
 from modoboa.lib.email_utils import sendmail_simple
+from modoboa.parameters import tools as param_tools
 
 from ...models import Msgrcpt
 from ...modo_extension import Amavis
@@ -24,16 +22,20 @@ class Command(BaseCommand):
     baseurl = None
     listingurl = None
 
-    option_list = BaseCommand.option_list + (
-        make_option("--baseurl", type="string", default=None,
-                    help="The scheme and hostname used to access Modoboa"),
-        make_option("--smtp_host", type="string", default="localhost",
-                    help="The address of the SMTP server used to send notifications"),
-        make_option("--smtp_port", type="int", default=25,
-                    help="The listening port of the SMTP server used to send notifications"),
-        make_option("--verbose", action="store_true",
-                    help="Activate verbose mode")
-    )
+    def add_arguments(self, parser):
+        """Add extra arguments to command line."""
+        parser.add_argument(
+            "--baseurl", type=str, default=None,
+            help="The scheme and hostname used to access Modoboa")
+        parser.add_argument(
+            "--smtp_host", type=str, default="localhost",
+            help="The address of the SMTP server used to send notifications")
+        parser.add_argument(
+            "--smtp_port", type=int, default=25,
+            help=("The listening port of the SMTP server used to send "
+                  "notifications"))
+        parser.add_argument("--verbose", action="store_true",
+                            help="Activate verbose mode")
 
     def handle(self, *args, **options):
         if options["baseurl"] is None:
@@ -64,8 +66,8 @@ class Command(BaseCommand):
             print msg
 
     def notify_admins_pending_requests(self):
-        self.sender = parameters.get_admin("NOTIFICATIONS_SENDER",
-                                           app="modoboa_amavis")
+        self.sender = param_tools.get_global_parameter(
+            "notifications_sender", app="modoboa_amavis")
         self.baseurl = self.options["baseurl"].strip("/")
         self.listingurl = self.baseurl \
             + reverse("modoboa_amavis:_mail_list") \
