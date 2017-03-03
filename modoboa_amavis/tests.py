@@ -2,10 +2,12 @@
 
 from django.core.urlresolvers import reverse
 
-from modoboa.core import models as core_models
 from modoboa.admin import factories as admin_factories
+from modoboa.admin import models as admin_models
+from modoboa.core import models as core_models
 from modoboa.lib.tests import ModoTestCase
 
+from . import lib
 from . import models
 
 
@@ -93,3 +95,48 @@ class DomainTestCase(ModoTestCase):
         name = "@{}".format(domain.name)
         policy = models.Policy.objects.get(policy_name=name)
         self.assertEqual(policy.spam_subject_tag2, custom_title)
+
+
+class ManualLearningTestCase(ModoTestCase):
+    """Check manual learning mode."""
+
+    @classmethod
+    def setUpTestData(cls):
+        """Create test data."""
+        super(ManualLearningTestCase, cls).setUpTestData()
+        admin_factories.populate_database()
+
+    def test_alias_creation(self):
+        """Check alias creation."""
+        self.set_global_parameter("user_level_learning", True)
+
+        # Fake activation because we don't have test data yet for
+        # amavis...
+        lib.setup_manual_learning_for_mbox(
+            admin_models.Mailbox.objects.get(
+                address="user", domain__name="test.com"))
+        lib.setup_manual_learning_for_mbox(
+            admin_models.Mailbox.objects.get(
+                address="admin", domain__name="test.com"))
+
+        values = {
+            "address": "alias1000@test.com",
+            "recipients": "admin@test.com",
+            "enabled": True
+        }
+        self.ajax_post(reverse("admin:alias_add"), values)
+        policy = models.Policy.objects.get(
+            policy_name=values["recipients"])
+        user = models.Users.objects.get(email=values["address"])
+        self.assertEqual(user.policy, policy)
+
+        values = {
+            "address": "user@test.com",
+            "recipients": "admin@test.com",
+            "enabled": True
+        }
+        self.ajax_post(reverse("admin:alias_add"), values)
+        policy = models.Policy.objects.get(
+            policy_name=values["recipients"])
+        user = models.Users.objects.get(email=values["address"])
+        self.assertEqual(user.policy, policy)

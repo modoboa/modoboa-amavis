@@ -98,44 +98,29 @@ def on_mailbox_deleted(sender, instance, **kwargs):
     delete_user_and_policy(u"@{0}".format(instance.full_address))
 
 
-@receiver(signals.post_save, sender=admin_models.Alias)
-def on_mailboxalias_created(sender, instance, **kwargs):
-    """Create amavis record for the new alias.
+@receiver(signals.post_save, sender=admin_models.AliasRecipient)
+def on_aliasrecipient_created(sender, instance, **kwargs):
+    """Create amavis record for the new alias recipient.
 
     FIXME: how to deal with distibution lists ?
     """
-    request = lib_signals.get_request()
-    if not manual_learning_enabled(request.user) or instance.type != "alias":
+    conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
+    condition = (
+        not conf["manual_learning"] or not conf["user_level_learning"] or
+        not instance.r_mailbox or
+        instance.alias.type != "alias")
+    if condition:
         return
-    alr = (
-        instance.aliasrecipient_set.filter(r_mailbox__isnull=False).first()
-    )
-    if alr:
-        mbox = alr.r_mailbox
-    else:
-        # Try to follow the alias chain until we find a mailbox...
-        while True:
-            alr = instance.aliasrecipient_set.filter(
-                r_alias__isnull=False).first()
-            if alr is None:
-                return
-            target_alias = alr.r_alias
-            if target_alias is None or target_alias.type != "alias":
-                return
-            alr = target_alias.aliasrecipient_set.filter(
-                r_mailbox__isnull=False).first()
-            if alr is None:
-                return
-            mbox = alr.r_mailbox
-            break
-    try:
-        policy = Policy.objects.get(policy_name=mbox.full_address)
-    except Policy.DoesNotExist:
-        return
-    else:
-        email = instance.address
-        Users.objects.create(
-            email=email, policy=policy, fullname=email, priority=7
+    policy = Policy.objects.filter(
+        policy_name=instance.r_mailbox.full_address).first()
+    if policy:
+        # Use mailbox policy for this new alias. We update or create
+        # to handle the case where an account is being replaced by an
+        # alias (when it is disabled).
+        email = instance.alias.address
+        Users.objects.update_or_create(
+            email=email,
+            defaults={"policy": policy, "fullname": email, "priority": 7}
         )
 
 
