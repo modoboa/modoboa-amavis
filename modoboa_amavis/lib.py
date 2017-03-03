@@ -36,7 +36,7 @@ def selfservice(ssfunc=None):
         @wraps(f)
         def wrapped_f(request, *args, **kwargs):
             secret_id = request.GET.get("secret_id")
-            if not secret_id and request.user.is_authenticated():
+            if not secret_id and request.user.is_authenticated:
                 return f(request, *args, **kwargs)
             if not param_tools.get_global_parameter("self_service"):
                 return redirect_to_login(
