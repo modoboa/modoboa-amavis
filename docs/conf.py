@@ -44,7 +44,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'modoboa-amavis'
-copyright = u'2016, Antoine Nguyen'
+copyright = u'2017, Antoine Nguyen'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

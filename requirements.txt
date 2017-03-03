@@ -1,2 +1,2 @@
-modoboa>=1.6.1
+modoboa>=1.7.0
 chardet
