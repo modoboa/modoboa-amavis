@@ -1,7 +1,7 @@
 modoboa-amavis
 ==============
 
-|landscape| |codecov|
+|travis| |codecov| |landscape|
 
 The `amavis <http://www.amavis.org/>`_ frontend of Modoboa.
 
@@ -42,6 +42,9 @@ Run the following commands to setup the database tables::
     
 Finally, restart the python process running modoboa (uwsgi, gunicorn,
 apache, whatever).
+
+.. |travis| image:: https://travis-ci.org/modoboa/modoboa-amavis.svg?branch=master
+   :target: https://travis-ci.org/modoboa/modoboa-amavis
 
 .. |landscape| image:: https://landscape.io/github/modoboa/modoboa-amavis/master/landscape.svg?style=flat
    :target: https://landscape.io/github/modoboa/modoboa-amavis/master
