@@ -9,9 +9,9 @@ from modoboa.lib import events, parameters
 
 from .lib import (
     create_user_and_policy, update_user_and_policy, delete_user_and_policy,
-    create_user_and_use_policy, delete_user, manual_learning_enabled
+    create_user_and_use_policy, delete_user
 )
-from .models import Policy, Users
+from .models import Users
 
 
 @events.observe("UserMenuDisplay")
@@ -89,46 +89,6 @@ def on_mailbox_deleted(mailbox):
         return
     for mb in mailbox:
         delete_user_and_policy(u"@{0}".format(mb.full_address))
-
-
-@events.observe("MailboxAliasCreated")
-def on_mailboxalias_created(user, alias):
-    """Create amavis record for the new alias.
-
-    FIXME: how to deal with distibution lists ?
-    """
-    if not manual_learning_enabled(user) or alias.type != "alias":
-        return
-    alr = (
-        alias.aliasrecipient_set.filter(r_mailbox__isnull=False).first()
-    )
-    if alr:
-        mbox = alr.r_mailbox
-    else:
-        # Try to follow the alias chain until we find a mailbox...
-        while True:
-            alr = alias.aliasrecipient_set.filter(
-                r_alias__isnull=False).first()
-            if alr is None:
-                return
-            target_alias = alr.r_alias
-            if target_alias is None or target_alias.type != "alias":
-                return
-            alr = target_alias.aliasrecipient_set.filter(
-                r_mailbox__isnull=False).first()
-            if alr is None:
-                return
-            mbox = alr.r_mailbox
-            break
-    try:
-        policy = Policy.objects.get(policy_name=mbox.full_address)
-    except Policy.DoesNotExist:
-        return
-    else:
-        email = alias.address
-        Users.objects.create(
-            email=email, policy=policy, fullname=email, priority=7
-        )
 
 
 @events.observe("MailboxAliasDeleted")
