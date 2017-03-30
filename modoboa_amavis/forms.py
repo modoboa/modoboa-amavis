@@ -225,12 +225,12 @@ class ParametersForm(param_forms.AdminParametersForm):
         "am_pdp_port": "am_pdp_mode=inet",
         "am_pdp_socket": "am_pdp_mode=unix",
 
-        "sa_is_local": "manual_learning=yes",
-        "default_user": "manual_learning=yes",
-        "spamd_address": "sa_is_local=no",
-        "spamd_port": "sa_is_local=no",
-        "domain_level_learning": "manual_learning=yes",
-        "user_level_learning": "manual_learning=yes"
+        "sa_is_local": "manual_learning=True",
+        "default_user": "manual_learning=True",
+        "spamd_address": "sa_is_local=False",
+        "spamd_port": "sa_is_local=False",
+        "domain_level_learning": "manual_learning=True",
+        "user_level_learning": "manual_learning=True"
     }
 
 
