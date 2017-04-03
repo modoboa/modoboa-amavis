@@ -322,14 +322,16 @@ def manual_learning_enabled(user):
     :return: True if learning is enabled, False otherwise.
     """
     conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
-    if conf["manual_learning"] and user.role != "SuperAdmins":
+    if not conf["manual_learning"]:
+        return False
+    if user.role != "SuperAdmins":
         if user.has_perm("admin.view_domains"):
             manual_learning = (
                 conf["domain_level_learning"] or conf["user_level_learning"])
         else:
             manual_learning = conf["user_level_learning"]
         return manual_learning
-    return False
+    return True
 
 
 def setup_manual_learning_for_domain(domain):
