@@ -103,7 +103,7 @@ class SpamassassinClient(object):
         else:
             self._username = None
         self.error = None
-        if self._sa_is_local == "yes":
+        if self._sa_is_local:
             self._learn_cmd = "sa-learn --{0} --no-sync -u {1}"
             self._learn_cmd_kwargs = {}
             self._expected_exit_codes = [0]
