@@ -20,6 +20,7 @@ from modoboa.lib.paginator import Paginator
 from modoboa.lib.web_utils import getctx, render_to_json_response
 from modoboa.parameters import tools as param_tools
 
+from . import constants
 from .templatetags.amavis_tags import (
     quar_menu, viewm_menu
 )
@@ -35,7 +36,11 @@ from .sql_email import SQLemail
 
 def empty_quarantine():
     """Shortcut to use when no content can be displayed."""
-    content = "<div class='alert alert-info'>%s</div>" % _("Empty quarantine")
+    content = loader.render_to_string(
+        "modoboa_amavis/empty_quarantine.html", {
+            "message_types": constants.MESSAGE_TYPES
+        }
+    )
     ctx = getctx("ok", level=2, listing=content)
     return render_to_json_response(ctx)
 
@@ -99,7 +104,8 @@ def _listing(request):
         return empty_quarantine()
     context["listing"] = loader.render_to_string(
         "modoboa_amavis/email_list.html", {
-            "email_list": context["rows"]
+            "email_list": context["rows"],
+            "message_types": constants.MESSAGE_TYPES
         }, request
     )
     del context["rows"]

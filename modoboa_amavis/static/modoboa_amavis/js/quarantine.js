@@ -4,6 +4,9 @@
  * @constructor
  * @param {Object} options - instance options
  */
+
+/* global $ Listing */
+
 var Quarantine = function(options) {
     Listing.call(this, options);
 };
@@ -53,7 +56,6 @@ Quarantine.prototype = {
 
         $("input[name*=msgtype]").attr("checked", false)
             .parent().removeClass('active');
-        
         if (msgtype !== undefined) {
             $("input[name=msgtype_" + msgtype + "]").attr("checked", true)
                 .parent().addClass('active');
@@ -214,7 +216,7 @@ Quarantine.prototype = {
             msgtype = $target.children("input").attr("name").replace("msgtype_", "");
         }
 
-        if (msgtype != 'all') {
+        if (msgtype !== 'all') {
             this.navobj.setparam('msgtype', msgtype);
         } else {
             this.navobj.delparam('msgtype');
