@@ -20,7 +20,6 @@
 }
 
 @media (max-width: 990px){
-    #filters_bar,
     th#date,
     td[name='date']{
         display: none;

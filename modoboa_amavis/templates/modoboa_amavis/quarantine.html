@@ -1,0 +1,23 @@
+{% load amavis_tags i18n %}
+
+<div class="row" style="padding-top: 10px">
+  <div class="col-sm-11">
+    {% block main %}{% endblock %}
+  </div>
+
+  <div id="right_menu_bar" class="col-sm-1 text-center">
+    {% block right_menu_bar %}
+      <p><strong>{% trans "Display" %}</strong></p>
+      <div id="filters" class="btn-group-vertical" data-toggle="buttons">
+        <label class="btn btn-default active">
+          <input type="radio" name="msgtype_all" title="{% trans 'All messages' %}" checked> {% trans "All" %}
+        </label>
+        {% for type, label in message_types.items %}
+          <label class="btn btn-{{ type|msgtype_to_color }}" title="{{ label }}">
+            <input type="radio" name="msgtype_{{ type }}" title="{{ label }}"> {{ type }}
+          </label>
+        {% endfor %}
+      </div>
+    {% endblock %}
+  </div>
+</div>

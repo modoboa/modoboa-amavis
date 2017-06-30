@@ -8,7 +8,8 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 
-from ..lib import manual_learning_enabled
+from .. import constants
+from .. import lib
 
 register = template.Library()
 
@@ -25,14 +26,16 @@ def viewm_menu(user, mail_id, rcpt):
         {"name": "release",
          "img": "fa fa-check",
          "class": "btn-success",
-         "url": (reverse('modoboa_amavis:mail_release', args=[mail_id])
-                 + ("?rcpt=%s" % rcpt if rcpt else "")),
+         "url": (
+             reverse('modoboa_amavis:mail_release', args=[mail_id]) +
+             ("?rcpt=%s" % rcpt if rcpt else "")),
          "label": _("Release")},
         {"name": "delete",
          "class": "btn-danger",
          "img": "fa fa-trash",
-         "url": (reverse('modoboa_amavis:mail_delete', args=[mail_id])
-                 + ("?rcpt=%s" % rcpt if rcpt else "")),
+         "url": (
+             reverse('modoboa_amavis:mail_delete', args=[mail_id]) +
+             ("?rcpt=%s" % rcpt if rcpt else "")),
          "label": _("Delete")},
         {"name": "headers",
          "class": "btn-default",
@@ -40,7 +43,7 @@ def viewm_menu(user, mail_id, rcpt):
          "label": _("View full headers")},
     ]
 
-    if manual_learning_enabled(user):
+    if lib.manual_learning_enabled(user):
         entries.insert(3, {
             "name": "process",
             "img": "fa fa-cog",
@@ -114,19 +117,21 @@ def quar_menu(user):
     extraopts = [{"name": "to", "label": _("To")}]
     return render_to_string("modoboa_amavis/main_action_bar.html", {
         "extraopts": extraopts,
-        "manual_learning": manual_learning_enabled(user)
+        "manual_learning": lib.manual_learning_enabled(user),
+        "msg_types": constants.MESSAGE_TYPES
     })
+
+
+@register.filter
+def msgtype_to_color(msgtype):
+    """Return corresponding color."""
+    return constants.MESSAGE_TYPE_COLORS.get(msgtype, "default")
 
 
 @register.filter
 def msgtype_to_html(msgtype):
     """Transform a message type to a bootstrap label."""
-    if msgtype in ["S", "V"]:
-        color = 'danger'
-    elif msgtype == "C":
-        color = "success"
-    else:
-        color = "warning"
+    color = constants.MESSAGE_TYPE_COLORS.get(msgtype, "default")
     return mark_safe(
-        '<span class="label label-%s">%s</span>' % (color, msgtype)
-    )
+        '<span class="label label-{}" title="{}">{}</span>'.format(
+            color, constants.MESSAGE_TYPES[msgtype], msgtype))
