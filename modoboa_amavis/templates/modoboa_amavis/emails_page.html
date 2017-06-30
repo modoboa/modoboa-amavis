@@ -21,10 +21,10 @@
   </td>
   <td class="openable {{ email.class }}" name="score">{{ email.score }}</td>
   <td class="openable {{ email.class }}" name="to">{{ email.to }}</td>
-  <td class="openable {{ email.class }}" name="from">
+  <td class="openable {{ email.class }}" name="from" title="{{ email.from }}">
     {{ email.from|truncatechars:30 }}
   </td>
-  <td class="openable {{ email.class }}" name="subject">
+  <td class="openable {{ email.class }}" name="subject" title="{{ email.subject }}">
     {{ email.subject|truncatechars:30 }}
   </td>
   <td class="openable {{ email.class }}" name="date">
