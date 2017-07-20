@@ -4,6 +4,7 @@
 import time
 
 from django.core.management.base import BaseCommand
+from django.db.models import Count
 
 from modoboa.parameters import tools as param_tools
 
@@ -51,14 +52,14 @@ class Command(BaseCommand):
                 msg.delete()
 
         self.__vprint(
-            "Deleting messages older than %d days...".format(
+            "Deleting messages older than {} days...".format(
                 conf["max_messages_age"]))
         limit = int(time.time()) - (conf["max_messages_age"] * 24 * 3600)
         Msgs.objects.filter(time_num__lt=limit).delete()
 
         self.__vprint("Deleting unreferenced e-mail addresses...")
-        for maddr in Maddr.objects.all():
-            if not maddr.msgs_set.count() and not maddr.msgrcpt_set.count():
-                maddr.delete()
+        Maddr.objects.annotate(
+            msgs_count=Count("msgs"), msgrcpt_count=Count("msgrcpt")
+        ).filter(msgs_count=0, msgrcpt_count=0).delete()
 
         self.__vprint("Done.")
