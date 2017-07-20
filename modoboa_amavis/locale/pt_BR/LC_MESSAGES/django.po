@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Modoboa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 09:14+0100\n"
+"POT-Creation-Date: 2017-07-20 14:57+0200\n"
 "PO-Revision-Date: 2015-08-10 20:08+0000\n"
 "Last-Translator: Rafael Barretto Alves <ch3yd@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/tonio/modoboa/"
@@ -20,6 +20,48 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: constants.py:9
+msgid "Clean"
+msgstr "Limpar"
+
+#: constants.py:10
+msgid "Spam"
+msgstr "Spam"
+
+#: constants.py:11
+#, fuzzy
+#| msgid "Spam"
+msgid "Spammy"
+msgstr "Spam"
+
+#: constants.py:12
+msgid "Virus"
+msgstr "Vírus"
+
+#: constants.py:13
+msgid "Bad Header"
+msgstr "Cabeçalho Inválido"
+
+#: constants.py:14
+msgid "Bad MIME"
+msgstr "MIME Inválido"
+
+#: constants.py:15
+msgid "Banned"
+msgstr "Banido"
+
+#: constants.py:16
+msgid "Over sized"
+msgstr ""
+
+#: constants.py:17
+msgid "MTA error"
+msgstr ""
+
+#: constants.py:18
+msgid "Unchecked"
+msgstr ""
 
 #: forms.py:89
 msgid "Global database"
@@ -114,7 +156,7 @@ msgstr "Notificações de remententes"
 msgid "The e-mail address used to send notitications"
 msgstr "O endereço de e-mail usado para enviar notificações"
 
-#: forms.py:167 templates/modoboa_amavis/main_action_bar.html:31
+#: forms.py:167 templates/modoboa_amavis/main_action_bar.html:28
 msgid "Manual learning"
 msgstr "Aprendizado manual"
 
@@ -182,7 +224,7 @@ msgstr ""
 "Permite que usuários simples treinem o Spamassassin (dentro de um banco de "
 "dados dedicado)"
 
-#: forms.py:242 templates/modoboa_amavis/main_action_bar.html:51
+#: forms.py:242 templates/modoboa_amavis/quarantine.html:10
 msgid "Display"
 msgstr "Mostrar"
 
@@ -198,11 +240,11 @@ msgstr "Defina o número máximo de mensagens mostradas numa página"
 msgid "Quarantine"
 msgstr "Quarentena"
 
-#: handlers.py:187
+#: handlers.py:172
 msgid "Pending requests"
 msgstr "Pedidos pendentes"
 
-#: handlers.py:198
+#: handlers.py:183
 msgid "Content filter"
 msgstr "Filtro de conteúdo"
 
@@ -298,23 +340,23 @@ msgstr "ou mais é spam"
 msgid "or more throw spam message away"
 msgstr "ou mais descarta a mensagem de spam"
 
-#: templates/modoboa_amavis/email_list.html:11
+#: templates/modoboa_amavis/email_list.html:14
 msgid "Score"
 msgstr "Pontuação"
 
-#: templates/modoboa_amavis/email_list.html:14 templatetags/amavis_tags.py:114
+#: templates/modoboa_amavis/email_list.html:17 templatetags/amavis_tags.py:117
 msgid "To"
 msgstr "Para"
 
-#: templates/modoboa_amavis/email_list.html:17
+#: templates/modoboa_amavis/email_list.html:20
 msgid "From"
 msgstr "De"
 
-#: templates/modoboa_amavis/email_list.html:20
+#: templates/modoboa_amavis/email_list.html:23
 msgid "Subject"
 msgstr "Assunto"
 
-#: templates/modoboa_amavis/email_list.html:23
+#: templates/modoboa_amavis/email_list.html:26
 msgid "Date"
 msgstr "Data"
 
@@ -330,6 +372,10 @@ msgstr "Marcado como spam"
 msgid "Marked as non-spam"
 msgstr "Marcado como não-spam"
 
+#: templates/modoboa_amavis/empty_quarantine.html:6
+msgid "Empty quarantine"
+msgstr "Quarentena vazia"
+
 #: templates/modoboa_amavis/index.html:4
 msgid "Quarantine management"
 msgstr "Gerenciamento de quarentena"
@@ -338,83 +384,27 @@ msgstr "Gerenciamento de quarentena"
 msgid "Select"
 msgstr "Selecionar"
 
-#: templates/modoboa_amavis/main_action_bar.html:11
-msgid "Clean"
-msgstr "Limpar"
-
-#: templates/modoboa_amavis/main_action_bar.html:12
-msgid "Spam"
-msgstr "Spam"
-
-#: templates/modoboa_amavis/main_action_bar.html:13
-msgid "Virus"
-msgstr "Vírus"
-
-#: templates/modoboa_amavis/main_action_bar.html:14
-msgid "Bad Header"
-msgstr "Cabeçalho Inválido"
-
-#: templates/modoboa_amavis/main_action_bar.html:15
-msgid "Bad MIME"
-msgstr "MIME Inválido"
-
-#: templates/modoboa_amavis/main_action_bar.html:16
-msgid "Banned"
-msgstr "Banido"
-
-#: templates/modoboa_amavis/main_action_bar.html:20
-#: templates/modoboa_amavis/main_action_bar.html:22
-#: templatetags/amavis_tags.py:30 templatetags/amavis_tags.py:95
+#: templates/modoboa_amavis/main_action_bar.html:17
+#: templates/modoboa_amavis/main_action_bar.html:19
+#: templatetags/amavis_tags.py:32 templatetags/amavis_tags.py:98
 msgid "Release"
 msgstr "Liberar"
 
-#: templates/modoboa_amavis/main_action_bar.html:25
-#: templates/modoboa_amavis/main_action_bar.html:27
-#: templatetags/amavis_tags.py:36 templatetags/amavis_tags.py:100
+#: templates/modoboa_amavis/main_action_bar.html:22
+#: templates/modoboa_amavis/main_action_bar.html:24
+#: templatetags/amavis_tags.py:39 templatetags/amavis_tags.py:103
 msgid "Delete"
 msgstr "Deletar"
 
-#: templates/modoboa_amavis/main_action_bar.html:36
-#: templatetags/amavis_tags.py:49
+#: templates/modoboa_amavis/main_action_bar.html:33
+#: templatetags/amavis_tags.py:52
 msgid "Mark as spam"
 msgstr "Marcar como spam"
 
-#: templates/modoboa_amavis/main_action_bar.html:37
-#: templatetags/amavis_tags.py:57
+#: templates/modoboa_amavis/main_action_bar.html:34
+#: templatetags/amavis_tags.py:60
 msgid "Mark as non-spam"
 msgstr "Não marcar como spam"
-
-#: templates/modoboa_amavis/main_action_bar.html:54
-msgid "All messages"
-msgstr "Todas mensagens"
-
-#: templates/modoboa_amavis/main_action_bar.html:54
-msgid "All"
-msgstr "Tudo"
-
-#: templates/modoboa_amavis/main_action_bar.html:57
-msgid "Clean only"
-msgstr "Somente limpa"
-
-#: templates/modoboa_amavis/main_action_bar.html:60
-msgid "Spam only"
-msgstr "Somente spam"
-
-#: templates/modoboa_amavis/main_action_bar.html:63
-msgid "Virus only"
-msgstr "Somente Vírus"
-
-#: templates/modoboa_amavis/main_action_bar.html:66
-msgid "Bad Header only"
-msgstr "Somente Cabeçalhos Inválidos"
-
-#: templates/modoboa_amavis/main_action_bar.html:69
-msgid "Bad MIME only"
-msgstr "Somente MIME Inválidos"
-
-#: templates/modoboa_amavis/main_action_bar.html:72
-msgid "Banned only"
-msgstr "Somente banido"
 
 #: templates/modoboa_amavis/notifications/pending_requests.html:3
 #, fuzzy, python-format
@@ -462,67 +452,89 @@ msgstr "Ato para essa mensagem:"
 msgid "Please visit %(listingurl)s for a full listing."
 msgstr "Por favor, visite %(listingurl)s para a listagem completa."
 
-#: templatetags/amavis_tags.py:24
+#: templates/modoboa_amavis/quarantine.html:13
+msgid "All messages"
+msgstr "Todas mensagens"
+
+#: templates/modoboa_amavis/quarantine.html:13
+msgid "All"
+msgstr "Tudo"
+
+#: templatetags/amavis_tags.py:25
 msgid "Back"
 msgstr "Voltar"
 
-#: templatetags/amavis_tags.py:40
+#: templatetags/amavis_tags.py:43
 msgid "View full headers"
 msgstr "Exibir cabeçalhos completos"
 
-#: views.py:38
-msgid "Empty quarantine"
-msgstr "Quarentena vazia"
-
-#: views.py:158 views.py:216 views.py:220 views.py:252 views.py:257
-#: views.py:259
+#: views.py:164 views.py:222 views.py:226 views.py:258 views.py:263
+#: views.py:265
 msgid "Invalid request"
 msgstr "Solicitação inválida"
 
-#: views.py:221
+#: views.py:227
 msgid "Message deleted"
 msgstr "Mensagem deletada"
 
-#: views.py:238
+#: views.py:244
 #, python-format
 msgid "%(count)d message deleted successfully"
 msgid_plural "%(count)d messages deleted successfully"
 msgstr[0] "%(count)d mensagem deletada com sucesso"
 msgstr[1] "%(count)d mensagens deletadas com sucesso"
 
-#: views.py:262
+#: views.py:268
 msgid "Request sent"
 msgstr "Pedido enviado"
 
-#: views.py:268
+#: views.py:274
 msgid "Message released"
 msgstr "Mensagem liberada"
 
-#: views.py:295
+#: views.py:301
 #, python-format
 msgid "%(count)d request sent"
 msgid_plural "%(count)d requests sent"
 msgstr[0] "%(count)d pedido enviado"
 msgstr[1] "%(count)d pedidos enviados"
 
-#: views.py:317
+#: views.py:323
 #, python-format
 msgid "%(count)d message released successfully"
 msgid_plural "%(count)d messages released successfully"
 msgstr[0] "%(count)d mensagem liberada com sucesso"
 msgstr[1] "%(count)d mensagens liberadas com sucesso"
 
-#: views.py:354
+#: views.py:360
 #, python-format
 msgid "%(count)d message processed successfully"
 msgid_plural "%(count)d messages processed successfully"
 msgstr[0] "%(count)d mensagem processada com sucesso"
 msgstr[1] "%(count)d mensagens processadas com sucesso"
 
-#: views.py:388
+#: views.py:394
 msgid "Select a database"
 msgstr "Selecione um banco de dados"
 
-#: views.py:392
+#: views.py:398
 msgid "Validate"
 msgstr "Validar"
+
+#~ msgid "Clean only"
+#~ msgstr "Somente limpa"
+
+#~ msgid "Spam only"
+#~ msgstr "Somente spam"
+
+#~ msgid "Virus only"
+#~ msgstr "Somente Vírus"
+
+#~ msgid "Bad Header only"
+#~ msgstr "Somente Cabeçalhos Inválidos"
+
+#~ msgid "Bad MIME only"
+#~ msgstr "Somente MIME Inválidos"
+
+#~ msgid "Banned only"
+#~ msgstr "Somente banido"
