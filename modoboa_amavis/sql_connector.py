@@ -1,9 +1,8 @@
-"""
-SQL connector module.
-"""
+"""SQL connector module."""
 
 import datetime
 
+from django.conf import settings
 from django.db.models import Q
 
 from modoboa.admin.models import Domain
@@ -12,11 +11,13 @@ from modoboa.lib.db_utils import db_type
 from .models import Quarantine, Msgrcpt, Maddr
 
 
-class SQLconnector(object):
+def reverse_domain_names(domains):
+    """Return a list of reversed domain names."""
+    return [".".join(reversed(domain.split("."))) for domain in domains]
 
-    """
-    This class handles all database operations.
-    """
+
+class SQLconnector(object):
+    """This class handles all database operations."""
 
     ORDER_TRANSLATION_TABLE = {
         "type": "content",
@@ -58,25 +59,25 @@ class SQLconnector(object):
             cursor = connections['amavis'].cursor()
             cursor.execute(query, args)
 
-    def _apply_msgrcpt_filters(self, flt):
-        """Apply filters based on user's role.
+    def _apply_msgrcpt_simpleuser_filter(self, flt):
+        """Apply specific filter for simple users."""
+        rcpts = [self.user.email]
+        if hasattr(self.user, "mailbox"):
+            rcpts += self.user.mailbox.alias_addresses
+        return flt & Q(rid__email__in=rcpts)
 
-        """
+    def _apply_msgrcpt_filters(self, flt):
+        """Apply filters based on user's role."""
         if self.user.role == 'SimpleUsers':
-            rcpts = [self.user.email]
-            if hasattr(self.user, "mailbox"):
-                rcpts += self.user.mailbox.alias_addresses
-            return flt & Q(rid__email__in=rcpts)
+            flt = self._apply_msgrcpt_simpleuser_filter(flt)
         elif not self.user.is_superuser:
-            doms = Domain.objects.get_for_admin(self.user)
-            regexp = "(%s)" % '|'.join([dom.name for dom in doms])
-            return flt & Q(rid__email__regex=regexp)
+            doms = Domain.objects.get_for_admin(
+                self.user).values_list("name", flat=True)
+            flt &= Q(rid__domain__in=reverse_domain_names(doms))
         return flt
 
     def _apply_extra_search_filter(self, crit, pattern):
-        """Apply search filters using additional criterias.
-
-        """
+        """Apply search filters using additional criterias."""
         if crit == "to":
             return Q(rid__email__contains=pattern)
         return None
@@ -192,20 +193,19 @@ class SQLconnector(object):
         )
 
     def get_domains_pending_requests(self, domains):
-        """Retrieve pending release requests for a list of domains.
-        """
-        regexp = "(%s)" % '|'.join([dom.name for dom in domains])
-        return Msgrcpt.objects.filter(rs='p', rid__email__regex=regexp)
+        """Retrieve pending release requests for a list of domains."""
+        return Msgrcpt.objects.filter(
+            rs='p', rid__domain__in=reverse_domain_names(domains))
 
     def get_pending_requests(self):
         """Return the number of requests currently pending."""
         rq = Q(rs='p')
         if not self.user.is_superuser:
             doms = Domain.objects.get_for_admin(self.user)
-            if not doms.count():
+            if not doms.exists():
                 return 0
-            regexp = "(%s)" % '|'.join([dom.name for dom in doms])
-            doms_q = Q(rid__email__regex=regexp)
+            doms_q = Q(rid__domain__in=reverse_domain_names(
+                doms.values_list("name", flat=True)))
             rq &= doms_q
         return Msgrcpt.objects.filter(rq).count()
 
@@ -234,72 +234,43 @@ class PgSQLconnector(SQLconnector):
 
     """
 
-    def _apply_msgrcpt_filters(self, flt):
+    def _apply_msgrcpt_simpleuser_filter(self, flt):
         """Return filters based on user's role. """
         self._where = []
-        if self.user.role == 'SimpleUsers':
-            rcpts = [self.user.email]
-            if hasattr(self.user, "mailbox"):
-                rcpts += self.user.mailbox.alias_addresses
-            self._where.append(
-                "convert_from(maddr.email, 'UTF8') IN (%s)"
-                % (','.join(["'%s'" % rcpt for rcpt in rcpts])))
-        elif not self.user.is_superuser:
-            doms = Domain.objects.get_for_admin(self.user)
-            regexp = "(%s)" % '|'.join([dom.name for dom in doms])
-            self._where.append(
-                "convert_from(maddr.email, 'UTF8') ~ '%s'" % regexp)
+        rcpts = [self.user.email]
+        if hasattr(self.user, "mailbox"):
+            rcpts += self.user.mailbox.alias_addresses
+        self._where.append(
+            "convert_from(maddr.email, '{}') IN ({})".format(
+                settings.AMAVIS_DEFAULT_DATABASE_ENCODING,
+                ','.join(["'%s'" % rcpt for rcpt in rcpts]))
+        )
         return flt
 
     def _apply_extra_search_filter(self, crit, pattern):
         """Apply search filters using additional criterias."""
         if crit == "to":
             self._where.append(
-                "convert_from(maddr.email, 'UTF8') LIKE '%%{0}%%'".format(
-                    pattern)
+                "convert_from(maddr.email, '{}') LIKE '%%{}%%'".format(
+                    settings.AMAVIS_DEFAULT_DATABASE_ENCODING, pattern)
             )
         return None
 
     def _apply_extra_select_filters(self, messages):
-        """Just a hook to apply additional filters to the queryset.
-
-        """
-        return messages.extra(where=self._where)
+        """Just a hook to apply additional filters to the queryset."""
+        if hasattr(self, "_where"):
+            messages = messages.extra(where=self._where)
+        return messages
 
     def get_recipient_message(self, address, mailid):
-        """Retrieve a message for a given recipient.
-        """
+        """Retrieve a message for a given recipient."""
         qset = Msgrcpt.objects.filter(mail=mailid).extra(
             where=["msgrcpt.rid=maddr.id",
-                   "convert_from(maddr.email, 'UTF8') = '%s'" % address],
+                   "convert_from(maddr.email, '{}') = '{}'".format(
+                       settings.AMAVIS_DEFAULT_DATABASE_ENCODING, address)],
             tables=['maddr']
         )
         return qset.all()[0]
-
-    def get_domains_pending_requests(self, domains):
-        """Retrieve pending release requests for a list of domains.
-        """
-        regexp = "(%s)" % '|'.join([dom.name for dom in domains])
-        return Msgrcpt.objects.filter(rs='p').extra(
-            where=["msgrcpt.rid=maddr.id",
-                   "convert_from(maddr.email, 'UTF8') ~ '%s'" % regexp],
-            tables=['maddr']
-        )
-
-    def get_pending_requests(self):
-        """Return the number of requests currently pending."""
-        rq = Q(rs='p')
-        if not self.user.is_superuser:
-            doms = Domain.objects.get_for_admin(self.user)
-            if not doms.count():
-                return 0
-            regexp = "(%s)" % '|'.join([dom.name for dom in doms])
-            return Msgrcpt.objects.filter(rq).extra(
-                where=["msgrcpt.rid=maddr.id",
-                       "convert_from(maddr.email, 'UTF8') ~ '%s'" % (regexp,)],
-                tables=['maddr']
-            ).count()
-        return Msgrcpt.objects.filter(rq).count()
 
 
 def get_connector(**kwargs):
