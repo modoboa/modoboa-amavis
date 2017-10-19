@@ -15,13 +15,14 @@ from django.utils.translation import ugettext_lazy
 
 
 class Maddr(models.Model):
-    partition_tag = models.IntegerField(unique=True, null=True, blank=True)
+    partition_tag = models.IntegerField(default=0)
     id = models.BigIntegerField(primary_key=True)
-    email = models.CharField(unique=True, max_length=255)
-    domain = models.CharField(max_length=765)
+    email = models.CharField(max_length=255)
+    domain = models.CharField(max_length=255)
 
     class Meta:
         db_table = u'maddr'
+        unique_together = [('partition_tag', 'email')]
         managed = False
 
 
