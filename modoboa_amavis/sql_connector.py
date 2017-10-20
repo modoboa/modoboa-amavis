@@ -93,8 +93,10 @@ class SQLconnector(object):
 
         Filters: rs, rid, content
         """
-        flt = Q(rs__in=[' ', 'V', 'R', 'p', 'S', 'H']) \
+        flt = (
+            Q(rs__in=[' ', 'V', 'R', 'p', 'S', 'H'])
             if self.navparams.get('viewrequests', '0') != '1' else Q(rs='p')
+        )
         flt = self._apply_msgrcpt_filters(flt)
         pattern = self.navparams.get("pattern", "")
         if pattern:
@@ -111,8 +113,9 @@ class SQLconnector(object):
                     nfilter = self._apply_extra_search_filter(crit, pattern)
                     if nfilter is None:
                         continue
-                search_flt = nfilter \
-                    if search_flt is None else search_flt | nfilter
+                search_flt = (
+                    nfilter if search_flt is None else search_flt | nfilter
+                )
             if search_flt:
                 flt &= search_flt
         msgtype = self.navparams.get('msgtype', None)
@@ -122,7 +125,6 @@ class SQLconnector(object):
         flt &= Q(
             mail__in=Quarantine.objects.filter(chunk_ind=1).values("mail_id")
         )
-
         messages = Msgrcpt.objects.select_related("mail", "rid").filter(flt)
         messages = self._apply_extra_select_filters(messages)
         return messages
@@ -147,7 +149,7 @@ class SQLconnector(object):
                 order = self.ORDER_TRANSLATION_TABLE[order]
                 self.messages = self.messages.order_by(sign + order)
 
-            self._messages_count = self.messages.count()
+            self._messages_count = len(self.messages)
 
         return self._messages_count
 
