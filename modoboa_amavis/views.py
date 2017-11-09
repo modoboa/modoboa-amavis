@@ -5,6 +5,7 @@ Amavis quarantine views.
 import email
 
 import chardet
+import six
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
@@ -111,7 +112,7 @@ def _listing(request):
     del context["rows"]
     if request.session.get('location', 'listing') != 'listing':
         context["menu"] = quar_menu(request.user)
-    request.session["location"] = "listingx"
+    request.session["location"] = "listing"
     return render_to_json_response(context)
 
 
@@ -183,10 +184,10 @@ def viewheaders(request, mail_id):
     msg = email.message_from_string(content)
     headers = []
     for name, value in msg.items():
-        if value:
-            result = chardet.detect(value)
-            if result["encoding"] is not None:
-                value = value.decode(result["encoding"])
+        # if value:
+        #     result = chardet.detect(value)
+        #     if result["encoding"] is not None:
+        #         value = value.decode(result["encoding"])
         headers += [(name, value)]
     return render(request, 'modoboa_amavis/viewheader.html', {
         "headers": headers
@@ -194,7 +195,7 @@ def viewheaders(request, mail_id):
 
 
 def check_mail_id(request, mail_id):
-    if type(mail_id) in [str, unicode]:
+    if isinstance(mail_id, six.string_types):
         if "rcpt" in request.POST:
             mail_id = ["%s %s" % (request.POST["rcpt"], mail_id)]
         else:

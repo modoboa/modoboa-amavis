@@ -38,7 +38,7 @@ class Mailaddr(models.Model):
 
 class Msgs(models.Model):
     partition_tag = models.IntegerField(null=True, blank=True)
-    mail_id = models.CharField(max_length=12, primary_key=True)
+    mail_id = models.BinaryField(max_length=12, primary_key=True)
     secret_id = models.BinaryField()
     am_id = models.CharField(max_length=60)
     time_num = models.IntegerField()
@@ -232,9 +232,10 @@ class Users(models.Model):
 
 class Wblist(models.Model):
     rid = models.IntegerField(primary_key=True)
-    sid = models.IntegerField(primary_key=True)
+    sid = models.IntegerField()
     wb = models.CharField(max_length=30)
 
     class Meta:
         db_table = u'wblist'
         managed = False
+        unique_together = [("rid", "sid")]

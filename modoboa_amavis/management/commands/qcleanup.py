@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from __future__ import print_function
+
 import time
 
 from django.core.management.base import BaseCommand
@@ -28,7 +30,7 @@ class Command(BaseCommand):
     def __vprint(self, msg):
         if not self.verbose:
             return
-        print msg
+        print(msg)
 
     def handle(self, *args, **options):
         Amavis().load()

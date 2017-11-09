@@ -2,8 +2,11 @@
 
 import datetime
 
+import chardet
+
 from django.conf import settings
 from django.db.models import Q
+from django.utils.encoding import smart_bytes
 
 from modoboa.admin.models import Domain
 from modoboa.lib.db_utils import db_type
@@ -154,18 +157,16 @@ class SQLconnector(object):
         return self._messages_count
 
     def fetch(self, start=None, stop=None):
-        """Fetch a range of messages from the internal cache.
-
-        """
+        """Fetch a range of messages from the internal cache."""
         emails = []
         for qm in self.messages[start - 1:stop]:
             if qm["rs"] == 'D':
                 continue
             m = {
                 "from": qm["mail__from_addr"],
-                "to": qm["rid__email"],
+                "to": smart_bytes(qm["rid__email"]),
                 "subject": qm["mail__subject"],
-                "mailid": qm["mail__mail_id"],
+                "mailid": smart_bytes(qm["mail__mail_id"]),
                 "date": datetime.datetime.fromtimestamp(qm["mail__time_num"]),
                 "type": qm["content"],
                 "score": qm["bspam_level"],
@@ -213,13 +214,22 @@ class SQLconnector(object):
 
     def get_mail_content(self, mailid):
         """Retrieve the content of a message."""
-        content = "".join([
-            str(qmail.mail_text)
-            for qmail in Quarantine.objects.filter(mail=mailid)
+        content = b"".join([
+            smart_bytes(qmail.mail_text)
+            for qmail in Quarantine.objects.filter(
+                    mail=smart_bytes(mailid))
         ])
-        if isinstance(content, unicode):
-            content = content.encode("utf-8")
-        return content
+        try:
+            content = content.decode("utf-8")
+        except UnicodeDecodeError:
+            pass
+        else:
+            return content
+        try:
+            result = chardet.detect(content)
+        except UnicodeDecodeError:
+            raise
+        return content.decode(result["encoding"])
 
 
 class PgSQLconnector(SQLconnector):
@@ -252,6 +262,8 @@ class PgSQLconnector(SQLconnector):
     def _apply_extra_search_filter(self, crit, pattern):
         """Apply search filters using additional criterias."""
         if crit == "to":
+            if not hasattr(self, "_where"):
+                self._where = []
             self._where.append(
                 "convert_from(maddr.email, '{}') LIKE '%%{}%%'".format(
                     settings.AMAVIS_DEFAULT_DATABASE_ENCODING, pattern)
