@@ -3,6 +3,8 @@
 import datetime
 import time
 
+from django.utils.encoding import smart_bytes
+
 import factory
 
 from . import models
@@ -25,9 +27,9 @@ class MsgsFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Msgs
 
-    mail_id = factory.Sequence(lambda n: "mailid{}".format(n))
+    mail_id = factory.Sequence(lambda n: smart_bytes("mailid{}".format(n)))
     partition_tag = 0
-    secret_id = factory.Sequence(lambda n: "id{}".format(n))
+    secret_id = factory.Sequence(lambda n: smart_bytes("id{}".format(n)))
     sid = factory.SubFactory(MaddrFactory)
     client_addr = "127.0.0.1"
     originating = "Y"

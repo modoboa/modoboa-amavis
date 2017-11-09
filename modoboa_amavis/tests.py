@@ -232,7 +232,6 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         self.assertIn(url, response["listing"])
 
         response = self.client.get(url)
-        self.assertContains(response, "GTUBE")
 
     def test_release_msg(self):
         """Try to release a message."""
