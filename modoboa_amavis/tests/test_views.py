@@ -1,8 +1,11 @@
 """Amavis tests."""
 
+import os
+
 import mock
 
 from django.core.urlresolvers import reverse
+from django.test import override_settings
 from django.utils.encoding import smart_text
 
 from modoboa.admin import factories as admin_factories
@@ -21,6 +24,7 @@ class TestDataMixin(object):
         cls.msgrcpt = factories.create_spam("user@test.com")
 
 
+@override_settings(SA_LOOKUP_PATH=(os.path.dirname(__file__), ))
 class ViewsTestCase(TestDataMixin, ModoTestCase):
     """Test views."""
 
@@ -190,3 +194,31 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         response = self.ajax_post(url, data)
         self.assertEqual(
             response["message"], "2 messages deleted successfully")
+
+    def _test_mark_message(self, action, status):
+        """Mark message common code."""
+        mail_id = self.msgrcpt.mail.mail_id
+        url = reverse("modoboa_amavis:mail_mark_as_" + action, args=[mail_id])
+        data = {"rcpt": smart_text(self.msgrcpt.rid.email)}
+        response = self.ajax_post(url, data)
+        self.assertEqual(
+            response["message"], "1 message processed successfully")
+        self.msgrcpt.refresh_from_db()
+        self.assertEqual(self.msgrcpt.rs, status)
+
+        self.msgrcpt.rs = " "
+        self.msgrcpt.save(update_fields=["rs"])
+        self.set_global_parameter("sa_is_local", False)
+        response = self.ajax_post(url, data)
+        self.assertEqual(
+            response["message"], "1 message processed successfully")
+        self.msgrcpt.refresh_from_db()
+        self.assertEqual(self.msgrcpt.rs, status)
+
+    def test_mark_as_ham(self):
+        """Test mark_as_ham view."""
+        self._test_mark_message("ham", "H")
+
+    def test_mark_as_spam(self):
+        """Test mark_as_spam view."""
+        self._test_mark_message("spam", "S")

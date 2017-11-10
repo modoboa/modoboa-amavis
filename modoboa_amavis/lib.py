@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from functools import wraps
+import os
 import re
 import socket
 import string
@@ -8,8 +9,9 @@ import struct
 
 import six
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.utils.encoding import smart_bytes
+from django.utils.encoding import smart_bytes, smart_text
 from django.utils.translation import ugettext as _
 
 from django.contrib.auth.views import redirect_to_login
@@ -107,16 +109,30 @@ class SpamassassinClient(object):
             self._username = None
         self.error = None
         if self._sa_is_local:
-            self._learn_cmd = "sa-learn --{0} --no-sync -u {1}"
+            self._learn_cmd = self._find_binary("sa-learn")
+            self._learn_cmd += " --{0} --no-sync -u {1}"
             self._learn_cmd_kwargs = {}
             self._expected_exit_codes = [0]
         else:
-            self._learn_cmd = "spamc -d {0} -p {1}".format(
+            self._learn_cmd = self._find_binary("spamc")
+            self._learn_cmd += " -d {0} -p {1}".format(
                 conf["spamd_address"], conf["spamd_port"]
             )
             self._learn_cmd += " -L {0} -u {1}"
             self._learn_cmd_kwargs = {}
             self._expected_exit_codes = [5, 6]
+
+    def _find_binary(self, name):
+        """Find path to binary."""
+        code, output = exec_cmd("which {}".format(name))
+        if not code:
+            return smart_text(output).strip()
+        known_paths = getattr(settings, "SA_LOOKUP_PATH", ("/usr/bin", ))
+        for path in known_paths:
+            bpath = os.path.join(path, name)
+            if os.path.isfile(bpath) and os.access(bpath, os.X_OK):
+                return bpath
+        raise InternalError(_("Failed to find {} binary").format(name))
 
     def _get_mailbox_from_rcpt(self, rcpt):
         """Retrieve a mailbox from a recipient address."""
@@ -178,7 +194,8 @@ class SpamassassinClient(object):
         if username not in self._username_cache:
             self._username_cache.append(username)
         cmd = self._learn_cmd.format(mtype, username)
-        code, output = exec_cmd(cmd, pinput=msg, **self._learn_cmd_kwargs)
+        code, output = exec_cmd(
+            cmd, pinput=smart_bytes(msg), **self._learn_cmd_kwargs)
         if code in self._expected_exit_codes:
             return True
         self.error = output
