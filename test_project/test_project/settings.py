@@ -184,7 +184,6 @@ MIGRATION_MODULES = {
 }
 
 TEST_RUNNER = "modoboa_amavis.test_runners.UnManagedModelTestRunner"
-AMAVIS_DEFAULT_DATABASE_ENCODING = "UTF8"
 
 if DB == 'MYSQL':
     DATABASES.update({

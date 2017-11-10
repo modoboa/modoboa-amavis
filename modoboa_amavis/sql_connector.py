@@ -182,14 +182,15 @@ class SQLconnector(object):
     def get_recipient_message(self, address, mailid):
         """Retrieve a message for a given recipient.
         """
-        return Msgrcpt.objects.get(mail=mailid, rid__email=address)
+        return Msgrcpt.objects.get(
+            mail=mailid, rid__email=smart_bytes(address))
 
     def set_msgrcpt_status(self, address, mailid, status):
         """Change the status (rs field) of a message recipient.
 
         :param string status: status
         """
-        addr = Maddr.objects.get(email=address)
+        addr = Maddr.objects.get(email=smart_bytes(address))
         self._exec(
             "UPDATE msgrcpt SET rs=%s WHERE mail_id=%s AND rid=%s",
             [status, mailid, addr.id]
