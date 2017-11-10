@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template import loader, Context
+from django.utils.encoding import smart_text
 from django.utils.translation import ugettext as _, ungettext
 
 from django.contrib.auth.decorators import login_required
@@ -257,7 +258,7 @@ def release_selfservice(request, mail_id):
         msgrcpt = connector.get_recipient_message(rcpt, mail_id)
     except Msgrcpt.DoesNotExist:
         raise BadRequest(_("Invalid request"))
-    if secret_id != str(msgrcpt.mail.secret_id):
+    if secret_id != smart_text(msgrcpt.mail.secret_id):
         raise BadRequest(_("Invalid request"))
     if not param_tools.get_global_parameter("user_can_release"):
         connector.set_msgrcpt_status(rcpt, mail_id, "p")
@@ -416,7 +417,7 @@ def process(request):
     selection.
 
     """
-    action = request.POST.get("action", None)
+    action = request.POST.get("action")
     ids = request.POST.get("selection", "")
     ids = ids.split(",")
     if not ids or action is None:

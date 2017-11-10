@@ -8,8 +8,9 @@ import struct
 
 import six
 
-from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.utils.encoding import smart_bytes
+from django.utils.translation import ugettext as _
 
 from django.contrib.auth.views import redirect_to_login
 
@@ -68,22 +69,22 @@ class AMrelease(object):
         def repl(match):
             return struct.pack("B", string.atoi(match.group(0)[1:], 16))
 
-        return re.sub(r"%([0-9a-fA-F]{2})", repl, answer)
+        return re.sub(br"%([0-9a-fA-F]{2})", repl, answer)
 
     def __del__(self):
         self.sock.close()
 
     def sendreq(self, mailid, secretid, recipient, *others):
-        self.sock.send("""request=release
+        self.sock.send(smart_bytes("""request=release
 mail_id=%s
 secret_id=%s
 quar_type=Q
 recipient=%s
 
-""" % (mailid, secretid, recipient))
+""" % (mailid, secretid, recipient)))
         answer = self.sock.recv(1024)
         answer = self.decode(answer)
-        if re.search(r"250 [\d\.]+ Ok", answer):
+        if re.search(br"250 [\d\.]+ Ok", answer):
             return True
         return False
 

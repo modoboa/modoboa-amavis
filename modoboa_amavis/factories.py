@@ -57,6 +57,7 @@ class MaddrFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = models.Maddr
+        django_get_or_create = ("email", )
 
     id = factory.Sequence(lambda n: n)
     email = factory.Sequence(lambda n: "user_{}@domain.test".format(n))

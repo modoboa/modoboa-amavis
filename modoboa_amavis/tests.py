@@ -1,5 +1,7 @@
 """Amavis tests."""
 
+import mock
+
 from django.core.urlresolvers import reverse
 from django.utils.encoding import smart_text
 
@@ -251,3 +253,75 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         self.ajax_get(url)
         self.msgrcpt.refresh_from_db()
         self.assertEqual(self.msgrcpt.rs, "D")
+
+    @mock.patch("socket.socket")
+    def test_release(self, mock_socket):
+        """Test release view."""
+
+        # Initiate session
+        url = reverse("modoboa_amavis:_mail_list")
+        response = self.ajax_get(url)
+
+        mock_socket.return_value.recv.return_value = b"250 1234 Ok\r\n"
+        mail_id = self.msgrcpt.mail.mail_id
+        url = reverse("modoboa_amavis:mail_release", args=[mail_id])
+        data = {"rcpt": smart_text(self.msgrcpt.rid.email)}
+        response = self.ajax_post(url, data)
+        self.msgrcpt.refresh_from_db()
+        self.assertEqual(self.msgrcpt.rs, "R")
+        self.assertEqual(
+            response["message"], "1 message released successfully")
+
+    @mock.patch("socket.socket")
+    def test_release_selfservice(self, mock_socket):
+        """Test release view."""
+        mock_socket.return_value.recv.return_value = b"250 1234 Ok\r\n"
+        self.client.logout()
+        mail_id = self.msgrcpt.mail.mail_id
+        url = reverse("modoboa_amavis:mail_release", args=[mail_id])
+        url = "{}?secret_id={}".format(
+            url, smart_text(self.msgrcpt.mail.secret_id))
+        self.set_global_parameter("self_service", True)
+        self.set_global_parameter("user_can_release", True)
+        self.ajax_get(url, status=400)
+        url = "{}&rcpt={}".format(url, smart_text(self.msgrcpt.rid.email))
+        self.ajax_get(url)
+        self.msgrcpt.refresh_from_db()
+        self.assertEqual(self.msgrcpt.rs, "R")
+
+    @mock.patch("socket.socket")
+    def test_process(self, mock_socket):
+        """Test process mode (bulk)."""
+        # Initiate session
+        url = reverse("modoboa_amavis:_mail_list")
+        response = self.ajax_get(url)
+
+        msgrcpt = factories.create_spam("user@test.com")
+        url = reverse("modoboa_amavis:mail_process")
+        selection = [
+            "{} {}".format(
+                smart_text(self.msgrcpt.rid.email),
+                smart_text(self.msgrcpt.mail.mail_id)),
+            "{} {}".format(
+                smart_text(msgrcpt.rid.email),
+                smart_text(msgrcpt.mail.mail_id)),
+        ]
+        mock_socket.return_value.recv.side_effect = (
+            b"250 1234 Ok\r\n", b"250 1234 Ok\r\n")
+        data = {
+            "action": "release",
+            "rcpt": smart_text(self.msgrcpt.rid.email),
+            "selection": ",".join(selection)
+        }
+        response = self.ajax_post(url, data)
+        self.assertEqual(
+            response["message"], "2 messages released successfully")
+
+        data = {
+            "action": "delete",
+            "rcpt": smart_text(self.msgrcpt.rid.email),
+            "selection": ",".join(selection)
+        }
+        response = self.ajax_post(url, data)
+        self.assertEqual(
+            response["message"], "2 messages deleted successfully")
