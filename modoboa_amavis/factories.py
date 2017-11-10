@@ -110,14 +110,14 @@ class QuarantineFactory(factory.DjangoModelFactory):
     mail = factory.SubFactory(MsgsFactory)
 
 
-def create_spam(rcpt, sender="spam@evil.corp"):
+def create_spam(rcpt, sender="spam@evil.corp", rs=" "):
     """Create a spam."""
     msgrcpt = MsgrcptFactory(
-        bspam_level=999.0, content="S", rs=" ",
+        bspam_level=999.0, content="S", rs=rs,
         rid__email=smart_bytes(rcpt),
         rid__domain="com.test",
         mail__sid__email=smart_bytes(sender),
-        mail__sid__domain="",
+        mail__sid__domain=""
     )
     QuarantineFactory(
         mail=msgrcpt.mail,
