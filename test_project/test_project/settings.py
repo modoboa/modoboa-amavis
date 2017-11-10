@@ -185,36 +185,13 @@ MIGRATION_MODULES = {
 
 TEST_RUNNER = "modoboa_amavis.test_runners.UnManagedModelTestRunner"
 
-if DB == 'MYSQL':
-    DATABASES.update({
-        'amavis': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'amavis_test',
-            'USER': 'amavis',
-            'PASSWORD': 'amavis',
-            'HOST': 'localhost',
-            'PORT': '',
-            'ATOMIC_REQUESTS': True,
-        }
-    })
-elif DB == 'SQLITE':
-    DATABASES.update({
-        'amavis': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'amavis_test.db',
-            'PORT': '',
-            'ATOMIC_REQUESTS': True,
-        },
-    })
-else:
-    DATABASES.update({
-        'amavis': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'amavis_test',
-            'USER': 'postgres',
-            'PASSWORD': '',
-            'HOST': 'localhost',
-            'PORT': '',
-            'ATOMIC_REQUESTS': True,
-        },
-    })
+# We force sqlite backend for tests because the generated database is
+# not the same as the one provided by amavis...
+DATABASES.update({
+    'amavis': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'amavis_test.db',
+        'PORT': '',
+        'ATOMIC_REQUESTS': True,
+    },
+})

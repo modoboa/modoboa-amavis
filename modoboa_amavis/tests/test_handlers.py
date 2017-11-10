@@ -7,8 +7,8 @@ from modoboa.admin import models as admin_models
 from modoboa.core import models as core_models
 from modoboa.lib.tests import ModoTestCase
 
-from . import lib
-from . import models
+from .. import lib
+from .. import models
 
 
 class DomainTestCase(ModoTestCase):
@@ -140,3 +140,23 @@ class ManualLearningTestCase(ModoTestCase):
             policy_name=values["recipients"])
         user = models.Users.objects.get(email=values["address"])
         self.assertEqual(user.policy, policy)
+
+    def test_mailbox_rename(self):
+        """Check rename case."""
+        self.set_global_parameter("user_level_learning", True)
+
+        lib.setup_manual_learning_for_mbox(
+            admin_models.Mailbox.objects.get(
+                address="user", domain__name="test.com"))
+
+        user = core_models.User.objects.get(username="user@test.com")
+        values = {
+            "username": "user2@test.com", "role": "SimpleUsers",
+            "quota_act": True, "is_active": True, "email": "user2@test.com",
+            "language": "en"
+        }
+        url = reverse("admin:account_change", args=[user.pk])
+        self.ajax_post(url, values)
+        self.assertTrue(
+            models.Users.objects.filter(email=values["email"]).exists()
+        )

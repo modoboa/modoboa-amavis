@@ -19,14 +19,14 @@ class UnManagedModelTestRunner(DiscoverRunner):
     Many thanks to the Caktus Group: http://bit.ly/1N8TcHW
     """
 
-    ALLOWED_MODELS = ["policy", "users"]
+    # ALLOWED_MODELS = ["maddr", "msgs", "policy", "users"]
 
     def setup_test_environment(self, *args, **kwargs):
         self.unmanaged_models = []
         for m in apps.get_models():
             condition = (
-                m._meta.app_label == "modoboa_amavis" and
-                m._meta.model_name in self.ALLOWED_MODELS)
+                m._meta.app_label == "modoboa_amavis")
+                # m._meta.model_name in self.ALLOWED_MODELS)
             if condition:
                 self.unmanaged_models.append(m)
                 m._meta.managed = True

@@ -232,9 +232,10 @@ class Users(models.Model):
 
 class Wblist(models.Model):
     rid = models.IntegerField(primary_key=True)
-    sid = models.IntegerField(primary_key=True)
+    sid = models.IntegerField()
     wb = models.CharField(max_length=30)
 
     class Meta:
         db_table = u'wblist'
         managed = False
+        unique_together = [("rid", "sid")]

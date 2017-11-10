@@ -1,13 +1,17 @@
 # coding: utf-8
 
-from django.core.management.base import BaseCommand, CommandError
+from __future__ import print_function
+
+from django.core import mail
+from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
+from django.contrib.sites import models as sites_models
+
 from modoboa.admin.models import Domain
 from modoboa.core.models import User
-from modoboa.lib.email_utils import sendmail_simple
 from modoboa.parameters import tools as param_tools
 
 from ...models import Msgrcpt
@@ -25,9 +29,6 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         """Add extra arguments to command line."""
         parser.add_argument(
-            "--baseurl", type=str, default=None,
-            help="The scheme and hostname used to access Modoboa")
-        parser.add_argument(
             "--smtp_host", type=str, default="localhost",
             help="The address of the SMTP server used to send notifications")
         parser.add_argument(
@@ -38,58 +39,67 @@ class Command(BaseCommand):
                             help="Activate verbose mode")
 
     def handle(self, *args, **options):
-        if options["baseurl"] is None:
-            raise CommandError("You must provide the --baseurl option")
         Amavis().load()
         self.options = options
         self.notify_admins_pending_requests()
 
-    def send_pr_notification(self, rcpt, reqs):
+    def _build_message(self, rcpt, total, reqs):
+        """Build new EmailMessage instance."""
         if self.options["verbose"]:
-            print "Sending notification to %s" % rcpt
-        total = reqs.count()
-        reqs = reqs.all()[:10]
+            print("Sending notification to %s" % rcpt)
         content = render_to_string(
             "modoboa_amavis/notifications/pending_requests.html", dict(
                 total=total, requests=reqs,
                 baseurl=self.baseurl, listingurl=self.listingurl
             )
         )
-        status, msg = sendmail_simple(
-            self.sender, rcpt,
-            subject=_("[modoboa] Pending release requests"),
-            content=content,
-            server=self.options["smtp_host"],
-            port=self.options["smtp_port"]
+        msg = mail.EmailMessage(
+            _("[modoboa] Pending release requests"),
+            content,
+            self.sender,
+            [rcpt]
         )
-        if not status:
-            print msg
+        return msg
 
     def notify_admins_pending_requests(self):
         self.sender = param_tools.get_global_parameter(
             "notifications_sender", app="modoboa_amavis")
-        self.baseurl = self.options["baseurl"].strip("/")
-        self.listingurl = self.baseurl \
-            + reverse("modoboa_amavis:_mail_list") \
-            + "?viewrequests=1"
+        self.baseurl = "https://{}".format(
+            sites_models.Site.objects.get_current().domain)
+        self.listingurl = "{}{}?viewrequests=1".format(
+            self.baseurl, reverse("modoboa_amavis:_mail_list"))
 
+        messages = []
+        # Check domain administators first.
         for da in User.objects.filter(groups__name="DomainAdmins"):
             if not hasattr(da, "mailbox"):
                 continue
             rcpt = da.mailbox.full_address
             reqs = get_connector().get_domains_pending_requests(
-                Domain.objects.get_for_admin(da)
+                Domain.objects.get_for_admin(da).values_list("name", flat=True)
             )
+            total = reqs.count()
+            reqs = reqs.all()[:10]
             if reqs.count():
-                self.send_pr_notification(rcpt, reqs)
+                messages.append(self._build_message(rcpt, total, reqs))
 
+        # Then super administators.
         reqs = Msgrcpt.objects.filter(rs='p')
-        if not reqs.count():
-            if self.options["verbose"]:
-                print "No release request currently pending"
+        total = reqs.count()
+        if total:
+            reqs = reqs.all()[:10]
+            for su in User.objects.filter(is_superuser=True):
+                if not hasattr(su, "mailbox"):
+                    continue
+                rcpt = su.mailbox.full_address
+                messages.append(self._build_message(rcpt, total, reqs))
+
+        # Finally, send emails.
+        if not len(messages):
             return
-        for su in User.objects.filter(is_superuser=True):
-            if not hasattr(su, "mailbox"):
-                continue
-            rcpt = su.mailbox.full_address
-            self.send_pr_notification(rcpt, reqs)
+        kwargs = {
+            "host": self.options["smtp_host"],
+            "port": self.options["smtp_port"]
+        }
+        with mail.get_connection(**kwargs) as connection:
+            connection.send_messages(messages)
