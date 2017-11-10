@@ -4,11 +4,14 @@ import os
 
 import mock
 
+from django.core import mail
+from django.core.management import call_command
 from django.core.urlresolvers import reverse
 from django.test import override_settings
 from django.utils.encoding import smart_text
 
 from modoboa.admin import factories as admin_factories
+from modoboa.core import models as core_models
 from modoboa.lib.tests import ModoTestCase
 
 from .. import factories
@@ -158,42 +161,26 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         self.msgrcpt.refresh_from_db()
         self.assertEqual(self.msgrcpt.rs, "R")
 
-    @mock.patch("socket.socket")
-    def test_process(self, mock_socket):
-        """Test process mode (bulk)."""
+    def test_release_request(self):
+        """Test release request mode."""
+        user = core_models.User.objects.get(username="user@test.com")
+        self.client.force_login(user)
+
         # Initiate session
         url = reverse("modoboa_amavis:_mail_list")
         response = self.ajax_get(url)
 
-        msgrcpt = factories.create_spam("user@test.com")
-        url = reverse("modoboa_amavis:mail_process")
-        selection = [
-            "{} {}".format(
-                smart_text(self.msgrcpt.rid.email),
-                smart_text(self.msgrcpt.mail.mail_id)),
-            "{} {}".format(
-                smart_text(msgrcpt.rid.email),
-                smart_text(msgrcpt.mail.mail_id)),
-        ]
-        mock_socket.return_value.recv.side_effect = (
-            b"250 1234 Ok\r\n", b"250 1234 Ok\r\n")
-        data = {
-            "action": "release",
-            "rcpt": smart_text(self.msgrcpt.rid.email),
-            "selection": ",".join(selection)
-        }
+        mail_id = self.msgrcpt.mail.mail_id
+        url = reverse("modoboa_amavis:mail_release", args=[mail_id])
+        data = {"rcpt": smart_text(self.msgrcpt.rid.email)}
         response = self.ajax_post(url, data)
-        self.assertEqual(
-            response["message"], "2 messages released successfully")
+        self.msgrcpt.refresh_from_db()
+        self.assertEqual(self.msgrcpt.rs, "p")
+        self.assertEqual(response["message"], "1 request sent")
 
-        data = {
-            "action": "delete",
-            "rcpt": smart_text(self.msgrcpt.rid.email),
-            "selection": ",".join(selection)
-        }
-        response = self.ajax_post(url, data)
-        self.assertEqual(
-            response["message"], "2 messages deleted successfully")
+        # Send notification to admins
+        call_command("amnotify")
+        self.assertEqual(len(mail.outbox), 1)
 
     def _test_mark_message(self, action, status):
         """Mark message common code."""
@@ -222,3 +209,50 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
     def test_mark_as_spam(self):
         """Test mark_as_spam view."""
         self._test_mark_message("spam", "S")
+
+    @mock.patch("socket.socket")
+    def test_process(self, mock_socket):
+        """Test process mode (bulk)."""
+        # Initiate session
+        url = reverse("modoboa_amavis:_mail_list")
+        response = self.ajax_get(url)
+
+        msgrcpt = factories.create_spam("user@test.com")
+        url = reverse("modoboa_amavis:mail_process")
+        selection = [
+            "{} {}".format(
+                smart_text(self.msgrcpt.rid.email),
+                smart_text(self.msgrcpt.mail.mail_id)),
+            "{} {}".format(
+                smart_text(msgrcpt.rid.email),
+                smart_text(msgrcpt.mail.mail_id)),
+        ]
+        mock_socket.return_value.recv.side_effect = (
+            b"250 1234 Ok\r\n", b"250 1234 Ok\r\n")
+        data = {
+            "action": "release",
+            "rcpt": smart_text(self.msgrcpt.rid.email),
+            "selection": ",".join(selection)
+        }
+        response = self.ajax_post(url, data)
+        self.assertEqual(
+            response["message"], "2 messages released successfully")
+
+        data["action"] = "mark_as_spam"
+        response = self.ajax_post(url, data)
+        self.assertEqual(
+            response["message"], "2 messages processed successfully")
+
+        data["action"] = "mark_as_ham"
+        response = self.ajax_post(url, data)
+        self.assertEqual(
+            response["message"], "2 messages processed successfully")
+
+        data = {
+            "action": "delete",
+            "rcpt": smart_text(self.msgrcpt.rid.email),
+            "selection": ",".join(selection)
+        }
+        response = self.ajax_post(url, data)
+        self.assertEqual(
+            response["message"], "2 messages deleted successfully")
