@@ -17,7 +17,7 @@ from django.utils.translation import ugettext_lazy
 class Maddr(models.Model):
     partition_tag = models.IntegerField(default=0)
     id = models.BigIntegerField(primary_key=True)
-    email = models.BinaryField()
+    email = models.CharField(max_length=255)
     domain = models.CharField(max_length=255)
 
     class Meta:
