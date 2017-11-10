@@ -4,7 +4,6 @@ Amavis quarantine views.
 """
 import email
 
-import chardet
 import six
 
 from django.core.urlresolvers import reverse
@@ -184,10 +183,6 @@ def viewheaders(request, mail_id):
     msg = email.message_from_string(content)
     headers = []
     for name, value in msg.items():
-        # if value:
-        #     result = chardet.detect(value)
-        #     if result["encoding"] is not None:
-        #         value = value.decode(result["encoding"])
         headers += [(name, value)]
     return render(request, 'modoboa_amavis/viewheader.html', {
         "headers": headers

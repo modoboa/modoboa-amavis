@@ -9,6 +9,48 @@ import factory
 
 from . import models
 
+SPAM_BODY = """X-Envelope-To: <{rcpt}>
+X-Envelope-To-Blocked: <{rcpt}>
+X-Quarantine-ID: <nq6ekd4wtXZg>
+X-Spam-Flag: YES
+X-Spam-Score: 1000.985
+X-Spam-Level: ****************************************************************
+X-Spam-Status: Yes, score=1000.985 tag=2 tag2=6.31 kill=6.31
+    tests=[ALL_TRUSTED=-1, GTUBE=1000, PYZOR_CHECK=1.985]
+    autolearn=no autolearn_force=no
+Received: from demo.modoboa.org ([127.0.0.1])
+    by localhost (demo.modoboa.org [127.0.0.1]) (amavisd-new, port 10024)
+    with ESMTP id nq6ekd4wtXZg for <user@demo.local>;
+    Thu,  9 Nov 2017 15:59:52 +0100 (CET)
+Received: from demo.modoboa.org (localhost [127.0.0.1])
+    by demo.modoboa.org (Postfix) with ESMTP
+    for <user@demo.local>; Thu,  9 Nov 2017 15:59:52 +0100 (CET)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Subject: Sample message
+From: {sender}
+To: {rcpt}
+Message-ID: <151023959268.5550.5713670714483771838@demo.modoboa.org>
+Date: Thu, 09 Nov 2017 15:59:52 +0100
+
+This is the GTUBE, the
+        Generic
+        Test for
+        Unsolicited
+        Bulk
+        Email
+
+If your spam filter supports it, the GTUBE provides a test by which you
+can verify that the filter is installed correctly and is detecting incoming
+spam. You can send yourself a test mail containing the following string of
+characters (in upper case and with no white spaces and line breaks):
+
+XJS*C4JDBQADN1.NSBN3*2IDNEN*GTUBE-STANDARD-ANTI-UBE-TEST-EMAIL*C.34X
+
+You should send this test mail from an account outside of your network.
+"""
+
 
 class MaddrFactory(factory.DjangoModelFactory):
     """Factory for Maddr."""
@@ -65,3 +107,19 @@ class QuarantineFactory(factory.DjangoModelFactory):
     partition_tag = 0
     chunk_ind = 1
     mail = factory.SubFactory(MsgsFactory)
+
+
+def create_spam(rcpt, sender="spam@evil.corp"):
+    """Create a spam."""
+    msgrcpt = MsgrcptFactory(
+        bspam_level=999.0, content="S", rs=" ",
+        rid__email=smart_bytes(rcpt),
+        rid__domain="com.test",
+        mail__sid__email=smart_bytes(sender),
+        mail__sid__domain="",
+    )
+    QuarantineFactory(
+        mail=msgrcpt.mail,
+        mail_text=smart_bytes(SPAM_BODY.format(rcpt=rcpt, sender=sender))
+    )
+    return msgrcpt

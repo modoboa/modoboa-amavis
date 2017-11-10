@@ -1,6 +1,7 @@
 """Amavis tests."""
 
 from django.core.urlresolvers import reverse
+from django.utils.encoding import smart_text
 
 from modoboa.admin import factories as admin_factories
 from modoboa.admin import models as admin_models
@@ -19,56 +20,7 @@ class TestDataMixin(object):
     def setUpTestData(cls):
         """Create some content."""
         super(TestDataMixin, cls).setUpTestData()
-        cls.msgrcpt = factories.MsgrcptFactory(
-            bspam_level=999.0, content="S", rs=" ",
-            rid__email=b"user@test.com",
-            rid__domain="com.test"
-        )
-        cls.quarantine = factories.QuarantineFactory(
-            mail=cls.msgrcpt.mail,
-            mail_text=b"""X-Envelope-To: <user@test.com>
-X-Envelope-To-Blocked: <user@test.com>
-X-Quarantine-ID: <nq6ekd4wtXZg>
-X-Spam-Flag: YES
-X-Spam-Score: 1000.985
-X-Spam-Level: ****************************************************************
-X-Spam-Status: Yes, score=1000.985 tag=2 tag2=6.31 kill=6.31
-	tests=[ALL_TRUSTED=-1, GTUBE=1000, PYZOR_CHECK=1.985]
-	autolearn=no autolearn_force=no
-Received: from demo.modoboa.org ([127.0.0.1])
-	by localhost (demo.modoboa.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id nq6ekd4wtXZg for <user@demo.local>;
-	Thu,  9 Nov 2017 15:59:52 +0100 (CET)
-Received: from demo.modoboa.org (localhost [127.0.0.1])
-	by demo.modoboa.org (Postfix) with ESMTP
-	for <user@demo.local>; Thu,  9 Nov 2017 15:59:52 +0100 (CET)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Subject: Sample message
-From: spam@example.net
-To: user@demo.local
-Message-ID: <151023959268.5550.5713670714483771838@demo.modoboa.org>
-User-Agent: Modoboa 1.9.1
-Date: Thu, 09 Nov 2017 15:59:52 +0100
-
-This is the GTUBE, the
-        Generic
-        Test for
-        Unsolicited
-        Bulk
-        Email
-
-If your spam filter supports it, the GTUBE provides a test by which you
-can verify that the filter is installed correctly and is detecting incoming
-spam. You can send yourself a test mail containing the following string of
-characters (in upper case and with no white spaces and line breaks):
-
-XJS*C4JDBQADN1.NSBN3*2IDNEN*GTUBE-STANDARD-ANTI-UBE-TEST-EMAIL*C.34X
-
-You should send this test mail from an account outside of your network.
-"""
-        )
+        cls.msgrcpt = factories.create_spam("user@test.com")
 
 
 class DomainTestCase(ModoTestCase):
@@ -211,6 +163,11 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         super(ViewsTestCase, cls).setUpTestData()
         admin_factories.populate_database()
 
+    def tearDown(self):
+        """Restore msgrcpt state."""
+        self.msgrcpt.rs = " "
+        self.msgrcpt.save(update_fields=["rs"])
+
     def test_index(self):
         """Test index view."""
         url = reverse("modoboa_amavis:index")
@@ -225,14 +182,72 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         """Test view_mail view."""
         mail_id = self.msgrcpt.mail.mail_id
         url = reverse("modoboa_amavis:mail_detail", args=[mail_id])
-        url = "{}?rcpt={}".format(url, self.msgrcpt.rid.email)
+        url = "{}?rcpt={}".format(url, smart_text(self.msgrcpt.rid.email))
         response = self.ajax_get(url)
         self.assertIn("menu", response)
         url = reverse("modoboa_amavis:mailcontent_get", args=[mail_id])
         self.assertIn(url, response["listing"])
 
         response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
-    def test_release_msg(self):
-        """Try to release a message."""
-        pass
+    def test_viewmail_selfservice(self):
+        """Test view_mail in self-service mode."""
+        self.client.logout()
+
+        mail_id = self.msgrcpt.mail.mail_id
+        url = reverse("modoboa_amavis:mail_detail", args=[mail_id])
+        url = "{}?secret_id={}".format(
+            url, smart_text(self.msgrcpt.mail.secret_id))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+        self.set_global_parameter("self_service", True)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+        url = "{}&rcpt={}".format(url, smart_text(self.msgrcpt.rid.email))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        url = reverse("modoboa_amavis:mailcontent_get", args=[mail_id])
+        url = "{}?secret_id={}".format(
+            url, smart_text(self.msgrcpt.mail.secret_id))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_viewheaders(self):
+        """Test headers display."""
+        mail_id = self.msgrcpt.mail.mail_id
+        url = reverse("modoboa_amavis:headers_detail", args=[mail_id])
+        response = self.client.get(url)
+        self.assertContains(response, b"X-Spam-Flag: YES")
+
+    def test_delete_msg(self):
+        """Test delete view."""
+
+        # Initiate session
+        url = reverse("modoboa_amavis:_mail_list")
+        response = self.ajax_get(url)
+
+        mail_id = self.msgrcpt.mail.mail_id
+        url = reverse("modoboa_amavis:mail_delete", args=[mail_id])
+        data = {"rcpt": smart_text(self.msgrcpt.rid.email)}
+        response = self.ajax_post(url, data)
+        self.msgrcpt.refresh_from_db()
+        self.assertEqual(self.msgrcpt.rs, "D")
+        self.assertEqual(
+            response["message"], "1 message deleted successfully")
+
+    def test_delete_selfservice(self):
+        """Test delete view in self-service mode."""
+        self.client.logout()
+        mail_id = self.msgrcpt.mail.mail_id
+        url = reverse("modoboa_amavis:mail_delete", args=[mail_id])
+        url = "{}?secret_id={}".format(
+            url, smart_text(self.msgrcpt.mail.secret_id))
+        self.set_global_parameter("self_service", True)
+        self.ajax_get(url, status=400)
+        url = "{}&rcpt={}".format(url, smart_text(self.msgrcpt.rid.email))
+        self.ajax_get(url)
+        self.msgrcpt.refresh_from_db()
+        self.assertEqual(self.msgrcpt.rs, "D")
