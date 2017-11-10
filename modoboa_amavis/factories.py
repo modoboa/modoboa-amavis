@@ -51,6 +51,32 @@ XJS*C4JDBQADN1.NSBN3*2IDNEN*GTUBE-STANDARD-ANTI-UBE-TEST-EMAIL*C.34X
 You should send this test mail from an account outside of your network.
 """
 
+VIRUS_BODY = """Subject: Virus Test Message (EICAR)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="huq684BweRXVnRxX"
+Content-Disposition: inline
+Date: Sun, 06 Nov 2011 10:08:18 -0800
+
+
+--huq684BweRXVnRxX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+This is a virus test message. It contains an attached file 'eicar.com',
+which contains the EICAR virus <http://eicar.org/86-0-Intended-use.html>
+test pattern.
+
+
+--huq684BweRXVnRxX
+Content-Type: application/x-msdos-program
+Content-Disposition: attachment; filename="eicar.com"
+Content-Transfer-Encoding: quoted-printable
+
+X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*=0A
+--huq684BweRXVnRxX--
+"""
+
 
 class MaddrFactory(factory.DjangoModelFactory):
     """Factory for Maddr."""
@@ -110,17 +136,30 @@ class QuarantineFactory(factory.DjangoModelFactory):
     mail = factory.SubFactory(MsgsFactory)
 
 
-def create_spam(rcpt, sender="spam@evil.corp", rs=" "):
-    """Create a spam."""
+def create_quarantined_msg(rcpt, sender, rs, body, **kwargs):
+    """Create a quarantined msg."""
     msgrcpt = MsgrcptFactory(
-        bspam_level=999.0, content="S", rs=rs,
+        rs=rs,
         rid__email=smart_bytes(rcpt),
-        rid__domain="com.test",
+        rid__domain="com.test",  # FIXME
         mail__sid__email=smart_bytes(sender),
-        mail__sid__domain=""
+        mail__sid__domain="",  # FIXME
+        **kwargs
     )
     QuarantineFactory(
         mail=msgrcpt.mail,
         mail_text=smart_bytes(SPAM_BODY.format(rcpt=rcpt, sender=sender))
     )
     return msgrcpt
+
+
+def create_spam(rcpt, sender="spam@evil.corp", rs=" "):
+    """Create a spam."""
+    body = SPAM_BODY.format(rcpt=rcpt, sender=sender)
+    return create_quarantined_msg(
+        rcpt, sender, rs, body, bspam_level=999.0, content="S")
+
+
+def create_virus(rcpt, sender="virus@evil.corp", rs=" "):
+    """Create a virus."""
+    return create_quarantined_msg(rcpt, sender, rs, VIRUS_BODY, content="V")
