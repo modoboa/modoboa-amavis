@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-20 14:57+0200\n"
+"POT-Creation-Date: 2017-11-10 18:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -237,65 +237,69 @@ msgstr ""
 msgid "Content filter"
 msgstr ""
 
-#: lib.py:62
+#: lib.py:67
 #, python-format
 msgid "Connection to amavis failed: %s"
 msgstr ""
 
-#: lib.py:130
+#: lib.py:135
+msgid "Failed to find {} binary"
+msgstr ""
+
+#: lib.py:149
 msgid "No recipient found"
 msgstr ""
 
-#: lib.py:142
+#: lib.py:161
 msgid "Local domain not found"
 msgstr ""
 
-#: management/commands/amnotify.py:60
+#: management/commands/amnotify.py:57
 msgid "[modoboa] Pending release requests"
 msgstr ""
 
-#: models.py:94
+#: models.py:95
 msgid "Virus filter"
 msgstr ""
 
-#: models.py:95 models.py:106 models.py:117
+#: models.py:96 models.py:107 models.py:118
 msgid "yes"
 msgstr ""
 
-#: models.py:96 models.py:107 models.py:118
+#: models.py:97 models.py:108 models.py:119
 msgid "no"
 msgstr ""
 
-#: models.py:97 models.py:108 models.py:119
+#: models.py:98 models.py:109 models.py:120
 #: templates/modoboa_amavis/domain_content_filter.html:17
 msgid "default"
 msgstr ""
 
-#: models.py:100
+#: models.py:101
 msgid "Bypass virus checks or not. Choose 'default' to use global settings."
 msgstr ""
 
-#: models.py:105
+#: models.py:106
 msgid "Spam filter"
 msgstr ""
 
-#: models.py:111
+#: models.py:112
 msgid "Bypass spam checks or not. Choose 'default' to use global settings."
 msgstr ""
 
-#: models.py:116
+#: models.py:117
 msgid "Banned filter"
 msgstr ""
 
-#: models.py:122
+#: models.py:123
 msgid "Bypass banned checks or not. Choose 'default' to use global settings."
 msgstr ""
 
-#: models.py:186
+#: models.py:187
 msgid "Spam marker"
 msgstr ""
 
-#: models.py:189
+#: models.py:190
 msgid ""
 "Modify spam subject using the specified text. Choose 'default' to use global "
 "settings."
@@ -439,55 +443,55 @@ msgstr ""
 msgid "View full headers"
 msgstr ""
 
-#: views.py:164 views.py:222 views.py:226 views.py:258 views.py:263
-#: views.py:265
+#: views.py:165 views.py:219 views.py:223 views.py:255 views.py:260
+#: views.py:262
 msgid "Invalid request"
 msgstr ""
 
-#: views.py:227
+#: views.py:224
 msgid "Message deleted"
 msgstr ""
 
-#: views.py:244
+#: views.py:241
 #, python-format
 msgid "%(count)d message deleted successfully"
 msgid_plural "%(count)d messages deleted successfully"
 msgstr[0] ""
 msgstr[1] ""
 
-#: views.py:268
+#: views.py:265
 msgid "Request sent"
 msgstr ""
 
-#: views.py:274
+#: views.py:271
 msgid "Message released"
 msgstr ""
 
-#: views.py:301
+#: views.py:298
 #, python-format
 msgid "%(count)d request sent"
 msgid_plural "%(count)d requests sent"
 msgstr[0] ""
 msgstr[1] ""
 
-#: views.py:323
+#: views.py:320
 #, python-format
 msgid "%(count)d message released successfully"
 msgid_plural "%(count)d messages released successfully"
 msgstr[0] ""
 msgstr[1] ""
 
-#: views.py:360
+#: views.py:357
 #, python-format
 msgid "%(count)d message processed successfully"
 msgid_plural "%(count)d messages processed successfully"
 msgstr[0] ""
 msgstr[1] ""
 
-#: views.py:394
+#: views.py:391
 msgid "Select a database"
 msgstr ""
 
-#: views.py:398
+#: views.py:395
 msgid "Validate"
 msgstr ""
