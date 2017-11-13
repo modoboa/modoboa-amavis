@@ -43,6 +43,11 @@ Run the following commands to setup the database tables::
 Finally, restart the python process running modoboa (uwsgi, gunicorn,
 apache, whatever).
 
+Note
+----
+Notice that if you dont configure amavis and its database, Modoboa
+won't work. Check `docs/setup` for more information.
+
 .. |travis| image:: https://travis-ci.org/modoboa/modoboa-amavis.svg?branch=master
    :target: https://travis-ci.org/modoboa/modoboa-amavis
 
