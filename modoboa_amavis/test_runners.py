@@ -1,7 +1,10 @@
 """Custom test runner."""
 
+from __future__ import unicode_literals
+
 from django.apps import apps
 from django.test.runner import DiscoverRunner
+
 
 
 class DisableMigrations(object):

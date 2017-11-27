@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 from django.core import mail
 from django.core.management.base import BaseCommand
