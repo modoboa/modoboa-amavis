@@ -47,7 +47,7 @@ class DomainPolicyForm(forms.ModelForm):
         for field in self.fields.keys():
             self.fields[field].required = False
 
-    def save(self, user, commit=True):
+    def save(self, user, commit=True, **kwargs):
         policy = super(DomainPolicyForm, self).save(commit=False)
         for field in ['bypass_spam_checks', 'bypass_virus_checks',
                       'bypass_banned_checks']:
