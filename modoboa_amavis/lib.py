@@ -181,8 +181,14 @@ class SpamassassinClient(object):
                 if mbox is None:
                     username = self._default_username
                 else:
-                    username = mbox.full_address
+                    if isinstance(mbox, admin_models.Mailbox):
+                        username = mbox.full_address
+                    elif isinstance(mbox, admin_models.AliasRecipient):
+                        username = mbox.address
+                    else:
+                        username = None
                     condition = (
+                        username is not None and
                         username not in self._setup_cache and
                         setup_manual_learning_for_mbox(mbox))
                     if condition:
@@ -375,12 +381,16 @@ def setup_manual_learning_for_mbox(mbox):
     :return: True if learning has been setup, False otherwise
     """
     result = False
-    pname = mbox.full_address[:32]
-    if not Policy.objects.filter(policy_name=pname).exists():
-        policy = create_user_and_policy(pname)
-        policy.sa_username = mbox.full_address
-        policy.save()
-        for alias in mbox.alias_addresses:
-            create_user_and_use_policy(alias, policy)
-        result = True
+    if (isinstance(mbox, admin_models.AliasRecipient) and
+       mbox.r_mailbox is not None):
+        mbox = mbox.r_mailbox
+    if isinstance(mbox, admin_models.Mailbox):
+        pname = mbox.full_address[:32]
+        if not Policy.objects.filter(policy_name=pname).exists():
+            policy = create_user_and_policy(pname)
+            policy.sa_username = mbox.full_address
+            policy.save()
+            for alias in mbox.alias_addresses:
+                create_user_and_use_policy(alias, policy)
+            result = True
     return result
