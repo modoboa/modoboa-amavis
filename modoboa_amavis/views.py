@@ -12,7 +12,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template import loader, Context
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_text, smart_str
 from django.utils.translation import ugettext as _, ungettext
 
 from django.contrib.auth.decorators import login_required
@@ -183,7 +183,7 @@ def viewmail(request, mail_id):
 def viewheaders(request, mail_id):
     """Display message headers."""
     content = get_connector().get_mail_content(mail_id)
-    msg = email.message_from_string(content)
+    msg = email.message_from_string(smart_str(content))
     headers = []
     for name, value in msg.items():
         headers += [(name, value)]

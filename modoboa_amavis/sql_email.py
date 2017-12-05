@@ -6,6 +6,7 @@ An email representation based on a database record.
 from __future__ import unicode_literals
 
 from django.template.loader import render_to_string
+from django.utils.encoding import smart_str
 
 from modoboa.lib.email_utils import Email
 
@@ -43,7 +44,7 @@ class SQLemail(Email):
 
         if self._msg is None:
             mail_text = get_connector().get_mail_content(self.mailid)
-            self._msg = email.message_from_string(mail_text)
+            self._msg = email.message_from_string(smart_str(mail_text))
             self._parse(self._msg)
         return self._msg
 
