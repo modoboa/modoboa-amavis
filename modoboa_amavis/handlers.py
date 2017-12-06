@@ -16,7 +16,7 @@ from modoboa.parameters import tools as param_tools
 
 from .lib import (
     create_user_and_policy, update_user_and_policy, delete_user_and_policy,
-    create_user_and_use_policy, delete_user, manual_learning_enabled
+    create_user_and_use_policy, delete_user
 )
 from .models import Policy, Users
 from .sql_connector import get_connector

@@ -5,6 +5,8 @@ An email representation based on a database record.
 
 from __future__ import unicode_literals
 
+import email
+
 from django.template.loader import render_to_string
 
 from modoboa.lib.email_utils import Email
@@ -38,8 +40,6 @@ class SQLemail(Email):
     @property
     def msg(self):
         """Get message's content."""
-        import email
-
         if self._msg is None:
             mail_text = get_connector().get_mail_content(self.mailid)
             self._msg = email.message_from_string(mail_text)
