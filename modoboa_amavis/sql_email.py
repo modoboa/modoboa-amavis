@@ -19,12 +19,11 @@ class SQLemail(Email):
     def __init__(self, *args, **kwargs):
         super(SQLemail, self).__init__(*args, **kwargs)
         fields = ["From", "To", "Cc", "Date", "Subject"]
-        for f in fields:
-            label = f
+        for field in fields:
             self.headers += [
-                {"name": label, "value": self.get_header(self.msg, f)}
+                {"name": field, "value": self.get_header(self.msg, field)}
             ]
-            setattr(self, label, self.msg[f])
+            setattr(self, field, self.msg[field])
         qreason = self.get_header(self.msg, "X-Amavis-Alert")
         self.qtype = ""
         self.qreason = ""
