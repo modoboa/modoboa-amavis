@@ -1,5 +1,7 @@
 """Amavis frontend default settings."""
 
+from __future__ import unicode_literals
+
 DATABASE_ROUTERS = ["modoboa_amavis.dbrouter.AmavisRouter"]
 
 SILENCED_SYSTEM_CHECKS = ["fields.W342", ]

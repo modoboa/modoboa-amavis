@@ -9,6 +9,8 @@ Provides:
 
 """
 
+from __future__ import unicode_literals
+
 from django.utils.translation import ugettext_lazy
 
 from modoboa.admin.models import Domain

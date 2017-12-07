@@ -2,6 +2,8 @@
 Amavis frontend template tags.
 """
 
+from __future__ import unicode_literals
+
 from django import template
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string

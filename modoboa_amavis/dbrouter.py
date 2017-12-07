@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+
+
 class AmavisRouter(object):
 
     """A router to control all database operations on models in
