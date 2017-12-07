@@ -127,9 +127,11 @@ def index(request):
         if request.user.role != "SimpleUsers":
             if conf["user_level_learning"] or conf["domain_level_learning"]:
                 check_learning_rcpt = "true"
-    return render(request, "modoboa_amavis/index.html", dict(
-        selection="quarantine", check_learning_rcpt=check_learning_rcpt
-    ))
+    context = {
+        "selection": "quarantine",
+        "check_learning_rcpt": check_learning_rcpt
+    }
+    return render(request, "modoboa_amavis/index.html", context)
 
 
 def getmailcontent_selfservice(request, mail_id):
@@ -155,9 +157,12 @@ def viewmail_selfservice(request, mail_id,
     secret_id = request.GET.get("secret_id", "")
     if rcpt is None:
         raise Http404
-    return render(request, tplname, dict(
-        mail_id=mail_id, rcpt=rcpt, secret_id=secret_id
-    ))
+    context = {
+        "mail_id": mail_id,
+        "rcpt": rcpt,
+        "secret_id": secret_id
+    }
+    return render(request, tplname, context)
 
 
 @selfservice(viewmail_selfservice)

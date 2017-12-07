@@ -47,11 +47,15 @@ class Command(BaseCommand):
         """Build new EmailMessage instance."""
         if self.options["verbose"]:
             print("Sending notification to %s" % rcpt)
+        context = {
+            "total": total,
+            "requests": reqs,
+            "baseurl": self.baseurl,
+            "listingurl": self.listingurl
+        }
         content = render_to_string(
-            "modoboa_amavis/notifications/pending_requests.html", dict(
-                total=total, requests=reqs,
-                baseurl=self.baseurl, listingurl=self.listingurl
-            )
+            "modoboa_amavis/notifications/pending_requests.html",
+            context
         )
         msg = mail.EmailMessage(
             _("[modoboa] Pending release requests"),

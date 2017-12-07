@@ -45,4 +45,5 @@ class Amavis(ModoExtension):
                 domalias_pattern = "@{0}".format(domalias.name)
                 create_user_and_use_policy(domalias_pattern, policy)
 
+
 exts_pool.register_extension(Amavis)
