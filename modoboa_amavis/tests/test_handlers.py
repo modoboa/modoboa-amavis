@@ -2,13 +2,17 @@
 
 from __future__ import unicode_literals
 
+import os
+
 from django.core.urlresolvers import reverse
+from django.test import override_settings
 
 from modoboa.admin import factories as admin_factories
 from modoboa.admin import models as admin_models
 from modoboa.core import models as core_models
 from modoboa.lib.tests import ModoTestCase
 
+from .. import factories
 from .. import lib
 from .. import models
 
@@ -99,6 +103,7 @@ class DomainTestCase(ModoTestCase):
         self.assertEqual(policy.spam_subject_tag2, custom_title)
 
 
+@override_settings(SA_LOOKUP_PATH=(os.path.dirname(__file__), ))
 class ManualLearningTestCase(ModoTestCase):
     """Check manual learning mode."""
 
@@ -162,3 +167,15 @@ class ManualLearningTestCase(ModoTestCase):
         self.assertTrue(
             models.Users.objects.filter(email=values["email"]).exists()
         )
+
+    def test_learn_alias_spam_as_admin(self):
+        """Check learning spam for an alias address as admin user."""
+        user = core_models.User.objects.get(username="admin")
+        recipient_db = "user"
+        rcpt = "alias@test.com"
+        sender = "spam@evil.corp"
+        content = factories.SPAM_BODY.format(rcpt=rcpt, sender=sender)
+
+        saclient = lib.SpamassassinClient(user, recipient_db)
+        result = saclient.learn_spam(rcpt, content)
+        self.assertTrue(result)
