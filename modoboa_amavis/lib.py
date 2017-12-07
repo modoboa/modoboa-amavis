@@ -115,6 +115,8 @@ class SpamassassinClient(object):
             self._learn_cmd += " --{0} --no-sync -u {1}"
             self._learn_cmd_kwargs = {}
             self._expected_exit_codes = [0]
+            self._sync_cmd = self._find_binary("sa-learn")
+            self._sync_cmd += " -u {0} --sync"
         else:
             self._learn_cmd = self._find_binary("spamc")
             self._learn_cmd += " -d {0} -p {1}".format(
@@ -215,8 +217,8 @@ class SpamassassinClient(object):
         """Call this method at the end of the processing."""
         if self._sa_is_local:
             for username in self._username_cache:
-                exec_cmd("sa-learn -u {0} --sync".format(username),
-                         **self._learn_cmd_kwargs)
+                cmd = self._sync_cmd.format(username)
+                exec_cmd(cmd, **self._learn_cmd_kwargs)
 
 
 class QuarantineNavigationParameters(NavigationParameters):
