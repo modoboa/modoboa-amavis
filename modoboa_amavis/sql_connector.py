@@ -88,9 +88,7 @@ class SQLconnector(object):
         return None
 
     def _apply_extra_select_filters(self, messages):
-        """Just a hook to apply additional filters to the queryset.
-
-        """
+        """Just a hook to apply additional filters to the queryset."""
         return messages
 
     def _get_quarantine_content(self):

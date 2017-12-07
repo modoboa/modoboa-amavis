@@ -5,6 +5,8 @@ An email representation based on a database record.
 
 from __future__ import unicode_literals
 
+import email
+
 from django.template.loader import render_to_string
 
 from modoboa.lib.email_utils import Email
@@ -19,12 +21,11 @@ class SQLemail(Email):
     def __init__(self, *args, **kwargs):
         super(SQLemail, self).__init__(*args, **kwargs)
         fields = ["From", "To", "Cc", "Date", "Subject"]
-        for f in fields:
-            label = f
+        for field in fields:
             self.headers += [
-                {"name": label, "value": self.get_header(self.msg, f)}
+                {"name": field, "value": self.get_header(self.msg, field)}
             ]
-            setattr(self, label, self.msg[f])
+            setattr(self, field, self.msg[field])
         qreason = self.get_header(self.msg, "X-Amavis-Alert")
         self.qtype = ""
         self.qreason = ""
@@ -39,8 +40,6 @@ class SQLemail(Email):
     @property
     def msg(self):
         """Get message's content."""
-        import email
-
         if self._msg is None:
             mail_text = get_connector().get_mail_content(self.mailid)
             self._msg = email.message_from_string(mail_text)
