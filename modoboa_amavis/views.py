@@ -135,7 +135,7 @@ def index(request):
 
 
 def getmailcontent_selfservice(request, mail_id):
-    mail = SQLemail(mail_id, mformat="plain", links="0")
+    mail = SQLemail(mail_id, mformat="plain")
     return render(request, "common/viewmail.html", {
         "headers": mail.render_headers(),
         "mailbody": mail.body
@@ -144,7 +144,7 @@ def getmailcontent_selfservice(request, mail_id):
 
 @selfservice(getmailcontent_selfservice)
 def getmailcontent(request, mail_id):
-    mail = SQLemail(mail_id, mformat="plain", links="0")
+    mail = SQLemail(mail_id, mformat="plain")
     return render(request, "common/viewmail.html", {
         "headers": mail.render_headers(),
         "mailbody": mail.body
