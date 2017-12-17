@@ -7,6 +7,9 @@ An email representation based on a database record.
 from __future__ import unicode_literals
 
 from django.template.loader import render_to_string
+from django.utils.encoding import smart_text
+
+from html2text import HTML2Text
 
 from modoboa.lib.email_utils import Email
 
@@ -36,6 +39,27 @@ class SQLemail(Email):
 
     def _fetch_message(self):
         return get_connector().get_mail_content(self.mailid)
+
+    @property
+    def body(self):
+        if self._body is None:
+            super(SQLemail, self).body
+
+        # if there's no plain text version available attempt to make one by
+        # sanitising the html version. The output isn't always pretty but it
+        # is readable, better than a blank screen and helps the user decide
+        # if the message is spam or ham.
+        if self.dformat == "plain" and not self.contents["plain"] \
+                and self.contents["html"]:
+            h = HTML2Text()
+            h.ignore_tables = True
+            h.images_to_alt = True
+            mail_text = h.handle(self.contents["html"])
+            self.contents["plain"] = smart_text(mail_text)
+            self._post_process_plain()
+            self._body = self.viewmail_plain()
+
+        return self._body
 
     def render_headers(self, **kwargs):
         context = {
