@@ -12,7 +12,7 @@ import struct
 import six
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.encoding import smart_bytes, smart_text
 from django.utils.translation import ugettext as _
 

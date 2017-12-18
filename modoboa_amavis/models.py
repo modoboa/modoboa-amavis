@@ -45,7 +45,7 @@ class Msgs(models.Model):
     am_id = models.CharField(max_length=60)
     time_num = models.IntegerField()
     time_iso = models.CharField(max_length=48)
-    sid = models.ForeignKey(Maddr, db_column='sid')
+    sid = models.ForeignKey(Maddr, db_column='sid', on_delete=models.CASCADE)
     policy = models.CharField(max_length=765, blank=True)
     client_addr = models.CharField(max_length=765, blank=True)
     size = models.IntegerField()
@@ -68,8 +68,8 @@ class Msgs(models.Model):
 
 class Msgrcpt(models.Model):
     partition_tag = models.IntegerField(null=True, blank=True)
-    mail = models.ForeignKey(Msgs, primary_key=True)
-    rid = models.ForeignKey(Maddr, db_column='rid')
+    mail = models.ForeignKey(Msgs, primary_key=True, on_delete=models.CASCADE)
+    rid = models.ForeignKey(Maddr, db_column='rid', on_delete=models.CASCADE)
     rseqnum = models.IntegerField(default=0)
     is_local = models.CharField(max_length=3)
     content = models.CharField(max_length=3)
@@ -209,7 +209,7 @@ class Policy(models.Model):
 
 class Quarantine(models.Model):
     partition_tag = models.IntegerField(null=True, blank=True)
-    mail = models.ForeignKey(Msgs, primary_key=True)
+    mail = models.ForeignKey(Msgs, primary_key=True, on_delete=models.CASCADE)
     chunk_ind = models.IntegerField()
     mail_text = models.BinaryField()
 
@@ -223,7 +223,7 @@ class Quarantine(models.Model):
 class Users(models.Model):
     id = models.AutoField(primary_key=True)
     priority = models.IntegerField()
-    policy = models.ForeignKey(Policy)
+    policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
     email = models.CharField(unique=True, max_length=255)
     fullname = models.CharField(max_length=765, blank=True)
 

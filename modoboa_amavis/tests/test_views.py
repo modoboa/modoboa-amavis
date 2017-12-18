@@ -8,7 +8,7 @@ import mock
 
 from django.core import mail
 from django.core.management import call_command
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import override_settings
 from django.utils.encoding import smart_text
 

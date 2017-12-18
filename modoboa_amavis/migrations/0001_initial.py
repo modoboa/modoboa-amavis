@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
             name='Msgrcpt',
             fields=[
                 ('partition_tag', models.IntegerField(null=True, blank=True)),
-                ('mail', models.ForeignKey(primary_key=True, serialize=False, to='modoboa_amavis.Msgs')),
+                ('mail', models.ForeignKey(primary_key=True, serialize=False, to='modoboa_amavis.Msgs', on_delete=models.CASCADE)),
                 ('rseqnum', models.IntegerField(default=0)),
                 ('is_local', models.CharField(max_length=3)),
                 ('content', models.CharField(max_length=3)),
@@ -146,7 +146,7 @@ class Migration(migrations.Migration):
             name='Quarantine',
             fields=[
                 ('partition_tag', models.IntegerField(null=True, blank=True)),
-                ('mail', models.ForeignKey(primary_key=True, serialize=False, to='modoboa_amavis.Msgs')),
+                ('mail', models.ForeignKey(primary_key=True, serialize=False, to='modoboa_amavis.Msgs', on_delete=models.CASCADE)),
                 ('chunk_ind', models.IntegerField()),
                 ('mail_text', models.TextField()),
             ],
