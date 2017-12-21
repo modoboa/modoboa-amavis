@@ -396,3 +396,15 @@ def setup_manual_learning_for_mbox(mbox):
                 create_user_and_use_policy(alias, policy)
             result = True
     return result
+
+
+def double_decode_utf8(s):
+    """Fix utf-8 strings that contain utf-8 escaped characters
+
+    Didn't even know the raw_unicode_escape encoding existed :)
+    https://docs.python.org/2/library/codecs.html?highlight=raw_unicode_escape#python-specific-encodings
+    https://docs.python.org/3/library/codecs.html?highlight=raw_unicode_escape#python-specific-encodings
+    """
+    assert isinstance(s, six.text_type), \
+        ("s should be of type %s" % type(six.text_type))
+    return s.encode("raw_unicode_escape").decode("utf-8")

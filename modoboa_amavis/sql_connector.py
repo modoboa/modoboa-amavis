@@ -13,6 +13,7 @@ from django.utils.encoding import smart_bytes
 from modoboa.admin.models import Domain
 from modoboa.lib.db_utils import db_type
 
+from .lib import double_decode_utf8
 from .models import Quarantine, Msgrcpt, Maddr
 
 
@@ -163,9 +164,9 @@ class SQLconnector(object):
             if qm["rs"] == 'D':
                 continue
             m = {
-                "from": qm["mail__from_addr"],
+                "from": double_decode_utf8(qm["mail__from_addr"]),
                 "to": smart_bytes(qm["rid__email"]),
-                "subject": qm["mail__subject"],
+                "subject": double_decode_utf8(qm["mail__subject"]),
                 "mailid": smart_bytes(qm["mail__mail_id"]),
                 "date": datetime.datetime.fromtimestamp(qm["mail__time_num"]),
                 "type": qm["content"],
