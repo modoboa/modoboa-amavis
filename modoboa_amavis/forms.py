@@ -25,15 +25,15 @@ class DomainPolicyForm(forms.ModelForm):
                   'spam_tag2_level', 'spam_subject_tag2',
                   'spam_kill_level', 'bypass_banned_checks')
         widgets = {
-            'bypass_virus_checks': form_utils.InlineRadioSelect(),
-            'bypass_spam_checks': form_utils.InlineRadioSelect(),
+            'bypass_virus_checks': form_utils.HorizontalRadioSelect(),
+            'bypass_spam_checks': form_utils.HorizontalRadioSelect(),
             'spam_tag2_level': forms.TextInput(
                 attrs={'class': 'form-control'}),
             'spam_kill_level': forms.TextInput(
                 attrs={'class': 'form-control'}),
             'spam_subject_tag2': forms.TextInput(
                 attrs={'class': 'form-control'}),
-            'bypass_banned_checks': form_utils.InlineRadioSelect(),
+            'bypass_banned_checks': form_utils.HorizontalRadioSelect(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -126,7 +126,7 @@ class ParametersForm(param_forms.AdminParametersForm):
         choices=[("inet", "inet"), ("unix", "unix")],
         initial="unix",
         help_text=_("Mode used to access the PDP server"),
-        widget=form_utils.InlineRadioSelect(attrs={"type": "checkbox"})
+        widget=form_utils.HorizontalRadioSelect()
     )
 
     am_pdp_host = forms.CharField(

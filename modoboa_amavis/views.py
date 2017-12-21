@@ -8,10 +8,10 @@ import email
 
 import six
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
-from django.template import loader, Context
+from django.template import loader
 from django.utils.encoding import smart_text, smart_str
 from django.utils.translation import ugettext as _, ungettext
 
@@ -177,7 +177,7 @@ def viewmail(request, mail_id):
         if rcpt == mb.full_address or rcpt in mb.alias_addresses:
             get_connector().set_msgrcpt_status(rcpt, mail_id, 'V')
     content = loader.get_template("modoboa_amavis/_email_display.html").render(
-        Context({"mail_id": mail_id}))
+        {"mail_id": mail_id})
     menu = viewm_menu(request.user, mail_id, rcpt)
     ctx = getctx("ok", menu=menu, listing=content)
     request.session['location'] = 'viewmail'
