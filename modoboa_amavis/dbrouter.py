@@ -30,6 +30,10 @@ class AmavisRouter(object):
         Make sure the auth app only appears in the 'amavis'
         database.
         """
-        if db == "amavis":
-            return app_label == "modoboa_amavis"
+        if app_label == "modoboa_amavis":
+            # modoboa_amavis migrations should be created in the amavis database.
+            return (db == "amavis")
+        elif db == "amavis":
+            # Don't create non modoboa_amavis migrations in the amavis database.
+            return False
         return None
