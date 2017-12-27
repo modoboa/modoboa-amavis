@@ -104,13 +104,13 @@ class SQLconnector(object):
             search_flt = None
             for crit in criteria.split(","):
                 if crit == "from_addr":
-                    nfilter = Q(mail__from_addr__contains=pattern)
+                    nfilter = Q(mail__from_addr__icontains=pattern)
                 elif crit == "subject":
-                    nfilter = Q(mail__subject__contains=pattern)
+                    nfilter = Q(mail__subject__icontains=pattern)
                 elif crit == "to":
                     if "str_email" not in self._annotations:
                         self._annotations["str_email"] = ConvertFrom("rid__email")
-                    nfilter = Q(str_email__contains=pattern)
+                    nfilter = Q(str_email__icontains=pattern)
                 else:
                     continue
                 search_flt = (
