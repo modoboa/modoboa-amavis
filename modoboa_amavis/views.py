@@ -30,7 +30,7 @@ from .lib import (
 )
 from .forms import LearningRecipientForm
 from .models import Msgrcpt
-from .sql_connector import get_connector
+from .sql_connector import SQLconnector
 from .sql_email import SQLemail
 from .utils import smart_text
 
@@ -72,7 +72,7 @@ def listing_page(request):
     previous_page_id = int(navparams["page"]) if "page" in navparams else None
     navparams.store()
 
-    connector = get_connector(user=request.user, navparams=navparams)
+    connector = SQLconnector(user=request.user, navparams=navparams)
     context = get_listing_pages(request, connector)
     if context is None:
         context = {"length": 0}
@@ -99,7 +99,7 @@ def _listing(request):
     navparams = QuarantineNavigationParameters(request)
     navparams.store()
 
-    connector = get_connector(user=request.user, navparams=navparams)
+    connector = SQLconnector(user=request.user, navparams=navparams)
     context = get_listing_pages(request, connector)
     if context is None:
         return empty_quarantine()
@@ -169,11 +169,11 @@ def viewmail(request, mail_id):
     if rcpt is None:
         raise BadRequest(_("Invalid request"))
     if request.user.email == rcpt:
-        get_connector().set_msgrcpt_status(rcpt, mail_id, 'V')
+        SQLconnector().set_msgrcpt_status(rcpt, mail_id, 'V')
     elif hasattr(request.user, "mailbox"):
         mb = request.user.mailbox
         if rcpt == mb.full_address or rcpt in mb.alias_addresses:
-            get_connector().set_msgrcpt_status(rcpt, mail_id, 'V')
+            SQLconnector().set_msgrcpt_status(rcpt, mail_id, 'V')
     content = loader.get_template("modoboa_amavis/_email_display.html").render(
         {"mail_id": mail_id})
     menu = viewm_menu(request.user, mail_id, rcpt)
@@ -223,7 +223,7 @@ def delete_selfservice(request, mail_id):
     if rcpt is None:
         raise BadRequest(_("Invalid request"))
     try:
-        get_connector().set_msgrcpt_status(rcpt, mail_id, 'D')
+        SQLconnector().set_msgrcpt_status(rcpt, mail_id, 'D')
     except Msgrcpt.DoesNotExist:
         raise BadRequest(_("Invalid request"))
     return render_to_json_response(_("Message deleted"))
@@ -236,7 +236,7 @@ def delete(request, mail_id):
     :param str mail_id: message unique identifier
     """
     mail_id = check_mail_id(request, mail_id)
-    connector = get_connector()
+    connector = SQLconnector()
     valid_addresses = get_user_valid_addresses(request.user)
     for mid in mail_id:
         r, i = mid.split()
@@ -258,7 +258,7 @@ def release_selfservice(request, mail_id):
     secret_id = request.GET.get("secret_id", None)
     if rcpt is None or secret_id is None:
         raise BadRequest(_("Invalid request"))
-    connector = get_connector()
+    connector = SQLconnector()
     try:
         msgrcpt = connector.get_recipient_message(rcpt, mail_id)
     except Msgrcpt.DoesNotExist:
@@ -287,7 +287,7 @@ def release(request, mail_id):
     """
     mail_id = check_mail_id(request, mail_id)
     msgrcpts = []
-    connector = get_connector()
+    connector = SQLconnector()
     valid_addresses = get_user_valid_addresses(request.user)
     for mid in mail_id:
         r, i = mid.split()
@@ -347,7 +347,7 @@ def mark_messages(request, selection, mtype, recipient_db=None):
             "user" if request.user.role == "SimpleUsers" else "global"
         )
     selection = check_mail_id(request, selection)
-    connector = get_connector()
+    connector = SQLconnector()
     saclient = SpamassassinClient(request.user, recipient_db)
     for item in selection:
         rcpt, mail_id = item.split()

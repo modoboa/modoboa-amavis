@@ -12,7 +12,7 @@ from html2text import HTML2Text
 
 from modoboa.lib.email_utils import Email
 
-from .sql_connector import get_connector
+from .sql_connector import SQLconnector
 from .utils import smart_text
 
 
@@ -38,7 +38,7 @@ class SQLemail(Email):
             self.qreason = qreason
 
     def _fetch_message(self):
-        return get_connector().get_mail_content(self.mailid)
+        return SQLconnector().get_mail_content(self.mailid)
 
     @property
     def body(self):

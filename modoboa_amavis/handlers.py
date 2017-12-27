@@ -19,7 +19,7 @@ from .lib import (
     create_user_and_use_policy, delete_user
 )
 from .models import Policy, Users
-from .sql_connector import get_connector
+from .sql_connector import SQLconnector
 from . import forms
 
 
@@ -163,7 +163,7 @@ def check_for_pending_requests(sender, include_all, **kwargs):
     if condition:
         return []
 
-    nbrequests = get_connector(user=request.user).get_pending_requests()
+    nbrequests = SQLconnector(user=request.user).get_pending_requests()
     if not nbrequests:
         return [{"id": "nbrequests", "counter": 0}] if include_all \
             else []

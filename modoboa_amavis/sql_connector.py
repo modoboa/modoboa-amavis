@@ -6,14 +6,13 @@ import datetime
 
 import chardet
 
-from django.conf import settings
 from django.db.models import Q
+from django.utils import six
 
 from modoboa.admin.models import Domain
-from modoboa.lib.db_utils import db_type
 
 from .models import Quarantine, Msgrcpt, Maddr
-from .utils import fix_utf8_encoding, smart_bytes
+from .utils import ConvertFrom, fix_utf8_encoding, smart_bytes
 
 
 def reverse_domain_names(domains):
@@ -51,6 +50,7 @@ class SQLconnector(object):
         self.messages = None
 
         self._messages_count = None
+        self._annotations = {}
 
     def _exec(self, query, args):
         """Execute a raw SQL query.
@@ -66,10 +66,13 @@ class SQLconnector(object):
 
     def _apply_msgrcpt_simpleuser_filter(self, flt):
         """Apply specific filter for simple users."""
+        if "str_email" not in self._annotations:
+            self._annotations["str_email"] = ConvertFrom("rid__email")
+
         rcpts = [self.user.email]
         if hasattr(self.user, "mailbox"):
             rcpts += self.user.mailbox.alias_addresses
-        return flt & Q(rid__email__in=rcpts)
+        return flt & Q(str_email__in=rcpts)
 
     def _apply_msgrcpt_filters(self, flt):
         """Apply filters based on user's role."""
@@ -80,16 +83,6 @@ class SQLconnector(object):
                 self.user).values_list("name", flat=True)
             flt &= Q(rid__domain__in=reverse_domain_names(doms))
         return flt
-
-    def _apply_extra_search_filter(self, crit, pattern):
-        """Apply search filters using additional criterias."""
-        if crit == "to":
-            return Q(rid__email__contains=pattern)
-        return None
-
-    def _apply_extra_select_filters(self, messages):
-        """Just a hook to apply additional filters to the queryset."""
-        return messages
 
     def _get_quarantine_content(self):
         """Fetch quarantine content.
@@ -112,10 +105,12 @@ class SQLconnector(object):
                     nfilter = Q(mail__from_addr__contains=pattern)
                 elif crit == "subject":
                     nfilter = Q(mail__subject__contains=pattern)
+                elif crit == "to":
+                    if "str_email" not in self._annotations:
+                        self._annotations["str_email"] = ConvertFrom("rid__email")
+                    nfilter = Q(str_email__contains=pattern)
                 else:
-                    nfilter = self._apply_extra_search_filter(crit, pattern)
-                    if nfilter is None:
-                        continue
+                    continue
                 search_flt = (
                     nfilter if search_flt is None else search_flt | nfilter
                 )
@@ -128,9 +123,13 @@ class SQLconnector(object):
         flt &= Q(
             mail__in=Quarantine.objects.filter(chunk_ind=1).values("mail_id")
         )
-        messages = Msgrcpt.objects.select_related("mail", "rid").filter(flt)
-        messages = self._apply_extra_select_filters(messages)
-        return messages
+
+        return (
+            Msgrcpt.objects
+            .annotate(**self._annotations)
+            .select_related("mail", "rid")
+            .filter(flt)
+        )
 
     def messages_count(self):
         """Return the total number of messages living in the quarantine.
@@ -182,15 +181,23 @@ class SQLconnector(object):
     def get_recipient_message(self, address, mailid):
         """Retrieve a message for a given recipient.
         """
-        return Msgrcpt.objects.get(
-            mail=mailid, rid__email=smart_bytes(address))
+        assert isinstance(address, six.text_type),\
+            "address should be of type %s" % six.text_type.__name__
+
+        return Msgrcpt.objects\
+            .annotate(str_email=ConvertFrom("rid__email"))\
+            .get(mail=mailid, str_email=address)
 
     def set_msgrcpt_status(self, address, mailid, status):
         """Change the status (rs field) of a message recipient.
 
         :param string status: status
         """
-        addr = Maddr.objects.get(email=smart_bytes(address))
+        assert isinstance(address, six.text_type),\
+            "address should be of type %s" % six.text_type.__name__
+        addr = Maddr.objects\
+            .annotate(str_email=ConvertFrom("email"))\
+            .get(str_email=address)
         self._exec(
             "UPDATE msgrcpt SET rs=%s WHERE mail_id=%s AND rid=%s",
             [status, mailid, addr.id]
@@ -231,68 +238,3 @@ class SQLconnector(object):
         except UnicodeDecodeError:
             raise
         return content.decode(result["encoding"])
-
-
-class PgSQLconnector(SQLconnector):
-
-    """
-    The postgres version.
-
-    Make use of ``QuerySet.extra`` and postgres ``convert_from``
-    function to let the quarantine manager work as expected !
-
-    The T4 alias is not a random choice. The generated query was
-    dumped to found it. Be careful since it can changes with
-    future Django versions...
-
-    """
-
-    def _apply_msgrcpt_simpleuser_filter(self, flt):
-        """Return filters based on user's role. """
-        self._where = []
-        rcpts = [self.user.email]
-        if hasattr(self.user, "mailbox"):
-            rcpts += self.user.mailbox.alias_addresses
-        self._where.append(
-            "convert_from(maddr.email, '{}') IN ({})".format(
-                settings.AMAVIS_DEFAULT_DATABASE_ENCODING,
-                ','.join(["'%s'" % rcpt for rcpt in rcpts]))
-        )
-        return flt
-
-    def _apply_extra_search_filter(self, crit, pattern):
-        """Apply search filters using additional criterias."""
-        if crit == "to":
-            if not hasattr(self, "_where"):
-                self._where = []
-            self._where.append(
-                "convert_from(maddr.email, '{}') LIKE '%%{}%%'".format(
-                    settings.AMAVIS_DEFAULT_DATABASE_ENCODING, pattern)
-            )
-        return None
-
-    def _apply_extra_select_filters(self, messages):
-        """Just a hook to apply additional filters to the queryset."""
-        if hasattr(self, "_where"):
-            messages = messages.extra(where=self._where)
-        return messages
-
-    def get_recipient_message(self, address, mailid):
-        """Retrieve a message for a given recipient."""
-        qset = Msgrcpt.objects.filter(mail=mailid).extra(
-            where=["msgrcpt.rid=maddr.id",
-                   "convert_from(maddr.email, '{}') = '{}'".format(
-                       settings.AMAVIS_DEFAULT_DATABASE_ENCODING, address)],
-            tables=['maddr']
-        )
-        return qset.all()[0]
-
-
-def get_connector(**kwargs):
-    """Return the appropriate *connector* class.
-
-    The result depends on the DB engine in use.
-    """
-    if db_type("amavis") == 'postgres':
-        return PgSQLconnector(**kwargs)
-    return SQLconnector(**kwargs)
