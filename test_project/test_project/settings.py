@@ -286,8 +286,10 @@ TEST_RUNNER = "modoboa_amavis.test_runners.UnManagedModelTestRunner"
 DATABASES.update({  # noqa
     'amavis': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'amavis_test.db',
+        'NAME': 'amavis.db',
         'PORT': '',
         'ATOMIC_REQUESTS': True,
     },
 })
+# sqlite defaults to UTF-8
+AMAVIS_DEFAULT_DATABASE_ENCODING = 'UTF-8'
