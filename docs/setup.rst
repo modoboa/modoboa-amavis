@@ -45,6 +45,13 @@ amavis to allow quarantined messages release, read this :ref:`section
    Amavis configuration allows for separate lookup and storage
    databases but Modoboa doesn't support it yet.
 
+.. note::
+
+   ``$sql_partition_tag`` should remain undefined in ``amavisd.conf``. Modoboa
+   does not support the use of ``sql_partition_tag``, setting this value can
+   result in quarantined messages not showing or the wrong messages being
+   released or learnt as ham/spam.
+
 Connect Modoboa and Amavis
 ==========================
 

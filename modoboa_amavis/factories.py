@@ -100,7 +100,6 @@ class MsgsFactory(factory.DjangoModelFactory):
         model = models.Msgs
 
     mail_id = factory.Sequence(lambda n: smart_bytes("mailid{}".format(n)))
-    partition_tag = 0
     secret_id = factory.Sequence(lambda n: smart_bytes("id{}".format(n)))
     sid = factory.SubFactory(MaddrFactory)
     client_addr = "127.0.0.1"
@@ -119,7 +118,6 @@ class MsgrcptFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Msgrcpt
 
-    partition_tag = 0
     rseqnum = 1
     is_local = "Y"
     bl = "N"
@@ -134,7 +132,6 @@ class QuarantineFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Quarantine
 
-    partition_tag = 0
     chunk_ind = 1
     mail = factory.SubFactory(MsgsFactory)
 
