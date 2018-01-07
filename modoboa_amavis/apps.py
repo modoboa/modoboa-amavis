@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """AppConfig for amavis."""
 
 from __future__ import unicode_literals

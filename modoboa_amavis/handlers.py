@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Amavis handlers."""
 
 from __future__ import unicode_literals
@@ -30,7 +32,7 @@ def menu(sender, location, user, **kwargs):
         return [
             {"name": "quarantine",
              "label": _("Quarantine"),
-             "url": reverse('modoboa_amavis:index')}
+             "url": reverse("modoboa_amavis:index")}
         ]
     return []
 

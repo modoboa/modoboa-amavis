@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """SQL connector module."""
 
 from __future__ import unicode_literals
@@ -61,7 +63,7 @@ class SQLconnector(object):
         from django.db import connections, transaction
 
         with transaction.atomic():
-            cursor = connections['amavis'].cursor()
+            cursor = connections["amavis"].cursor()
             cursor.execute(query, args)
 
     def _apply_msgrcpt_simpleuser_filter(self, flt):
@@ -76,7 +78,7 @@ class SQLconnector(object):
 
     def _apply_msgrcpt_filters(self, flt):
         """Apply filters based on user's role."""
-        if self.user.role == 'SimpleUsers':
+        if self.user.role == "SimpleUsers":
             flt = self._apply_msgrcpt_simpleuser_filter(flt)
         elif not self.user.is_superuser:
             doms = Domain.objects.get_for_admin(
@@ -90,13 +92,13 @@ class SQLconnector(object):
         Filters: rs, rid, content
         """
         flt = (
-            Q(rs__in=[' ', 'V', 'R', 'p', 'S', 'H'])
-            if self.navparams.get('viewrequests', '0') != '1' else Q(rs='p')
+            Q(rs__in=[" ", "V", "R", "p", "S", "H"])
+            if self.navparams.get("viewrequests", "0") != "1" else Q(rs="p")
         )
         flt = self._apply_msgrcpt_filters(flt)
         pattern = self.navparams.get("pattern", "")
         if pattern:
-            criteria = self.navparams.get('criteria')
+            criteria = self.navparams.get("criteria")
             if criteria == "both":
                 criteria = "from_addr,subject,to"
             search_flt = None
@@ -116,7 +118,7 @@ class SQLconnector(object):
                 )
             if search_flt:
                 flt &= search_flt
-        msgtype = self.navparams.get('msgtype', None)
+        msgtype = self.navparams.get("msgtype", None)
         if msgtype is not None:
             flt &= Q(content=msgtype)
 
@@ -159,7 +161,7 @@ class SQLconnector(object):
         """Fetch a range of messages from the internal cache."""
         emails = []
         for qm in self.messages[start - 1:stop]:
-            if qm["rs"] == 'D':
+            if qm["rs"] == "D":
                 continue
             m = {
                 "from": fix_utf8_encoding(qm["mail__from_addr"]),
@@ -171,9 +173,9 @@ class SQLconnector(object):
                 "score": qm["bspam_level"],
                 "status": qm["rs"]
             }
-            if qm["rs"] in ['', ' ']:
+            if qm["rs"] in ["", " "]:
                 m["class"] = "unseen"
-            elif qm["rs"] == 'p':
+            elif qm["rs"] == "p":
                 m["class"] = "pending"
             emails.append(m)
         return emails
@@ -206,11 +208,11 @@ class SQLconnector(object):
     def get_domains_pending_requests(self, domains):
         """Retrieve pending release requests for a list of domains."""
         return Msgrcpt.objects.filter(
-            rs='p', rid__domain__in=reverse_domain_names(domains))
+            rs="p", rid__domain__in=reverse_domain_names(domains))
 
     def get_pending_requests(self):
         """Return the number of requests currently pending."""
-        rq = Q(rs='p')
+        rq = Q(rs="p")
         if not self.user.is_superuser:
             doms = Domain.objects.get_for_admin(self.user)
             if not doms.exists():

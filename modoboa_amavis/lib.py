@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
 
@@ -9,10 +9,9 @@ import socket
 import string
 import struct
 
-import six
-
 from django.conf import settings
 from django.urls import reverse
+from django.utils import six
 from django.utils.translation import ugettext as _
 
 from django.contrib.auth.views import redirect_to_login
@@ -233,13 +232,13 @@ class QuarantineNavigationParameters(NavigationParameters):
     """
     def __init__(self, request):
         super(QuarantineNavigationParameters, self).__init__(
-            request, 'quarantine_navparams'
+            request, "quarantine_navparams"
         )
         self.parameters += [
-            ('pattern', '', False),
-            ('criteria', 'from_addr', False),
-            ('msgtype', None, False),
-            ('viewrequests', None, False)
+            ("pattern", "", False),
+            ("criteria", "from_addr", False),
+            ("msgtype", None, False),
+            ("viewrequests", None, False)
         ]
 
     def _store_page(self):

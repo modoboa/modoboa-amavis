@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Amavis tests."""
 
 from __future__ import unicode_literals
@@ -108,7 +110,7 @@ class ManualLearningTestCase(ModoTestCase):
     """Check manual learning mode."""
 
     @classmethod
-    def setUpTestData(cls):
+    def setUpTestData(cls):  # noqa:N802
         """Create test data."""
         super(ManualLearningTestCase, cls).setUpTestData()
         admin_factories.populate_database()

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Modoboa amavis constants."""
 
 from __future__ import unicode_literals

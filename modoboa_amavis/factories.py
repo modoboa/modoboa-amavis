@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """Amavis factories."""
 
 from __future__ import unicode_literals
@@ -88,7 +89,7 @@ class MaddrFactory(factory.DjangoModelFactory):
         model = models.Maddr
         django_get_or_create = ("email", )
 
-    id = factory.Sequence(lambda n: n)
+    id = factory.Sequence(lambda n: n)  # noqa:A003
     email = factory.Sequence(lambda n: "user_{}@domain.test".format(n))
     domain = "test.domain"
 
@@ -156,7 +157,7 @@ def create_quarantined_msg(rcpt, sender, rs, body, **kwargs):
 def create_spam(rcpt, sender="spam@evil.corp", rs=" "):
     """Create a spam."""
     body = SPAM_BODY.format(rcpt=rcpt, sender=sender)
-    body += 'fóó bár'
+    body += "fóó bár"
     return create_quarantined_msg(
         rcpt, sender, rs, body, bspam_level=999.0, content="S")
 

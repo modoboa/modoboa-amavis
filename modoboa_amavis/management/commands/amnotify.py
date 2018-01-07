@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 
 from __future__ import print_function, unicode_literals
 
@@ -20,7 +20,7 @@ from ...sql_connector import SQLconnector
 
 
 class Command(BaseCommand):
-    help = 'Amavis notification tool'
+    help = "Amavis notification tool"  # noqa:A003
 
     sender = None
     baseurl = None
@@ -88,7 +88,7 @@ class Command(BaseCommand):
                 messages.append(self._build_message(rcpt, total, reqs))
 
         # Then super administators.
-        reqs = Msgrcpt.objects.filter(rs='p')
+        reqs = Msgrcpt.objects.filter(rs="p")
         total = reqs.count()
         if total:
             reqs = reqs.all()[:10]

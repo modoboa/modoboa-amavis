@@ -27,8 +27,8 @@ class SQLemail(Email):
 
         qreason = self.msg["X-Amavis-Alert"]
         if qreason:
-            if ',' in qreason:
-                self.qtype, qreason = qreason.split(',', 1)
+            if "," in qreason:
+                self.qtype, qreason = qreason.split(",", 1)
             elif qreason.startswith("BAD HEADER SECTION "):
                 # Workaround for amavis <= 2.8.0 :p
                 self.qtype = "BAD HEADER SECTION"

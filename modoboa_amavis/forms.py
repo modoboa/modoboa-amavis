@@ -1,4 +1,5 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
+
 """
 Amavis forms.
 """
@@ -21,19 +22,19 @@ class DomainPolicyForm(forms.ModelForm):
 
     class Meta:
         model = Policy
-        fields = ('bypass_virus_checks', 'bypass_spam_checks',
-                  'spam_tag2_level', 'spam_subject_tag2',
-                  'spam_kill_level', 'bypass_banned_checks')
+        fields = ("bypass_virus_checks", "bypass_spam_checks",
+                  "spam_tag2_level", "spam_subject_tag2",
+                  "spam_kill_level", "bypass_banned_checks")
         widgets = {
-            'bypass_virus_checks': form_utils.HorizontalRadioSelect(),
-            'bypass_spam_checks': form_utils.HorizontalRadioSelect(),
-            'spam_tag2_level': forms.TextInput(
-                attrs={'class': 'form-control'}),
-            'spam_kill_level': forms.TextInput(
-                attrs={'class': 'form-control'}),
-            'spam_subject_tag2': forms.TextInput(
-                attrs={'class': 'form-control'}),
-            'bypass_banned_checks': form_utils.HorizontalRadioSelect(),
+            "bypass_virus_checks": form_utils.HorizontalRadioSelect(),
+            "bypass_spam_checks": form_utils.HorizontalRadioSelect(),
+            "spam_tag2_level": forms.TextInput(
+                attrs={"class": "form-control"}),
+            "spam_kill_level": forms.TextInput(
+                attrs={"class": "form-control"}),
+            "spam_subject_tag2": forms.TextInput(
+                attrs={"class": "form-control"}),
+            "bypass_banned_checks": form_utils.HorizontalRadioSelect(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -51,12 +52,12 @@ class DomainPolicyForm(forms.ModelForm):
 
     def save(self, user, commit=True, **kwargs):
         policy = super(DomainPolicyForm, self).save(commit=False)
-        for field in ['bypass_spam_checks', 'bypass_virus_checks',
-                      'bypass_banned_checks']:
-            if getattr(policy, field) == '':
+        for field in ["bypass_spam_checks", "bypass_virus_checks",
+                      "bypass_banned_checks"]:
+            if getattr(policy, field) == "":
                 setattr(policy, field, None)
 
-        if self.cleaned_data['spam_subject_tag2_act']:
+        if self.cleaned_data["spam_subject_tag2_act"]:
             policy.spam_subject_tag2 = None
 
         if commit:

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Amavis frontend template tags.
 """
@@ -29,19 +31,19 @@ def viewm_menu(user, mail_id, rcpt):
          "img": "fa fa-check",
          "class": "btn-success",
          "url": (
-             reverse('modoboa_amavis:mail_release', args=[mail_id]) +
+             reverse("modoboa_amavis:mail_release", args=[mail_id]) +
              ("?rcpt=%s" % rcpt if rcpt else "")),
          "label": _("Release")},
         {"name": "delete",
          "class": "btn-danger",
          "img": "fa fa-trash",
          "url": (
-             reverse('modoboa_amavis:mail_delete', args=[mail_id]) +
+             reverse("modoboa_amavis:mail_delete", args=[mail_id]) +
              ("?rcpt=%s" % rcpt if rcpt else "")),
          "label": _("Delete")},
         {"name": "headers",
          "class": "btn-default",
-         "url": reverse('modoboa_amavis:headers_detail', args=[mail_id]),
+         "url": reverse("modoboa_amavis:headers_detail", args=[mail_id]),
          "label": _("View full headers")},
     ]
 
@@ -69,14 +71,14 @@ def viewm_menu(user, mail_id, rcpt):
             ]
         })
 
-    menu = render_to_string('common/buttons_list.html',
+    menu = render_to_string("common/buttons_list.html",
                             {"entries": entries, "extraclasses": "pull-left"})
 
     entries = [{"name": "close",
                 "url": "javascript:history.go(-1);",
                 "img": "icon-remove"}]
     menu += render_to_string(
-        'common/buttons_list.html',
+        "common/buttons_list.html",
         {"entries": entries, "extraclasses": "pull-right"}
     )
 
@@ -105,7 +107,7 @@ def viewm_menu_simple(user, mail_id, rcpt, secret_id=""):
          "label": _("Delete")},
     ]
 
-    return render_to_string('common/buttons_list.html',
+    return render_to_string("common/buttons_list.html",
                             {"entries": entries})
 
 
@@ -135,5 +137,5 @@ def msgtype_to_html(msgtype):
     """Transform a message type to a bootstrap label."""
     color = constants.MESSAGE_TYPE_COLORS.get(msgtype, "default")
     return mark_safe(
-        '<span class="label label-{}" title="{}">{}</span>'.format(
+        "<span class=\"label label-{}\" title=\"{}\">{}</span>".format(
             color, constants.MESSAGE_TYPES[msgtype], msgtype))

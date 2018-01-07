@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Amavis tests."""
 
 from __future__ import unicode_literals
@@ -23,7 +25,7 @@ class TestDataMixin(object):
     """A mixin to provide test data."""
 
     @classmethod
-    def setUpTestData(cls):
+    def setUpTestData(cls):  # noqa:N802
         """Create some content."""
         super(TestDataMixin, cls).setUpTestData()
         cls.msgrcpt = factories.create_spam("user@test.com")
@@ -34,7 +36,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
     """Test views."""
 
     @classmethod
-    def setUpTestData(cls):
+    def setUpTestData(cls):  # noqa:N802
         """Create test data."""
         super(ViewsTestCase, cls).setUpTestData()
         admin_factories.populate_database()
@@ -62,10 +64,10 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         msgrcpt = factories.create_virus("user@test.com")
         response = self.ajax_get("{}?msgtype=V".format(url))
         self.assertIn(
-            '<tr id="{}">'.format(smart_text(msgrcpt.mail.mail_id)),
+            "<tr id=\"{}\">".format(smart_text(msgrcpt.mail.mail_id)),
             response["listing"])
         self.assertNotIn(
-            '<tr id="{}">'.format(smart_text(self.msgrcpt.mail.mail_id)),
+            "<tr id=\"{}\">".format(smart_text(self.msgrcpt.mail.mail_id)),
             response["listing"])
 
     def test_viewmail(self):
@@ -251,9 +253,9 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         url = reverse("modoboa_amavis:learning_recipient_set")
         url = "{}?type=ham&selection={}".format(url, selection)
         response = self.client.get(url)
-        self.assertContains(response, 'value="global"')
-        self.assertContains(response, 'value="domain"')
-        self.assertNotContains(response, 'value="user"')
+        self.assertContains(response, "value=\"global\"")
+        self.assertContains(response, "value=\"domain\"")
+        self.assertNotContains(response, "value=\"user\"")
         data = {
             "selection": selection,
             "ltype": "ham",
@@ -264,7 +266,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         # Check user level learning
         self.set_global_parameter("user_level_learning", True)
         response = self.client.get(url)
-        self.assertContains(response, 'value="user"')
+        self.assertContains(response, "value=\"user\"")
         data = {
             "selection": selection,
             "ltype": "ham",
