@@ -6,11 +6,11 @@ from __future__ import unicode_literals
 import datetime
 import time
 
-from django.utils.encoding import smart_bytes
-
 import factory
 
 from . import models
+from .utils import smart_bytes
+
 
 SPAM_BODY = """X-Envelope-To: <{rcpt}>
 X-Envelope-To-Blocked: <{rcpt}>

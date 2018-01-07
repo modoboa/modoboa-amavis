@@ -7,13 +7,13 @@ An email representation based on a database record.
 from __future__ import unicode_literals
 
 from django.template.loader import render_to_string
-from django.utils.encoding import smart_text
 
 from html2text import HTML2Text
 
 from modoboa.lib.email_utils import Email
 
 from .sql_connector import get_connector
+from .utils import smart_text
 
 
 class SQLemail(Email):

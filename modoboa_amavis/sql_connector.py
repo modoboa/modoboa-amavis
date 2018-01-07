@@ -8,12 +8,12 @@ import chardet
 
 from django.conf import settings
 from django.db.models import Q
-from django.utils.encoding import smart_bytes
 
 from modoboa.admin.models import Domain
 from modoboa.lib.db_utils import db_type
 
 from .models import Quarantine, Msgrcpt, Maddr
+from .utils import fix_utf8_encoding, smart_bytes
 
 
 def reverse_domain_names(domains):
@@ -163,9 +163,9 @@ class SQLconnector(object):
             if qm["rs"] == 'D':
                 continue
             m = {
-                "from": qm["mail__from_addr"],
+                "from": fix_utf8_encoding(qm["mail__from_addr"]),
                 "to": smart_bytes(qm["rid__email"]),
-                "subject": qm["mail__subject"],
+                "subject": fix_utf8_encoding(qm["mail__subject"]),
                 "mailid": smart_bytes(qm["mail__mail_id"]),
                 "date": datetime.datetime.fromtimestamp(qm["mail__time_num"]),
                 "type": qm["content"],

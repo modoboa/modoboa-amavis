@@ -10,13 +10,13 @@ from django.core import mail
 from django.core.management import call_command
 from django.urls import reverse
 from django.test import override_settings
-from django.utils.encoding import smart_text
 
 from modoboa.admin import factories as admin_factories
 from modoboa.core import models as core_models
 from modoboa.lib.tests import ModoTestCase
 
 from .. import factories
+from ..utils import smart_text
 
 
 class TestDataMixin(object):
@@ -70,7 +70,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
 
     def test_viewmail(self):
         """Test view_mail view."""
-        mail_id = self.msgrcpt.mail.mail_id
+        mail_id = smart_text(self.msgrcpt.mail.mail_id)
         url = reverse("modoboa_amavis:mail_detail", args=[mail_id])
         url = "{}?rcpt={}".format(url, smart_text(self.msgrcpt.rid.email))
         response = self.ajax_get(url)
@@ -91,7 +91,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         """Test view_mail in self-service mode."""
         self.client.logout()
 
-        mail_id = self.msgrcpt.mail.mail_id
+        mail_id = smart_text(self.msgrcpt.mail.mail_id)
         url = reverse("modoboa_amavis:mail_detail", args=[mail_id])
         url = "{}?secret_id={}".format(
             url, smart_text(self.msgrcpt.mail.secret_id))
@@ -113,7 +113,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
 
     def test_viewheaders(self):
         """Test headers display."""
-        mail_id = self.msgrcpt.mail.mail_id
+        mail_id = smart_text(self.msgrcpt.mail.mail_id)
         url = reverse("modoboa_amavis:headers_detail", args=[mail_id])
         response = self.client.get(url)
         self.assertContains(response, b"X-Spam-Flag: YES")
@@ -125,7 +125,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         url = reverse("modoboa_amavis:_mail_list")
         response = self.ajax_get(url)
 
-        mail_id = self.msgrcpt.mail.mail_id
+        mail_id = smart_text(self.msgrcpt.mail.mail_id)
         url = reverse("modoboa_amavis:mail_delete", args=[mail_id])
         data = {"rcpt": smart_text(self.msgrcpt.rid.email)}
         response = self.ajax_post(url, data)
@@ -137,7 +137,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
     def test_delete_selfservice(self):
         """Test delete view in self-service mode."""
         self.client.logout()
-        mail_id = self.msgrcpt.mail.mail_id
+        mail_id = smart_text(self.msgrcpt.mail.mail_id)
         url = reverse("modoboa_amavis:mail_delete", args=[mail_id])
         url = "{}?secret_id={}".format(
             url, smart_text(self.msgrcpt.mail.secret_id))
@@ -157,7 +157,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         response = self.ajax_get(url)
 
         mock_socket.return_value.recv.return_value = b"250 1234 Ok\r\n"
-        mail_id = self.msgrcpt.mail.mail_id
+        mail_id = smart_text(self.msgrcpt.mail.mail_id)
         url = reverse("modoboa_amavis:mail_release", args=[mail_id])
         data = {"rcpt": smart_text(self.msgrcpt.rid.email)}
         response = self.ajax_post(url, data)
@@ -171,7 +171,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         """Test release view."""
         mock_socket.return_value.recv.return_value = b"250 1234 Ok\r\n"
         self.client.logout()
-        mail_id = self.msgrcpt.mail.mail_id
+        mail_id = smart_text(self.msgrcpt.mail.mail_id)
         base_url = reverse("modoboa_amavis:mail_release", args=[mail_id])
         self.set_global_parameter("self_service", True)
         # Missing rcpt -> fails
@@ -207,7 +207,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         url = reverse("modoboa_amavis:_mail_list")
         response = self.ajax_get(url)
 
-        mail_id = self.msgrcpt.mail.mail_id
+        mail_id = smart_text(self.msgrcpt.mail.mail_id)
         url = reverse("modoboa_amavis:mail_release", args=[mail_id])
         data = {"rcpt": smart_text(self.msgrcpt.rid.email)}
         response = self.ajax_post(url, data)
@@ -221,7 +221,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
 
     def _test_mark_message(self, action, status):
         """Mark message common code."""
-        mail_id = self.msgrcpt.mail.mail_id
+        mail_id = smart_text(self.msgrcpt.mail.mail_id)
         url = reverse("modoboa_amavis:mail_mark_as_" + action, args=[mail_id])
         data = {"rcpt": smart_text(self.msgrcpt.rid.email)}
         response = self.ajax_post(url, data)
@@ -280,7 +280,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         """Test learning when connected as a simple user."""
         user = core_models.User.objects.get(username="user@test.com")
         self.client.force_login(user)
-        mail_id = self.msgrcpt.mail.mail_id
+        mail_id = smart_text(self.msgrcpt.mail.mail_id)
         url = reverse("modoboa_amavis:mail_mark_as_ham", args=[mail_id])
         data = {"rcpt": smart_text(self.msgrcpt.rid.email)}
         response = self.ajax_post(url, data)

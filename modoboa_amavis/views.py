@@ -10,7 +10,6 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template import loader
-from django.utils.encoding import smart_text
 from django.utils.translation import ugettext as _, ungettext
 
 from django.contrib.auth.decorators import login_required
@@ -33,6 +32,7 @@ from .forms import LearningRecipientForm
 from .models import Msgrcpt
 from .sql_connector import get_connector
 from .sql_email import SQLemail
+from .utils import smart_text
 
 
 def empty_quarantine():
