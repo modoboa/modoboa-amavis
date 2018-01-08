@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Maddr',
             fields=[
-                ('partition_tag', models.IntegerField(unique=True, null=True, blank=True)),
+                ('partition_tag', models.IntegerField(default=0)),
                 ('id', models.BigIntegerField(serialize=False, primary_key=True)),
                 ('email', models.CharField(unique=True, max_length=255)),
                 ('domain', models.CharField(max_length=765)),
@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Msgs',
             fields=[
-                ('partition_tag', models.IntegerField(null=True, blank=True)),
+                ('partition_tag', models.IntegerField(default=0)),
                 ('mail_id', models.CharField(max_length=12, serialize=False, primary_key=True)),
                 ('secret_id', models.CharField(max_length=12, blank=True)),
                 ('am_id', models.CharField(max_length=60)),
@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Msgrcpt',
             fields=[
-                ('partition_tag', models.IntegerField(null=True, blank=True)),
+                ('partition_tag', models.IntegerField(default=0)),
                 ('mail', models.ForeignKey(primary_key=True, serialize=False, to='modoboa_amavis.Msgs', on_delete=models.CASCADE)),
                 ('rseqnum', models.IntegerField(default=0)),
                 ('is_local', models.CharField(max_length=3)),
@@ -145,7 +145,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Quarantine',
             fields=[
-                ('partition_tag', models.IntegerField(null=True, blank=True)),
+                ('partition_tag', models.IntegerField(default=0)),
                 ('mail', models.ForeignKey(primary_key=True, serialize=False, to='modoboa_amavis.Msgs', on_delete=models.CASCADE)),
                 ('chunk_ind', models.IntegerField()),
                 ('mail_text', models.TextField()),

@@ -28,6 +28,13 @@ This plugin provides a simple management frontend for `amavisd-new
    you're planning to use the :ref:`selfservice`, you'll need version
    **2.8.0**.
 
+.. note::
+
+   ``$sql_partition_tag`` should remain undefined in ``amavisd.conf``. Modoboa
+   does not support the use of ``sql_partition_tag``, setting this value can
+   result in quarantined messages not showing or the wrong messages being
+   released or learnt as ham/spam.
+
 Contents:
 
 .. toctree::

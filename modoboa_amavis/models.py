@@ -39,7 +39,7 @@ class Mailaddr(models.Model):
 
 
 class Msgs(models.Model):
-    partition_tag = models.IntegerField(null=True, blank=True)
+    partition_tag = models.IntegerField(default=0)
     mail_id = models.CharField(max_length=12, primary_key=True)
     secret_id = models.BinaryField()
     am_id = models.CharField(max_length=60)
@@ -67,7 +67,7 @@ class Msgs(models.Model):
 
 
 class Msgrcpt(models.Model):
-    partition_tag = models.IntegerField(null=True, blank=True)
+    partition_tag = models.IntegerField(default=0)
     mail = models.ForeignKey(Msgs, primary_key=True, on_delete=models.CASCADE)
     rid = models.ForeignKey(Maddr, db_column='rid', on_delete=models.CASCADE)
     rseqnum = models.IntegerField(default=0)
@@ -208,7 +208,7 @@ class Policy(models.Model):
 
 
 class Quarantine(models.Model):
-    partition_tag = models.IntegerField(null=True, blank=True)
+    partition_tag = models.IntegerField(default=0)
     mail = models.ForeignKey(Msgs, primary_key=True, on_delete=models.CASCADE)
     chunk_ind = models.IntegerField()
     mail_text = models.BinaryField()
