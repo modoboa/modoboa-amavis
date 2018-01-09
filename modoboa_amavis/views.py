@@ -4,15 +4,13 @@ Amavis quarantine views.
 """
 from __future__ import unicode_literals
 
-import email
-
 import six
 
 from django.urls import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template import loader
-from django.utils.encoding import smart_text, smart_str
+from django.utils.encoding import smart_text
 from django.utils.translation import ugettext as _, ungettext
 
 from django.contrib.auth.decorators import login_required
@@ -135,7 +133,7 @@ def index(request):
 
 
 def getmailcontent_selfservice(request, mail_id):
-    mail = SQLemail(mail_id, mformat="plain")
+    mail = SQLemail(mail_id, dformat="plain")
     return render(request, "common/viewmail.html", {
         "headers": mail.render_headers(),
         "mailbody": mail.body
@@ -144,7 +142,7 @@ def getmailcontent_selfservice(request, mail_id):
 
 @selfservice(getmailcontent_selfservice)
 def getmailcontent(request, mail_id):
-    mail = SQLemail(mail_id, mformat="plain")
+    mail = SQLemail(mail_id, dformat="plain")
     return render(request, "common/viewmail.html", {
         "headers": mail.render_headers(),
         "mailbody": mail.body
@@ -187,14 +185,14 @@ def viewmail(request, mail_id):
 @login_required
 def viewheaders(request, mail_id):
     """Display message headers."""
-    content = get_connector().get_mail_content(mail_id)
-    msg = email.message_from_string(smart_str(content))
+    email = SQLemail(mail_id)
     headers = []
-    for name, value in msg.items():
-        headers += [(name, value)]
-    return render(request, 'modoboa_amavis/viewheader.html', {
+    for name in email.msg.keys():
+        headers.append((name, email.get_header(email.msg, name)))
+    context = {
         "headers": headers
-    })
+    }
+    return render(request, 'modoboa_amavis/viewheader.html', context)
 
 
 def check_mail_id(request, mail_id):

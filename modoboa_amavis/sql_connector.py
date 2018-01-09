@@ -215,7 +215,7 @@ class SQLconnector(object):
 
     def get_mail_content(self, mailid):
         """Retrieve the content of a message."""
-        content = b"".join([
+        content = smart_bytes("").join([
             smart_bytes(qmail.mail_text)
             for qmail in Quarantine.objects.filter(
                     mail=smart_bytes(mailid))
