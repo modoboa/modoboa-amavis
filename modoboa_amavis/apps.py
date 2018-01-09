@@ -14,4 +14,6 @@ class AmavisConfig(AppConfig):
     verbose_name = "Modoboa amavis frontend"
 
     def ready(self):
-        from . import handlers
+        # Import these to force registration of checks and signals
+        from . import checks  # noqa:F401
+        from . import handlers  # noqa:F401
