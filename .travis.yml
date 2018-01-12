@@ -47,6 +47,8 @@ deploy:
   password:
     secure: qtRkmcbA9tbqFw0IK/liCuKszeXDrUC9iI7j3Q4x0jxx7OW8bnn0JqGl45IuKaaSIt1M3PIP0T82h3S+DqBoGfE0xuH4Oe2WwvP76p8afjeOHjoRVOhKihTAZZXsBA2jEteNiDibiu7ezpMXQNaO+BnfYqUJ3ATZJD7xIRNigHo=
   skip_cleanup: true
+  distributions: "sdist bdist_wheel"
   on:
     tags: true
-    python: '3.6'
+    python: "3.6"
+    condition: $DB = POSTGRESQL
