@@ -6,7 +6,7 @@ Amavis forms.
 from __future__ import unicode_literals
 
 from django import forms
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, ugettext_lazy
 
 from modoboa.lib import form_utils
 from modoboa.parameters import forms as param_forms
@@ -102,121 +102,126 @@ class ParametersForm(param_forms.AdminParametersForm):
 
     app = "modoboa_amavis"
 
-    qsettings_sep = form_utils.SeparatorField(label=_("Quarantine settings"))
+    qsettings_sep = form_utils.SeparatorField(
+        label=ugettext_lazy("Quarantine settings"))
 
     max_messages_age = forms.IntegerField(
-        label=_("Maximum message age"),
+        label=ugettext_lazy("Maximum message age"),
         initial=14,
-        help_text=_(
+        help_text=ugettext_lazy(
             "Quarantine messages maximum age (in days) before deletion"
         )
     )
 
-    sep1 = form_utils.SeparatorField(label=_("Messages releasing"))
+    sep1 = form_utils.SeparatorField(label=ugettext_lazy("Messages releasing"))
 
     released_msgs_cleanup = form_utils.YesNoField(
-        label=_("Remove released messages"),
+        label=ugettext_lazy("Remove released messages"),
         initial=False,
-        help_text=_("Remove messages marked as released while cleaning up "
-                    "the database")
+        help_text=ugettext_lazy(
+            "Remove messages marked as released while cleaning up "
+            "the database"
+        )
     )
 
     am_pdp_mode = forms.ChoiceField(
-        label=_("Amavis connection mode"),
+        label=ugettext_lazy("Amavis connection mode"),
         choices=[("inet", "inet"), ("unix", "unix")],
         initial="unix",
-        help_text=_("Mode used to access the PDP server"),
+        help_text=ugettext_lazy("Mode used to access the PDP server"),
         widget=form_utils.HorizontalRadioSelect()
     )
 
     am_pdp_host = forms.CharField(
-        label=_("PDP server address"),
+        label=ugettext_lazy("PDP server address"),
         initial="localhost",
-        help_text=_("PDP server address (if inet mode)"),
+        help_text=ugettext_lazy("PDP server address (if inet mode)"),
         widget=forms.TextInput(attrs={"class": "form-control"})
     )
 
     am_pdp_port = forms.IntegerField(
-        label=_("PDP server port"),
+        label=ugettext_lazy("PDP server port"),
         initial=9998,
-        help_text=_("PDP server port (if inet mode)")
+        help_text=ugettext_lazy("PDP server port (if inet mode)")
     )
 
     am_pdp_socket = forms.CharField(
-        label=_("PDP server socket"),
+        label=ugettext_lazy("PDP server socket"),
         initial="/var/amavis/amavisd.sock",
-        help_text=_("Path to the PDP server socket (if unix mode)")
+        help_text=ugettext_lazy("Path to the PDP server socket (if unix mode)")
     )
 
     user_can_release = form_utils.YesNoField(
-        label=_("Allow direct release"),
+        label=ugettext_lazy("Allow direct release"),
         initial=False,
-        help_text=_("Allow users to directly release their messages")
+        help_text=ugettext_lazy(
+            "Allow users to directly release their messages")
     )
 
     self_service = form_utils.YesNoField(
-        label=_("Enable self-service mode"),
+        label=ugettext_lazy("Enable self-service mode"),
         initial=False,
-        help_text=_("Activate the 'self-service' mode")
+        help_text=ugettext_lazy("Activate the 'self-service' mode")
     )
 
     notifications_sender = forms.EmailField(
-        label=_("Notifications sender"),
+        label=ugettext_lazy("Notifications sender"),
         initial="notification@modoboa.org",
-        help_text=_("The e-mail address used to send notitications")
+        help_text=ugettext_lazy(
+            "The e-mail address used to send notitications")
     )
 
-    lsep = form_utils.SeparatorField(label=_("Manual learning"))
+    lsep = form_utils.SeparatorField(label=ugettext_lazy("Manual learning"))
 
     manual_learning = form_utils.YesNoField(
-        label=_("Enable manual learning"),
+        label=ugettext_lazy("Enable manual learning"),
         initial=True,
-        help_text=_(
+        help_text=ugettext_lazy(
             "Allow super administrators to manually train Spamassassin"
         )
     )
 
     sa_is_local = form_utils.YesNoField(
-        label=_("Is Spamassassin local?"),
+        label=ugettext_lazy("Is Spamassassin local?"),
         initial=True,
-        help_text=_(
+        help_text=ugettext_lazy(
             "Tell if Spamassassin is running on the same server than modoboa"
         )
     )
 
     default_user = forms.CharField(
-        label=_("Default user"),
+        label=ugettext_lazy("Default user"),
         initial="amavis",
-        help_text=_(
+        help_text=ugettext_lazy(
             "Name of the user owning the default bayesian database"
         )
     )
 
     spamd_address = forms.CharField(
-        label=_("Spamd address"),
+        label=ugettext_lazy("Spamd address"),
         initial="127.0.0.1",
-        help_text=_("The IP address where spamd can be reached")
+        help_text=ugettext_lazy("The IP address where spamd can be reached")
     )
 
     spamd_port = forms.IntegerField(
-        label=_("Spamd port"),
+        label=ugettext_lazy("Spamd port"),
         initial=783,
-        help_text=_("The TCP port spamd is listening on")
+        help_text=ugettext_lazy("The TCP port spamd is listening on")
     )
 
     domain_level_learning = form_utils.YesNoField(
-        label=_("Enable per-domain manual learning"),
+        label=ugettext_lazy("Enable per-domain manual learning"),
         initial=False,
-        help_text=_(
+        help_text=ugettext_lazy(
             "Allow domain administrators to train Spamassassin "
             "(within dedicated per-domain databases)"
         )
     )
 
     user_level_learning = form_utils.YesNoField(
-        label=_("Enable per-user manual learning"),
+        label=ugettext_lazy("Enable per-user manual learning"),
         initial=False,
-        help_text=_(
+        help_text=ugettext_lazy(
             "Allow simple users to personally train Spamassassin "
             "(within a dedicated database)"
         )
@@ -241,10 +246,11 @@ class UserSettings(param_forms.UserParametersForm):
 
     app = "modoboa_amavis"
 
-    dsep = form_utils.SeparatorField(label=_("Display"))
+    dsep = form_utils.SeparatorField(label=ugettext_lazy("Display"))
 
     messages_per_page = forms.IntegerField(
         initial=40,
-        label=_("Number of displayed emails per page"),
-        help_text=_("Set the maximum number of messages displayed in a page")
+        label=ugettext_lazy("Number of displayed emails per page"),
+        help_text=ugettext_lazy(
+            "Set the maximum number of messages displayed in a page")
     )
