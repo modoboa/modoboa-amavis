@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding: utf-8
+# -*- coding: utf-8 -*-
 
 from __future__ import print_function, unicode_literals
 
@@ -16,7 +16,7 @@ from ...modo_extension import Amavis
 
 class Command(BaseCommand):
     args = ""
-    help = "Amavis quarantine cleanup"
+    help = "Amavis quarantine cleanup"  # noqa:A003
 
     def add_arguments(self, parser):
         """Add extra arguments to command line."""

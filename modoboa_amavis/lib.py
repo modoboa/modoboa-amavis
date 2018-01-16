@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
 
@@ -9,11 +9,9 @@ import socket
 import string
 import struct
 
-import six
-
 from django.conf import settings
 from django.urls import reverse
-from django.utils.encoding import smart_bytes, smart_text
+from django.utils import six
 from django.utils.translation import ugettext as _
 
 from django.contrib.auth.views import redirect_to_login
@@ -26,6 +24,7 @@ from modoboa.lib.web_utils import NavigationParameters
 from modoboa.parameters import tools as param_tools
 
 from .models import Users, Policy
+from .utils import smart_bytes, smart_text
 
 
 def selfservice(ssfunc=None):
@@ -208,7 +207,7 @@ class SpamassassinClient(object):
             cmd, pinput=smart_bytes(msg), **self._learn_cmd_kwargs)
         if code in self._expected_exit_codes:
             return True
-        self.error = output
+        self.error = smart_text(output)
         return False
 
     def learn_spam(self, rcpt, msg):
@@ -233,13 +232,13 @@ class QuarantineNavigationParameters(NavigationParameters):
     """
     def __init__(self, request):
         super(QuarantineNavigationParameters, self).__init__(
-            request, 'quarantine_navparams'
+            request, "quarantine_navparams"
         )
         self.parameters += [
-            ('pattern', '', False),
-            ('criteria', 'from_addr', False),
-            ('msgtype', None, False),
-            ('viewrequests', None, False)
+            ("pattern", "", False),
+            ("criteria", "from_addr", False),
+            ("msgtype", None, False),
+            ("viewrequests", None, False)
         ]
 
     def _store_page(self):

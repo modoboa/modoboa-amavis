@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Amavis handlers."""
 
 from __future__ import unicode_literals
@@ -19,7 +21,7 @@ from .lib import (
     create_user_and_use_policy, delete_user
 )
 from .models import Policy, Users
-from .sql_connector import get_connector
+from .sql_connector import SQLconnector
 from . import forms
 
 
@@ -30,7 +32,7 @@ def menu(sender, location, user, **kwargs):
         return [
             {"name": "quarantine",
              "label": _("Quarantine"),
-             "url": reverse('modoboa_amavis:index')}
+             "url": reverse("modoboa_amavis:index")}
         ]
     return []
 
@@ -163,7 +165,7 @@ def check_for_pending_requests(sender, include_all, **kwargs):
     if condition:
         return []
 
-    nbrequests = get_connector(user=request.user).get_pending_requests()
+    nbrequests = SQLconnector(user=request.user).get_pending_requests()
     if not nbrequests:
         return [{"id": "nbrequests", "counter": 0}] if include_all \
             else []

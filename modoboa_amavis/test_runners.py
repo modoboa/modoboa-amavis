@@ -1,18 +1,11 @@
+# -*- coding: utf-8 -*-
+
 """Custom test runner."""
 
 from __future__ import unicode_literals
 
 from django.apps import apps
 from django.test.runner import DiscoverRunner
-
-
-
-class DisableMigrations(object):
-    def __contains__(self, item):
-        return True
-
-    def __getitem__(self, item):
-        return "notmigrations"
 
 
 class UnManagedModelTestRunner(DiscoverRunner):
@@ -22,23 +15,21 @@ class UnManagedModelTestRunner(DiscoverRunner):
     Many thanks to the Caktus Group: http://bit.ly/1N8TcHW
     """
 
-    # ALLOWED_MODELS = ["maddr", "msgs", "policy", "users"]
+    unmanaged_models = []
 
     def setup_test_environment(self, *args, **kwargs):
-        self.unmanaged_models = []
+        """Mark modoboa_amavis models as managed during testing
+        During database setup migrations are only run for managed models"""
         for m in apps.get_models():
-            condition = (
-                m._meta.app_label == "modoboa_amavis")
-                # m._meta.model_name in self.ALLOWED_MODELS)
-            if condition:
+            if m._meta.app_label == "modoboa_amavis":
                 self.unmanaged_models.append(m)
                 m._meta.managed = True
         super(UnManagedModelTestRunner, self).setup_test_environment(
             *args, **kwargs)
 
     def teardown_test_environment(self, *args, **kwargs):
+        """Revert modoboa_amavis models to unmanaged"""
         super(UnManagedModelTestRunner, self).teardown_test_environment(
             *args, **kwargs)
-        # reset unmanaged models
         for m in self.unmanaged_models:
             m._meta.managed = False

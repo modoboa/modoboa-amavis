@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
 
@@ -8,20 +10,20 @@ class AmavisRouter(object):
 
     def db_for_read(self, model, **hints):
         """Point all operations on amavis models to 'amavis'."""
-        if model._meta.app_label == 'modoboa_amavis':
-            return 'amavis'
+        if model._meta.app_label == "modoboa_amavis":
+            return "amavis"
         return None
 
     def db_for_write(self, model, **hints):
         """Point all operations on amavis models to 'amavis'."""
-        if model._meta.app_label == 'modoboa_amavis':
-            return 'amavis'
+        if model._meta.app_label == "modoboa_amavis":
+            return "amavis"
         return None
 
     def allow_relation(self, obj1, obj2, **hints):
         """Allow any relation if a model in amavis is involved."""
-        if obj1._meta.app_label == 'modoboa_amavis' \
-           or obj2._meta.app_label == 'modoboa_amavis':
+        if obj1._meta.app_label == "modoboa_amavis" \
+           or obj2._meta.app_label == "modoboa_amavis":
             return True
         return None
 
@@ -30,6 +32,10 @@ class AmavisRouter(object):
         Make sure the auth app only appears in the 'amavis'
         database.
         """
-        if db == "amavis":
-            return app_label == "modoboa_amavis"
+        if app_label == "modoboa_amavis":
+            # modoboa_amavis migrations should be created in the amavis database.
+            return (db == "amavis")
+        elif db == "amavis":
+            # Don't create non modoboa_amavis migrations in the amavis database.
+            return False
         return None

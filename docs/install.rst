@@ -33,6 +33,6 @@ Run the following commands to setup the database tables::
   $ python manage.py migrate
   $ python manage.py collectstatic
   $ python manage.py load_initial_data
-    
+  $ python manage.py check --deploy
 Finally, restart the python process running modoboa (uwsgi, gunicorn,
 apache, whatever).

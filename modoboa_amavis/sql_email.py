@@ -7,13 +7,13 @@ An email representation based on a database record.
 from __future__ import unicode_literals
 
 from django.template.loader import render_to_string
-from django.utils.encoding import smart_text
 
 from html2text import HTML2Text
 
 from modoboa.lib.email_utils import Email
 
-from .sql_connector import get_connector
+from .sql_connector import SQLconnector
+from .utils import smart_text
 
 
 class SQLemail(Email):
@@ -27,8 +27,8 @@ class SQLemail(Email):
 
         qreason = self.msg["X-Amavis-Alert"]
         if qreason:
-            if ',' in qreason:
-                self.qtype, qreason = qreason.split(',', 1)
+            if "," in qreason:
+                self.qtype, qreason = qreason.split(",", 1)
             elif qreason.startswith("BAD HEADER SECTION "):
                 # Workaround for amavis <= 2.8.0 :p
                 self.qtype = "BAD HEADER SECTION"
@@ -38,7 +38,7 @@ class SQLemail(Email):
             self.qreason = qreason
 
     def _fetch_message(self):
-        return get_connector().get_mail_content(self.mailid)
+        return SQLconnector().get_mail_content(self.mailid)
 
     @property
     def body(self):

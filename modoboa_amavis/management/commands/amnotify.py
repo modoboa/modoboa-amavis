@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 
 from __future__ import print_function, unicode_literals
 
@@ -16,11 +16,11 @@ from modoboa.parameters import tools as param_tools
 
 from ...models import Msgrcpt
 from ...modo_extension import Amavis
-from ...sql_connector import get_connector
+from ...sql_connector import SQLconnector
 
 
 class Command(BaseCommand):
-    help = 'Amavis notification tool'
+    help = "Amavis notification tool"  # noqa:A003
 
     sender = None
     baseurl = None
@@ -79,7 +79,7 @@ class Command(BaseCommand):
             if not hasattr(da, "mailbox"):
                 continue
             rcpt = da.mailbox.full_address
-            reqs = get_connector().get_domains_pending_requests(
+            reqs = SQLconnector().get_domains_pending_requests(
                 Domain.objects.get_for_admin(da).values_list("name", flat=True)
             )
             total = reqs.count()
@@ -88,7 +88,7 @@ class Command(BaseCommand):
                 messages.append(self._build_message(rcpt, total, reqs))
 
         # Then super administators.
-        reqs = Msgrcpt.objects.filter(rs='p')
+        reqs = Msgrcpt.objects.filter(rs="p")
         total = reqs.count()
         if total:
             reqs = reqs.all()[:10]

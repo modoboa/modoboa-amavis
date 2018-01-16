@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Amavis frontend default settings."""
 
 from __future__ import unicode_literals

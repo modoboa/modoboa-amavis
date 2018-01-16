@@ -16,30 +16,18 @@ sudo: false
 
 cache: pip
 
-services:
-  - postgres
-  - mysql
+addons:
+  postgresql: "9.3"
+  mysql: "5.5"
 
 before_install:
   - pip install codecov
-  - if [[ $DB = "POSTGRESQL" ]]; then pip install -q psycopg2; fi
-  - if [[ $DB = "MYSQL" ]]; then pip install -q mysqlclient; fi
-  - pip install -e git+https://github.com/tonioo/modoboa.git#egg=modoboa
+  - pip install -e git+https://github.com/modoboa/modoboa.git#egg=modoboa
 
 install:
   - pip install -q -r requirements.txt
   - pip install -q -r test-requirements.txt
   - python setup.py -q develop
-
-before_script:
-  - if [[ $DB = "POSTGRESQL" ]]; then psql -c "CREATE DATABASE modoboa_test;" -U postgres; fi
-  - if [[ $DB = "POSTGRESQL" ]]; then psql -c "CREATE DATABASE amavis_test;" -U postgres; fi
-  - if [[ $DB = "MYSQL" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS modoboa_test;" -uroot; fi
-  - if [[ $DB = "MYSQL" ]]; then mysql -e "CREATE USER 'modoboa'@'localhost' IDENTIFIED BY 'modoboa'" -uroot; fi
-  - if [[ $DB = "MYSQL" ]]; then mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'modoboa'@'localhost';" -uroot; fi
-  - if [[ $DB = "MYSQL" ]]; then mysql -e "CREATE DATABASE IF NOT EXISTS amavis_test;" -uroot; fi
-  - if [[ $DB = "MYSQL" ]]; then mysql -e "CREATE USER 'amavis'@'localhost' IDENTIFIED BY 'amavis'" -uroot; fi
-  - if [[ $DB = "MYSQL" ]]; then mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'amavis'@'localhost';" -uroot; fi
 
 script:
   - cd test_project
