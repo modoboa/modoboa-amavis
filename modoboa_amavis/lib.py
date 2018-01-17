@@ -9,6 +9,8 @@ import socket
 import string
 import struct
 
+import idna
+
 from django.conf import settings
 from django.urls import reverse
 from django.utils import six
@@ -17,7 +19,8 @@ from django.utils.translation import ugettext as _
 from django.contrib.auth.views import redirect_to_login
 
 from modoboa.admin import models as admin_models
-from modoboa.lib.email_utils import split_mailbox
+from modoboa.lib.email_utils import (
+    split_mailbox, split_address, split_local_part)
 from modoboa.lib.exceptions import InternalError
 from modoboa.lib.sysutils import exec_cmd
 from modoboa.lib.web_utils import NavigationParameters
@@ -395,3 +398,38 @@ def setup_manual_learning_for_mbox(mbox):
                 create_user_and_use_policy(alias, policy)
             result = True
     return result
+
+
+def make_query_args(address, exact_extension=True, wildcard=None,
+                    domain_search=False):
+    assert isinstance(address, six.text_type),\
+        "address should be of type %s" % six.text_type.__name__
+    conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
+    local_part, domain = split_address(address)
+    if not conf["localpart_is_case_sensitive"]:
+        local_part = local_part.lower()
+    if domain:
+        domain = domain.lstrip("@").rstrip(".")
+        domain = domain.lower()
+        orig_domain = domain
+        domain = idna.encode(domain, uts46=True).decode('ascii')
+    delimiter = conf["recipient_delimiter"]
+    local_part, extension = split_local_part(local_part, delimiter=delimiter)
+    query_args = []
+    if (
+        conf["localpart_is_case_sensitive"]
+        or (domain and domain != orig_domain)
+    ):
+        query_args.append(address)
+    if extension:
+        query_args.append("%s%s%s@%s" % (
+            local_part, delimiter, extension, domain))
+    if delimiter and not exact_extension and wildcard:
+        query_args.append("%s%s%s@%s" % (
+            local_part, delimiter, wildcard, domain))
+    query_args.append("%s@%s" % (local_part, domain))
+    if domain_search:
+        query_args.append("@%s" % domain)
+        query_args.append("@.")
+
+    return query_args

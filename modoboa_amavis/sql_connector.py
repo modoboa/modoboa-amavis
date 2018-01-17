@@ -13,6 +13,7 @@ from django.utils import six
 
 from modoboa.admin.models import Domain
 
+from .lib import make_query_args
 from .models import Quarantine, Msgrcpt, Maddr
 from .utils import ConvertFrom, fix_utf8_encoding, smart_bytes
 
@@ -74,7 +75,14 @@ class SQLconnector(object):
         rcpts = [self.user.email]
         if hasattr(self.user, "mailbox"):
             rcpts += self.user.mailbox.alias_addresses
-        return flt & Q(str_email__in=rcpts)
+
+        query_rcpts = []
+        for rcpt in rcpts:
+            query_rcpts += make_query_args(rcpt, exact_extension=False,
+                                           wildcard=".*")
+
+        re = "(%s)" % "|".join(query_rcpts)
+        return flt & Q(str_email__regex=re)
 
     def _apply_msgrcpt_filters(self, flt):
         """Apply filters based on user's role."""
