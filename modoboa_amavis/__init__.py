@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 
+"""The amavis frontend of Modoboa."""
+
 from __future__ import unicode_literals
 
-__version__ = "1.1.3"
+from pkg_resources import get_distribution, DistributionNotFound
+
+
+try:
+    __version__ = get_distribution(__name__).version
+except DistributionNotFound:
+    # package is not installed
+    pass
 
 default_app_config = "modoboa_amavis.apps.AmavisConfig"
