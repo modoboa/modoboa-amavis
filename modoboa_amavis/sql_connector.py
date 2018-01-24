@@ -13,6 +13,7 @@ from django.utils import six
 
 from modoboa.admin.models import Domain
 
+from .lib import make_query_args
 from .models import Quarantine, Msgrcpt, Maddr
 from .utils import ConvertFrom, fix_utf8_encoding, smart_bytes
 
@@ -74,7 +75,14 @@ class SQLconnector(object):
         rcpts = [self.user.email]
         if hasattr(self.user, "mailbox"):
             rcpts += self.user.mailbox.alias_addresses
-        return flt & Q(str_email__in=rcpts)
+
+        query_rcpts = []
+        for rcpt in rcpts:
+            query_rcpts += make_query_args(rcpt, exact_extension=False,
+                                           wildcard=".*")
+
+        re = "(%s)" % "|".join(query_rcpts)
+        return flt & Q(str_email__regex=re)
 
     def _apply_msgrcpt_filters(self, flt):
         """Apply filters based on user's role."""
@@ -104,13 +112,13 @@ class SQLconnector(object):
             search_flt = None
             for crit in criteria.split(","):
                 if crit == "from_addr":
-                    nfilter = Q(mail__from_addr__contains=pattern)
+                    nfilter = Q(mail__from_addr__icontains=pattern)
                 elif crit == "subject":
-                    nfilter = Q(mail__subject__contains=pattern)
+                    nfilter = Q(mail__subject__icontains=pattern)
                 elif crit == "to":
                     if "str_email" not in self._annotations:
                         self._annotations["str_email"] = ConvertFrom("rid__email")
-                    nfilter = Q(str_email__contains=pattern)
+                    nfilter = Q(str_email__icontains=pattern)
                 else:
                     continue
                 search_flt = (

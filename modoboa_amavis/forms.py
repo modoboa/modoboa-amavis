@@ -103,6 +103,24 @@ class ParametersForm(param_forms.AdminParametersForm):
 
     app = "modoboa_amavis"
 
+    amavis_settings_sep = form_utils.SeparatorField(
+        label=ugettext_lazy("Amavis settings"))
+
+    localpart_is_case_sensitive = form_utils.YesNoField(
+        label=ugettext_lazy("Localpart is case sensitive"),
+        initial=False,
+        help_text=ugettext_lazy("Value should match amavisd.conf variable %s"
+                                % "$localpart_is_case_sensitive")
+    )
+
+    recipient_delimiter = forms.CharField(
+        label=ugettext_lazy("Recipient delimiter"),
+        initial="",
+        help_text=ugettext_lazy("Value should match amavisd.conf variable %s"
+                                % "$recipient_delimiter"),
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+
     qsettings_sep = form_utils.SeparatorField(
         label=ugettext_lazy("Quarantine settings"))
 
