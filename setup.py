@@ -41,7 +41,7 @@ if __name__ == "__main__":
         name="modoboa-amavis",
         description="The amavis frontend of Modoboa",
         long_description=LONG_DESCRIPTION,
-        license="ISC",
+        license="MIT",
         url="http://modoboa.org/",
         author="Antoine Nguyen",
         author_email="tonio@ngyn.org",
