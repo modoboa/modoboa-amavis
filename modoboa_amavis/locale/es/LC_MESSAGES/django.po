@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # abel.velasco <abelonius@gmail.com>, 2017
 # Carlos L <carlos.latorre.sanchez@openmailbox.org>, 2017
@@ -10,309 +10,368 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Modoboa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-10 18:11+0100\n"
+"POT-Creation-Date: 2018-01-25 11:17+0100\n"
 "PO-Revision-Date: 2017-11-23 20:02+0000\n"
 "Last-Translator: Evilham <github@evilham.com>\n"
-"Language-Team: Spanish (http://www.transifex.com/tonio/modoboa/language/es/)\n"
+"Language-Team: Spanish (http://www.transifex.com/tonio/modoboa/language/"
+"es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: constants.py:9
+#: checks/settings_checks.py:12
+msgid ""
+"AMAVIS_DEFAULT_DATABASE_ENCODING does not match the character encoding used "
+"by the Amavis database."
+msgstr ""
+
+#: checks/settings_checks.py:14
+msgid ""
+"Check your database character encoding and set/update "
+"AMAVIS_DEFAULT_DATABASE_ENCODING."
+msgstr ""
+
+#: checks/settings_checks.py:20
+msgid "Modoboa Amavis has not been tested using the selected database engine."
+msgstr ""
+
+#: checks/settings_checks.py:21
+msgid "Try using PostgreSQL, MySQL or MariaDB."
+msgstr ""
+
+#: constants.py:13
 msgid "Clean"
 msgstr "Limpios"
 
-#: constants.py:10
+#: constants.py:14
 msgid "Spam"
 msgstr "Correo basura"
 
-#: constants.py:11
+#: constants.py:15
 msgid "Spammy"
 msgstr "Con correo basura"
 
-#: constants.py:12
+#: constants.py:16
 msgid "Virus"
 msgstr "Virus"
 
-#: constants.py:13
+#: constants.py:17
 msgid "Bad Header"
 msgstr "Cabecera errónea"
 
-#: constants.py:14
+#: constants.py:18
 msgid "Bad MIME"
 msgstr "MIME erróneo"
 
-#: constants.py:15
+#: constants.py:19
 msgid "Banned"
 msgstr "Baneado"
 
-#: constants.py:16
+#: constants.py:20
 msgid "Over sized"
 msgstr "Tamaño excesivo"
 
-#: constants.py:17
+#: constants.py:21
 msgid "MTA error"
 msgstr "Error del MTA"
 
-#: constants.py:18
+#: constants.py:22
 msgid "Unchecked"
 msgstr "Sin comprobar"
 
-#: forms.py:89
+#: forms.py:92
 msgid "Global database"
 msgstr "Base de datos global"
 
-#: forms.py:92
+#: forms.py:95
 msgid "Domain's database"
 msgstr "Base de datos de dominio"
 
-#: forms.py:94
+#: forms.py:97
 msgid "User's database"
 msgstr "Base de datos de usuario"
 
-#: forms.py:103
+#: forms.py:107
+#, fuzzy
+#| msgid "Quarantine settings"
+msgid "Amavis settings"
+msgstr "Configuración de la cuarentena"
+
+#: forms.py:110
+msgid "Localpart is case sensitive"
+msgstr ""
+
+#: forms.py:112 forms.py:119
+#, python-format
+msgid "Value should match amavisd.conf variable %s"
+msgstr ""
+
+#: forms.py:117
+msgid "Recipient delimiter"
+msgstr ""
+
+#: forms.py:125
 msgid "Quarantine settings"
 msgstr "Configuración de la cuarentena"
 
-#: forms.py:106
+#: forms.py:128
 msgid "Maximum message age"
 msgstr "Tiempo máximo del mensaje"
 
-#: forms.py:109
+#: forms.py:131
 msgid "Quarantine messages maximum age (in days) before deletion"
-msgstr "Máxima edad (en días) de los mensajes de cuarentena antes de proceder a su eliminación"
+msgstr ""
+"Máxima edad (en días) de los mensajes de cuarentena antes de proceder a su "
+"eliminación"
 
-#: forms.py:113
+#: forms.py:135
 msgid "Messages releasing"
 msgstr "Publicando mensajes"
 
-#: forms.py:116
+#: forms.py:138
 msgid "Remove released messages"
 msgstr "Eliminar mensajes publicados"
 
-#: forms.py:118
+#: forms.py:141
 msgid "Remove messages marked as released while cleaning up the database"
-msgstr "Eliminar los mensajes marcados como publicados cuando se haga limpieza de la base de datos"
+msgstr ""
+"Eliminar los mensajes marcados como publicados cuando se haga limpieza de la "
+"base de datos"
 
-#: forms.py:123
+#: forms.py:147
 msgid "Amavis connection mode"
 msgstr "Modo de conexión con Amavis"
 
-#: forms.py:126
+#: forms.py:150
 msgid "Mode used to access the PDP server"
 msgstr "Modo usado para acceder al servidor PDP"
 
-#: forms.py:131
+#: forms.py:155
 msgid "PDP server address"
 msgstr "Dirección del servidor PDP"
 
-#: forms.py:133
+#: forms.py:157
 msgid "PDP server address (if inet mode)"
 msgstr "Dirección del servidor de PDP (si está en modo inet)"
 
-#: forms.py:138
+#: forms.py:162
 msgid "PDP server port"
 msgstr "Puerto del servidor PDP"
 
-#: forms.py:140
+#: forms.py:164
 msgid "PDP server port (if inet mode)"
 msgstr "Puerto del servidor de PDP (si está en modo inet)"
 
-#: forms.py:144
+#: forms.py:168
 msgid "PDP server socket"
 msgstr "socket del servidor PDP"
 
-#: forms.py:146
+#: forms.py:170
 msgid "Path to the PDP server socket (if unix mode)"
 msgstr "Dirección del socket del servidor de PDP (si están en modo unix)"
 
-#: forms.py:150
+#: forms.py:174
 msgid "Allow direct release"
 msgstr "Permitir publicación directa"
 
-#: forms.py:152
+#: forms.py:177
 msgid "Allow users to directly release their messages"
 msgstr "Permitir a los usuarios enviar directamente sus mensajes"
 
-#: forms.py:156
+#: forms.py:181
 msgid "Enable self-service mode"
 msgstr "Activar modo de autoservicio"
 
-#: forms.py:158
+#: forms.py:183
 msgid "Activate the 'self-service' mode"
 msgstr "Activar el modo 'auto-servicio'"
 
-#: forms.py:162
+#: forms.py:187
 msgid "Notifications sender"
 msgstr "Notificaciones al remitente"
 
-#: forms.py:164
+#: forms.py:190
 msgid "The e-mail address used to send notitications"
 msgstr "La dirección de correo usada para enviar notificaciones"
 
-#: forms.py:167 templates/modoboa_amavis/main_action_bar.html:28
+#: forms.py:193 templates/modoboa_amavis/main_action_bar.html:28
 msgid "Manual learning"
 msgstr "Entrenamiento manual"
 
-#: forms.py:170
+#: forms.py:196
 msgid "Enable manual learning"
 msgstr "Activar el entrenamiento manual"
 
-#: forms.py:173
+#: forms.py:199
 msgid "Allow super administrators to manually train Spamassassin"
 msgstr "Permitir a los super administradores entrenar manualmente Spamassassin"
 
-#: forms.py:178
+#: forms.py:204
 msgid "Is Spamassassin local?"
 msgstr "Se ejecuta Spamassassin localmente?"
 
-#: forms.py:181
+#: forms.py:207
 msgid "Tell if Spamassassin is running on the same server than modoboa"
-msgstr "Determinar si Spamassassin se está ejecutando en el mismo servidor que modoboa"
+msgstr ""
+"Determinar si Spamassassin se está ejecutando en el mismo servidor que "
+"modoboa"
 
-#: forms.py:186
+#: forms.py:212
 msgid "Default user"
 msgstr "Usuario por defecto"
 
-#: forms.py:189
+#: forms.py:215
 msgid "Name of the user owning the default bayesian database"
-msgstr "Nombre del usuario propietario de la base de datos bayesiana por defecto"
+msgstr ""
+"Nombre del usuario propietario de la base de datos bayesiana por defecto"
 
-#: forms.py:194
+#: forms.py:220
 msgid "Spamd address"
 msgstr "Dirección de spamd"
 
-#: forms.py:196
+#: forms.py:222
 msgid "The IP address where spamd can be reached"
 msgstr "La dirección IP donde se encuentra spamd"
 
-#: forms.py:200
+#: forms.py:226
 msgid "Spamd port"
 msgstr "Puerto de spamd"
 
-#: forms.py:202
+#: forms.py:228
 msgid "The TCP port spamd is listening on"
 msgstr "El puerto TCP donde se está ejecutando spamd"
 
-#: forms.py:206
+#: forms.py:232
 msgid "Enable per-domain manual learning"
 msgstr "Activar entrenamiento manual por dominio"
 
-#: forms.py:209
+#: forms.py:235
 msgid ""
 "Allow domain administrators to train Spamassassin (within dedicated per-"
 "domain databases)"
-msgstr "Permitir a los administradores de dominio entrenar Spamassassin con una base de datos dedicada por dominio"
+msgstr ""
+"Permitir a los administradores de dominio entrenar Spamassassin con una base "
+"de datos dedicada por dominio"
 
-#: forms.py:215
+#: forms.py:241
 msgid "Enable per-user manual learning"
 msgstr "Activar entrenamiento manual por usuario"
 
-#: forms.py:218
+#: forms.py:244
 msgid ""
 "Allow simple users to personally train Spamassassin (within a dedicated "
 "database)"
-msgstr "Permitir a los usuarios normales entrenar Spamassassin personalmente con una base de datos dedicada"
+msgstr ""
+"Permitir a los usuarios normales entrenar Spamassassin personalmente con una "
+"base de datos dedicada"
 
-#: forms.py:242 templates/modoboa_amavis/quarantine.html:10
+#: forms.py:268 templates/modoboa_amavis/quarantine.html:10
 msgid "Display"
 msgstr "Mostrar"
 
-#: forms.py:246
+#: forms.py:272
 msgid "Number of displayed emails per page"
 msgstr "Número de emails mostrados por página"
 
-#: forms.py:247
+#: forms.py:274
 msgid "Set the maximum number of messages displayed in a page"
 msgstr "Fijar el número máxima de mensajes mostrados en una página"
 
-#: handlers.py:30 modo_extension.py:36
+#: handlers.py:34 modo_extension.py:39
 msgid "Quarantine"
 msgstr "Cuarentena"
 
-#: handlers.py:172
+#: handlers.py:176
 msgid "Pending requests"
 msgstr "Solicitudes pendientes"
 
-#: handlers.py:183
+#: handlers.py:187
 msgid "Content filter"
 msgstr "Filtro de contenido"
 
-#: lib.py:67
+#: lib.py:71
 #, python-format
 msgid "Connection to amavis failed: %s"
 msgstr "La conexión con amavis falló: %s"
 
-#: lib.py:135
+#: lib.py:141
 msgid "Failed to find {} binary"
 msgstr "Error en localizar el binario {}"
 
-#: lib.py:149
+#: lib.py:155
 msgid "No recipient found"
 msgstr "No se encontró destinatario"
 
-#: lib.py:161
+#: lib.py:167
 msgid "Local domain not found"
 msgstr "No se encontró el dominio local"
 
-#: management/commands/amnotify.py:57
+#: management/commands/amnotify.py:61
 msgid "[modoboa] Pending release requests"
 msgstr "[modoboa] Pendiente de publicar las peticiones"
 
-#: models.py:95
+#: models.py:99
 msgid "Virus filter"
 msgstr "Filtro de virus"
 
-#: models.py:96 models.py:107 models.py:118
+#: models.py:100 models.py:111 models.py:122
 msgid "yes"
 msgstr "sí"
 
-#: models.py:97 models.py:108 models.py:119
+#: models.py:101 models.py:112 models.py:123
 msgid "no"
 msgstr "no"
 
-#: models.py:98 models.py:109 models.py:120
+#: models.py:102 models.py:113 models.py:124
 #: templates/modoboa_amavis/domain_content_filter.html:17
 msgid "default"
 msgstr "Por defecto"
 
-#: models.py:101
+#: models.py:105
 msgid "Bypass virus checks or not. Choose 'default' to use global settings."
-msgstr "Saltarse la comprobación de virus o no. Elija 'Por defecto' para usar la configuración global."
+msgstr ""
+"Saltarse la comprobación de virus o no. Elija 'Por defecto' para usar la "
+"configuración global."
 
-#: models.py:106
+#: models.py:110
 msgid "Spam filter"
 msgstr "Filtro de spam"
 
-#: models.py:112
+#: models.py:116
 msgid "Bypass spam checks or not. Choose 'default' to use global settings."
-msgstr "Saltarse la comprobación de spam o no. Elija 'Por defecto' para usar la configuración global."
+msgstr ""
+"Saltarse la comprobación de spam o no. Elija 'Por defecto' para usar la "
+"configuración global."
 
-#: models.py:117
+#: models.py:121
 msgid "Banned filter"
 msgstr "Filtro de expulsados"
 
-#: models.py:123
+#: models.py:127
 msgid "Bypass banned checks or not. Choose 'default' to use global settings."
-msgstr "Saltarse la comprobación de expulsados o no. Elija 'Por defecto' para usar la configuración global."
+msgstr ""
+"Saltarse la comprobación de expulsados o no. Elija 'Por defecto' para usar "
+"la configuración global."
 
-#: models.py:187
+#: models.py:191
 msgid "Spam marker"
 msgstr "Marcador de spam"
 
-#: models.py:190
+#: models.py:194
 msgid ""
-"Modify spam subject using the specified text. Choose 'default' to use global"
-" settings."
-msgstr "Modificar el asunto del spam usando el texto especificado. Elija 'por defecto' para usar la configuración global."
+"Modify spam subject using the specified text. Choose 'default' to use global "
+"settings."
+msgstr ""
+"Modificar el asunto del spam usando el texto especificado. Elija 'por "
+"defecto' para usar la configuración global."
 
-#: modo_extension.py:27
+#: modo_extension.py:30
 msgid "Amavis frontend"
 msgstr "Frontend de Amavis"
 
-#: modo_extension.py:29
+#: modo_extension.py:32
 msgid "Simple amavis management frontend"
 msgstr "Panel de gestión sencilla para amavis"
 
@@ -332,7 +391,7 @@ msgstr "o más lanza un mensaje de spam"
 msgid "Score"
 msgstr "Puntuación"
 
-#: templates/modoboa_amavis/email_list.html:17 templatetags/amavis_tags.py:117
+#: templates/modoboa_amavis/email_list.html:17 templatetags/amavis_tags.py:121
 msgid "To"
 msgstr "A"
 
@@ -374,23 +433,23 @@ msgstr "Seleccionar"
 
 #: templates/modoboa_amavis/main_action_bar.html:17
 #: templates/modoboa_amavis/main_action_bar.html:19
-#: templatetags/amavis_tags.py:32 templatetags/amavis_tags.py:98
+#: templatetags/amavis_tags.py:36 templatetags/amavis_tags.py:102
 msgid "Release"
 msgstr "Publicar"
 
 #: templates/modoboa_amavis/main_action_bar.html:22
 #: templates/modoboa_amavis/main_action_bar.html:24
-#: templatetags/amavis_tags.py:39 templatetags/amavis_tags.py:103
+#: templatetags/amavis_tags.py:43 templatetags/amavis_tags.py:107
 msgid "Delete"
 msgstr "Eliminar"
 
 #: templates/modoboa_amavis/main_action_bar.html:33
-#: templatetags/amavis_tags.py:52
+#: templatetags/amavis_tags.py:56
 msgid "Mark as spam"
 msgstr "Marcar como spam"
 
 #: templates/modoboa_amavis/main_action_bar.html:34
-#: templatetags/amavis_tags.py:60
+#: templatetags/amavis_tags.py:64
 msgid "Mark as non-spam"
 msgstr "Marcar como no spam"
 
@@ -438,63 +497,63 @@ msgstr "Todos los mensajes"
 msgid "All"
 msgstr "Todos"
 
-#: templatetags/amavis_tags.py:25
+#: templatetags/amavis_tags.py:29
 msgid "Back"
 msgstr "Anterior"
 
-#: templatetags/amavis_tags.py:43
+#: templatetags/amavis_tags.py:47
 msgid "View full headers"
 msgstr "Ver todas las cabeceras"
 
-#: views.py:165 views.py:219 views.py:223 views.py:255 views.py:260
-#: views.py:262
+#: views.py:172 views.py:226 views.py:230 views.py:262 views.py:267
+#: views.py:269
 msgid "Invalid request"
 msgstr "Petición inválida"
 
-#: views.py:224
+#: views.py:231
 msgid "Message deleted"
 msgstr "Mensaje eliminado"
 
-#: views.py:241
+#: views.py:248
 #, python-format
 msgid "%(count)d message deleted successfully"
 msgid_plural "%(count)d messages deleted successfully"
 msgstr[0] "%(count)d mensaje eliminado correctamente"
 msgstr[1] "%(count)d mensajes eliminados correctamente"
 
-#: views.py:265
+#: views.py:272
 msgid "Request sent"
 msgstr "Petición enviada"
 
-#: views.py:271
+#: views.py:278
 msgid "Message released"
 msgstr "Mensaje publicado"
 
-#: views.py:298
+#: views.py:305
 #, python-format
 msgid "%(count)d request sent"
 msgid_plural "%(count)d requests sent"
 msgstr[0] "%(count)d petición enviada"
 msgstr[1] "%(count)d peticiones enviadas"
 
-#: views.py:320
+#: views.py:327
 #, python-format
 msgid "%(count)d message released successfully"
 msgid_plural "%(count)d messages released successfully"
 msgstr[0] "%(count)d mensaje publicado correctamente"
 msgstr[1] "%(count)d mensajes publicados correctamente"
 
-#: views.py:357
+#: views.py:364
 #, python-format
 msgid "%(count)d message processed successfully"
 msgid_plural "%(count)d messages processed successfully"
 msgstr[0] "%(count)d mensaje procesado satisfactoriamente"
 msgstr[1] "%(count)d mensajes procesados satisfactoriamente"
 
-#: views.py:391
+#: views.py:398
 msgid "Select a database"
 msgstr "Seleccionar base de datos"
 
-#: views.py:395
+#: views.py:402
 msgid "Validate"
 msgstr "Validar"
