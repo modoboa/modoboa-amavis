@@ -300,7 +300,7 @@ def release(request, mail_id):
        not param_tools.get_global_parameter("user_can_release"):
         for msgrcpt in msgrcpts:
             connector.set_msgrcpt_status(
-                msgrcpt.rid.email, msgrcpt.mail.mail_id, "p"
+                smart_text(msgrcpt.rid.email), msgrcpt.mail.mail_id, "p"
             )
         message = ungettext("%(count)d request sent",
                             "%(count)d requests sent",
@@ -318,7 +318,7 @@ def release(request, mail_id):
         )
         if result:
             connector.set_msgrcpt_status(
-                rcpt.rid.email, rcpt.mail.mail_id, "R")
+                smart_text(rcpt.rid.email), rcpt.mail.mail_id, "R")
         else:
             error = result
             break
