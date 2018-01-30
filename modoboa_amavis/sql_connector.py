@@ -13,7 +13,7 @@ from django.utils import six
 
 from modoboa.admin.models import Domain
 
-from .lib import make_query_args
+from .lib import cleanup_email_address, make_query_args
 from .models import Quarantine, Msgrcpt, Maddr
 from .utils import ConvertFrom, fix_utf8_encoding, smart_bytes
 
@@ -172,7 +172,9 @@ class SQLconnector(object):
             if qm["rs"] == "D":
                 continue
             m = {
-                "from": fix_utf8_encoding(qm["mail__from_addr"]),
+                "from": cleanup_email_address(
+                    fix_utf8_encoding(qm["mail__from_addr"])
+                ),
                 "to": smart_bytes(qm["rid__email"]),
                 "subject": fix_utf8_encoding(qm["mail__subject"]),
                 "mailid": smart_bytes(qm["mail__mail_id"]),
