@@ -118,7 +118,8 @@ class ParametersForm(param_forms.AdminParametersForm):
         initial="",
         help_text=ugettext_lazy("Value should match amavisd.conf variable %s"
                                 % "$recipient_delimiter"),
-        widget=forms.TextInput(attrs={"class": "form-control"})
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+        required=False
     )
 
     qsettings_sep = form_utils.SeparatorField(
