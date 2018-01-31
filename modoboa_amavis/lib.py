@@ -318,7 +318,7 @@ def update_user_and_policy(oldname, newname):
     u.email = newname
     u.fullname = newname
     u.policy.policy_name = newname[:32]
-    u.policy.save()
+    u.policy.save(update_fields=["policy_name"])
     u.save()
 
 

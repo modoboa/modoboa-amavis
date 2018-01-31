@@ -31,7 +31,8 @@ Edit the settings.py file of your modoboa instance and add
 
 Then, add the following at the end of the file::
 
-  from modoboa_amavis.settings import *      
+  from modoboa_amavis import settings as modoboa_amavis_settings
+  modoboa_amavis_settings.apply(globals())
 
 Run the following commands to setup the database tables::
 
