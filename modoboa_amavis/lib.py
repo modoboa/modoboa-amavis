@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+from email.utils import parseaddr
 from functools import wraps
 import os
 import re
@@ -433,3 +434,10 @@ def make_query_args(address, exact_extension=True, wildcard=None,
         query_args.append("@.")
 
     return query_args
+
+
+def cleanup_email_address(address):
+    address = parseaddr(address)
+    if address[0]:
+        return "%s <%s>" % address
+    return address[1]

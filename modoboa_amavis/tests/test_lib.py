@@ -2,9 +2,11 @@
 
 from __future__ import unicode_literals
 
+from django.test import SimpleTestCase
+
 from modoboa.lib.tests import ModoTestCase
 
-from ..lib import make_query_args
+from modoboa_amavis.lib import cleanup_email_address, make_query_args
 
 
 class MakeQueryArgsTests(ModoTestCase):
@@ -74,4 +76,21 @@ class MakeQueryArgsTests(ModoTestCase):
             "pingüino@xn--pjaro-xqa.xn--nio-8ma.example.com",
         ]
         output = make_query_args(address)
+        self.assertEqual(output, expected_output)
+
+
+class FixUTF8EncodingTests(SimpleTestCase):
+
+    """Tests for modoboa_amavis.lib.cleanup_email_address()."""
+
+    def test_value_with_newline(self):
+        value = "\"John Smith\" <john.smith@example.com>\n"
+        expected_output = "John Smith <john.smith@example.com>"
+        output = cleanup_email_address(value)
+        self.assertEqual(output, expected_output)
+
+    def test_no_name(self):
+        value = "<john.smith@example.com>"
+        expected_output = "john.smith@example.com"
+        output = cleanup_email_address(value)
         self.assertEqual(output, expected_output)

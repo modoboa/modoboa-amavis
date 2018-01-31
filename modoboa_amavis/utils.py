@@ -4,6 +4,8 @@
 
 from __future__ import unicode_literals
 
+import chardet
+
 from django.conf import settings
 from django.db.models.expressions import Func
 from django.utils import six
@@ -58,7 +60,24 @@ def fix_utf8_encoding(value):
     """
     assert isinstance(value, six.text_type), \
         ("value should be of type %s" % six.text_type.__name__)
-    return value.encode("raw_unicode_escape").decode("utf-8")
+
+    if len(value) == 0:
+        # short circuit for empty strings
+        return ""
+
+    bytes_value = value.encode("raw_unicode_escape")
+    try:
+        value = bytes_value.decode("utf-8")
+    except UnicodeDecodeError:
+        encoding = chardet.detect(bytes_value)
+        try:
+            value = bytes_value.decode(encoding["encoding"], "replace")
+        except (TypeError, UnicodeDecodeError):
+            # ??? use the original value, we've done our best to try and
+            # convert it to a clean utf-8 string.
+            pass
+
+    return value
 
 
 class ConvertFrom(Func):
