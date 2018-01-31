@@ -13,6 +13,7 @@ from modoboa.admin import factories as admin_factories
 from modoboa.admin import models as admin_models
 from modoboa.core import models as core_models
 from modoboa.lib.tests import ModoTestCase
+from modoboa.transport import factories as tr_factories
 
 from .. import factories
 from .. import lib
@@ -70,6 +71,34 @@ class DomainTestCase(ModoTestCase):
             models.Users.objects.filter(email=name).exists())
         self.assertTrue(
             models.Policy.objects.filter(policy_name=name).exists())
+
+        # Now from form
+        self.client.force_login(self.admin)
+        rdomain = admin_factories.DomainFactory(
+            name="domain.relay", type="relaydomain")
+        rdomain.transport = tr_factories.TransportFactory(
+            pattern=rdomain.name, service="relay",
+            _settings={
+                "relay_target_host": "external.host.tld",
+                "relay_target_port": "25",
+                "relay_verify_recipients": False
+            }
+        )
+        rdomain.save()
+        values = {
+            "name": "domain2.relay",
+            "quota": rdomain.quota,
+            "default_mailbox_quota": rdomain.default_mailbox_quota,
+            "type": "relaydomain",
+            "enabled": rdomain.enabled,
+            "service": rdomain.transport.service,
+            "relay_target_host": "127.0.0.1",
+            "relay_target_port": 25,
+        }
+        self.ajax_post(
+            reverse("admin:domain_change", args=[rdomain.pk]),
+            values
+        )
 
     def test_delete_domain(self):
         """Test domain removal."""
