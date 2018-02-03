@@ -233,6 +233,7 @@ class QuarantineNavigationParameters(NavigationParameters):
     """
     Specific NavigationParameters subclass for the quarantine.
     """
+
     def __init__(self, request):
         super(QuarantineNavigationParameters, self).__init__(
             request, "quarantine_navparams"
@@ -386,7 +387,7 @@ def setup_manual_learning_for_mbox(mbox):
     """
     result = False
     if (isinstance(mbox, admin_models.AliasRecipient) and
-       mbox.r_mailbox is not None):
+            mbox.r_mailbox is not None):
         mbox = mbox.r_mailbox
     if isinstance(mbox, admin_models.Mailbox):
         pname = mbox.full_address[:32]
@@ -417,8 +418,8 @@ def make_query_args(address, exact_extension=True, wildcard=None,
     local_part, extension = split_local_part(local_part, delimiter=delimiter)
     query_args = []
     if (
-        conf["localpart_is_case_sensitive"]
-        or (domain and domain != orig_domain)
+        conf["localpart_is_case_sensitive"] or
+        (domain and domain != orig_domain)
     ):
         query_args.append(address)
     if extension:

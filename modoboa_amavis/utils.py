@@ -88,7 +88,7 @@ class ConvertFrom(Func):
     """
 
     """PostgreSQL implementation.
-    See https://www.postgresql.org/docs/9.3/static/functions-string.html#FUNCTIONS-STRING-OTHER"""
+    See https://www.postgresql.org/docs/9.3/static/functions-string.html#FUNCTIONS-STRING-OTHER"""  # NOQA:E501
     function = "convert_from"
     arity = 1
     template = "%(function)s(%(expressions)s, '{}')".format(
@@ -96,7 +96,7 @@ class ConvertFrom(Func):
 
     def as_mysql(self, compiler, connection):
         """MySQL implementation.
-        See https://dev.mysql.com/doc/refman/5.5/en/cast-functions.html#function_convert"""
+        See https://dev.mysql.com/doc/refman/5.5/en/cast-functions.html#function_convert"""   # NOQA:E501
         return super(ConvertFrom, self).as_sql(
             compiler, connection,
             function="CONVERT",

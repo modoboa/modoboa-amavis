@@ -116,7 +116,8 @@ class SQLconnector(object):
                     nfilter = Q(mail__subject__icontains=pattern)
                 elif crit == "to":
                     if "str_email" not in self._annotations:
-                        self._annotations["str_email"] = ConvertFrom("rid__email")
+                        self._annotations["str_email"] = ConvertFrom(
+                            "rid__email")
                     nfilter = Q(str_email__icontains=pattern)
                 else:
                     continue
@@ -236,7 +237,7 @@ class SQLconnector(object):
         content = smart_bytes("").join([
             smart_bytes(qmail.mail_text)
             for qmail in Quarantine.objects.filter(
-                    mail=smart_bytes(mailid))
+                mail=smart_bytes(mailid))
         ])
         try:
             content = content.decode("utf-8")
