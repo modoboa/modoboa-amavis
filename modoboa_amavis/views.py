@@ -194,7 +194,7 @@ def viewheaders(request, mail_id):
     context = {
         "headers": headers
     }
-    return render(request, 'modoboa_amavis/viewheader.html', context)
+    return render(request, "modoboa_amavis/viewheader.html", context)
 
 
 def check_mail_id(request, mail_id):

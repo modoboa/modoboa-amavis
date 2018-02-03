@@ -413,7 +413,7 @@ def make_query_args(address, exact_extension=True, wildcard=None,
         domain = domain.lstrip("@").rstrip(".")
         domain = domain.lower()
         orig_domain = domain
-        domain = idna.encode(domain, uts46=True).decode('ascii')
+        domain = idna.encode(domain, uts46=True).decode("ascii")
     delimiter = conf["recipient_delimiter"]
     local_part, extension = split_local_part(local_part, delimiter=delimiter)
     query_args = []

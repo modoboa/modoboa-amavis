@@ -25,8 +25,8 @@ class Maddr(models.Model):
     domain = models.CharField(max_length=255)
 
     class Meta:
-        db_table = 'maddr'
-        unique_together = [('partition_tag', 'email')]
+        db_table = "maddr"
+        unique_together = [("partition_tag", "email")]
         managed = False
 
 
@@ -36,7 +36,7 @@ class Mailaddr(models.Model):
     email = models.CharField(unique=True, max_length=255)
 
     class Meta:
-        db_table = 'mailaddr'
+        db_table = "mailaddr"
         managed = False
 
 
@@ -47,7 +47,7 @@ class Msgs(models.Model):
     am_id = models.CharField(max_length=60)
     time_num = models.IntegerField()
     time_iso = models.CharField(max_length=48)
-    sid = models.ForeignKey(Maddr, db_column='sid', on_delete=models.CASCADE)
+    sid = models.ForeignKey(Maddr, db_column="sid", on_delete=models.CASCADE)
     policy = models.CharField(max_length=765, blank=True)
     client_addr = models.CharField(max_length=765, blank=True)
     size = models.IntegerField()
@@ -63,15 +63,15 @@ class Msgs(models.Model):
     host = models.CharField(max_length=765)
 
     class Meta:
-        db_table = 'msgs'
+        db_table = "msgs"
         managed = False
-        unique_together = ('partition_tag', 'mail_id')
+        unique_together = ("partition_tag", "mail_id")
 
 
 class Msgrcpt(models.Model):
     partition_tag = models.IntegerField(default=0)
     mail = models.ForeignKey(Msgs, primary_key=True, on_delete=models.CASCADE)
-    rid = models.ForeignKey(Maddr, db_column='rid', on_delete=models.CASCADE)
+    rid = models.ForeignKey(Maddr, db_column="rid", on_delete=models.CASCADE)
     rseqnum = models.IntegerField(default=0)
     is_local = models.CharField(max_length=3)
     content = models.CharField(max_length=3)
@@ -83,7 +83,7 @@ class Msgrcpt(models.Model):
     smtp_resp = models.CharField(max_length=765, blank=True)
 
     class Meta:
-        db_table = 'msgrcpt'
+        db_table = "msgrcpt"
         managed = False
         unique_together = ("partition_tag", "mail", "rseqnum")
 
@@ -96,10 +96,10 @@ class Policy(models.Model):
     banned_files_lover = models.CharField(max_length=3, blank=True, null=True)
     bad_header_lover = models.CharField(max_length=3, blank=True, null=True)
     bypass_virus_checks = models.CharField(
-        ugettext_lazy("Virus filter"), default='', null=True,
-        choices=(('N', ugettext_lazy('yes')),
-                 ('Y', ugettext_lazy('no')),
-                 ('', ugettext_lazy('default'))),
+        ugettext_lazy("Virus filter"), default="", null=True,
+        choices=(("N", ugettext_lazy("yes")),
+                 ("Y", ugettext_lazy("no")),
+                 ("", ugettext_lazy("default"))),
         max_length=3,
         help_text=ugettext_lazy(
             "Bypass virus checks or not. Choose 'default' to use global "
@@ -107,10 +107,10 @@ class Policy(models.Model):
         )
     )
     bypass_spam_checks = models.CharField(
-        ugettext_lazy("Spam filter"), default='', null=True,
-        choices=(('N', ugettext_lazy('yes')),
-                 ('Y', ugettext_lazy('no')),
-                 ('', ugettext_lazy('default'))),
+        ugettext_lazy("Spam filter"), default="", null=True,
+        choices=(("N", ugettext_lazy("yes")),
+                 ("Y", ugettext_lazy("no")),
+                 ("", ugettext_lazy("default"))),
         max_length=3,
         help_text=ugettext_lazy(
             "Bypass spam checks or not. Choose 'default' to use global "
@@ -118,10 +118,10 @@ class Policy(models.Model):
         )
     )
     bypass_banned_checks = models.CharField(
-        ugettext_lazy("Banned filter"), default='', null=True,
-        choices=(('N', ugettext_lazy('yes')),
-                 ('Y', ugettext_lazy('no')),
-                 ('', ugettext_lazy('default'))),
+        ugettext_lazy("Banned filter"), default="", null=True,
+        choices=(("N", ugettext_lazy("yes")),
+                 ("Y", ugettext_lazy("no")),
+                 ("", ugettext_lazy("default"))),
         max_length=3,
         help_text=ugettext_lazy(
             "Bypass banned checks or not. Choose 'default' to use global "
@@ -205,7 +205,7 @@ class Policy(models.Model):
     sa_username = models.CharField(max_length=192, blank=True, null=True)
 
     class Meta:
-        db_table = 'policy'
+        db_table = "policy"
         managed = False
 
 
@@ -216,7 +216,7 @@ class Quarantine(models.Model):
     mail_text = models.BinaryField()
 
     class Meta:
-        db_table = 'quarantine'
+        db_table = "quarantine"
         managed = False
         ordering = ["-mail__time_num"]
         unique_together = ("partition_tag", "mail", "chunk_ind")
@@ -230,7 +230,7 @@ class Users(models.Model):
     fullname = models.CharField(max_length=765, blank=True)
 
     class Meta:
-        db_table = 'users'
+        db_table = "users"
         managed = False
 
 
@@ -240,6 +240,6 @@ class Wblist(models.Model):
     wb = models.CharField(max_length=30)
 
     class Meta:
-        db_table = 'wblist'
+        db_table = "wblist"
         managed = False
         unique_together = [("rid", "sid")]
