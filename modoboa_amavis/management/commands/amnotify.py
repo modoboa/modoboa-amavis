@@ -2,18 +2,16 @@
 
 from __future__ import print_function, unicode_literals
 
+from django.contrib.sites import models as sites_models
 from django.core import mail
 from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import ugettext as _
 
-from django.contrib.sites import models as sites_models
-
 from modoboa.admin.models import Domain
 from modoboa.core.models import User
 from modoboa.parameters import tools as param_tools
-
 from ...models import Msgrcpt
 from ...modo_extension import Amavis
 from ...sql_connector import SQLconnector

@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 from django.test import SimpleTestCase
 
 from modoboa.lib.tests import ModoTestCase
-
 from modoboa_amavis.lib import cleanup_email_address, make_query_args
 
 

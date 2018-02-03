@@ -9,9 +9,10 @@ import chardet
 from django.conf import settings
 from django.db.models.expressions import Func
 from django.utils import six
-from django.utils.encoding import smart_bytes as django_smart_bytes
-from django.utils.encoding import smart_str as django_smart_str
-from django.utils.encoding import smart_text as django_smart_text
+from django.utils.encoding import (
+    smart_bytes as django_smart_bytes, smart_str as django_smart_str,
+    smart_text as django_smart_text
+)
 
 
 """

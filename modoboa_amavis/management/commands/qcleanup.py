@@ -9,8 +9,7 @@ from django.core.management.base import BaseCommand
 from django.db.models import Count
 
 from modoboa.parameters import tools as param_tools
-
-from ...models import Msgrcpt, Msgs, Maddr
+from ...models import Maddr, Msgrcpt, Msgs
 from ...modo_extension import Amavis
 
 

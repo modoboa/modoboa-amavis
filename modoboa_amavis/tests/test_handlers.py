@@ -6,18 +6,14 @@ from __future__ import unicode_literals
 
 import os
 
-from django.urls import reverse
 from django.test import override_settings
+from django.urls import reverse
 
-from modoboa.admin import factories as admin_factories
-from modoboa.admin import models as admin_models
+from modoboa.admin import factories as admin_factories, models as admin_models
 from modoboa.core import models as core_models
 from modoboa.lib.tests import ModoTestCase
 from modoboa.transport import factories as tr_factories
-
-from .. import factories
-from .. import lib
-from .. import models
+from .. import factories, lib, models
 
 
 class DomainTestCase(ModoTestCase):

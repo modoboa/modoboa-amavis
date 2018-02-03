@@ -2,32 +2,31 @@
 
 from __future__ import unicode_literals
 
-from email.utils import parseaddr
-from functools import wraps
 import os
 import re
 import socket
 import string
 import struct
+from email.utils import parseaddr
+from functools import wraps
 
 import idna
 
 from django.conf import settings
+from django.contrib.auth.views import redirect_to_login
 from django.urls import reverse
 from django.utils import six
 from django.utils.translation import ugettext as _
 
-from django.contrib.auth.views import redirect_to_login
-
 from modoboa.admin import models as admin_models
 from modoboa.lib.email_utils import (
-    split_mailbox, split_address, split_local_part)
+    split_address, split_local_part, split_mailbox
+)
 from modoboa.lib.exceptions import InternalError
 from modoboa.lib.sysutils import exec_cmd
 from modoboa.lib.web_utils import NavigationParameters
 from modoboa.parameters import tools as param_tools
-
-from .models import Users, Policy
+from .models import Policy, Users
 from .utils import smart_bytes, smart_text
 
 

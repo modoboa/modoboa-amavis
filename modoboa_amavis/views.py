@@ -8,32 +8,28 @@ from __future__ import unicode_literals
 
 import six
 
-from django.urls import reverse
-from django.http import HttpResponseRedirect, Http404
+from django.contrib.auth.decorators import login_required
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import loader
+from django.urls import reverse
 from django.utils.translation import ugettext as _, ungettext
 
-from django.contrib.auth.decorators import login_required
-
-from modoboa.admin.models import Mailbox, Domain
+from modoboa.admin.models import Domain, Mailbox
 from modoboa.lib.exceptions import BadRequest
 from modoboa.lib.paginator import Paginator
 from modoboa.lib.web_utils import getctx, render_to_json_response
 from modoboa.parameters import tools as param_tools
-
 from . import constants
-from .templatetags.amavis_tags import (
-    quar_menu, viewm_menu
-)
-from .lib import (
-    selfservice, AMrelease, QuarantineNavigationParameters,
-    SpamassassinClient, manual_learning_enabled
-)
 from .forms import LearningRecipientForm
+from .lib import (
+    AMrelease, QuarantineNavigationParameters, SpamassassinClient,
+    manual_learning_enabled, selfservice
+)
 from .models import Msgrcpt
 from .sql_connector import SQLconnector
 from .sql_email import SQLemail
+from .templatetags.amavis_tags import quar_menu, viewm_menu
 from .utils import smart_text
 
 

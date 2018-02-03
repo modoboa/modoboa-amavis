@@ -12,7 +12,6 @@ import factory
 from . import models
 from .utils import smart_bytes
 
-
 SPAM_BODY = """X-Envelope-To: <{rcpt}>
 X-Envelope-To-Blocked: <{rcpt}>
 X-Quarantine-ID: <nq6ekd4wtXZg>

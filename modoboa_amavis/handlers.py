@@ -4,25 +4,23 @@
 
 from __future__ import unicode_literals
 
-from django.urls import reverse
 from django.db.models import signals
 from django.dispatch import receiver
+from django.template import Context, Template
+from django.urls import reverse
 from django.utils.translation import ugettext as _
-from django.template import Template, Context
 
-from modoboa.admin import models as admin_models
-from modoboa.admin import signals as admin_signals
+from modoboa.admin import models as admin_models, signals as admin_signals
 from modoboa.core import signals as core_signals
 from modoboa.lib import signals as lib_signals
 from modoboa.parameters import tools as param_tools
-
+from . import forms
 from .lib import (
-    create_user_and_policy, update_user_and_policy, delete_user_and_policy,
-    create_user_and_use_policy, delete_user
+    create_user_and_policy, create_user_and_use_policy, delete_user,
+    delete_user_and_policy, update_user_and_policy
 )
 from .models import Policy, Users
 from .sql_connector import SQLconnector
-from . import forms
 
 
 @receiver(core_signals.extra_user_menu_entries)

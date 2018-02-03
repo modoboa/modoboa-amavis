@@ -12,9 +12,8 @@ from django.db.models import Q
 from django.utils import six
 
 from modoboa.admin.models import Domain
-
 from .lib import cleanup_email_address, make_query_args
-from .models import Quarantine, Msgrcpt, Maddr
+from .models import Maddr, Msgrcpt, Quarantine
 from .utils import ConvertFrom, fix_utf8_encoding, smart_bytes
 
 
