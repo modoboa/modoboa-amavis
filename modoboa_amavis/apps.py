@@ -15,5 +15,5 @@ class AmavisConfig(AppConfig):
 
     def ready(self):
         # Import these to force registration of checks and signals
-        from . import checks  # noqa:F401
-        from . import handlers  # noqa:F401
+        from . import checks  # NOQA:F401
+        from . import handlers  # NOQA:F401

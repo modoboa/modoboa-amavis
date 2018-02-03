@@ -18,7 +18,7 @@ from ...sql_connector import SQLconnector
 
 
 class Command(BaseCommand):
-    help = "Amavis notification tool"  # noqa:A003
+    help = "Amavis notification tool"  # NOQA:A003
 
     sender = None
     baseurl = None

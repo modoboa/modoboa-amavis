@@ -24,7 +24,7 @@ class TestDataMixin(object):
     """A mixin to provide test data."""
 
     @classmethod
-    def setUpTestData(cls):  # noqa:N802
+    def setUpTestData(cls):  # NOQA:N802
         """Create some content."""
         super(TestDataMixin, cls).setUpTestData()
         cls.msgrcpt = factories.create_spam("user@test.com")
@@ -35,7 +35,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
     """Test views."""
 
     @classmethod
-    def setUpTestData(cls):  # noqa:N802
+    def setUpTestData(cls):  # NOQA:N802
         """Create test data."""
         super(ViewsTestCase, cls).setUpTestData()
         admin_factories.populate_database()

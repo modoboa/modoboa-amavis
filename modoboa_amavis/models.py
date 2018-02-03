@@ -20,7 +20,7 @@ from django.utils.translation import ugettext_lazy
 
 class Maddr(models.Model):
     partition_tag = models.IntegerField(default=0)
-    id = models.BigIntegerField(primary_key=True)  # noqa:A003
+    id = models.BigIntegerField(primary_key=True)  # NOQA:A003
     email = models.CharField(max_length=255)
     domain = models.CharField(max_length=255)
 
@@ -31,7 +31,7 @@ class Maddr(models.Model):
 
 
 class Mailaddr(models.Model):
-    id = models.IntegerField(primary_key=True)  # noqa:A003
+    id = models.IntegerField(primary_key=True)  # NOQA:A003
     priority = models.IntegerField()
     email = models.CharField(unique=True, max_length=255)
 
@@ -223,7 +223,7 @@ class Quarantine(models.Model):
 
 
 class Users(models.Model):
-    id = models.AutoField(primary_key=True)  # noqa:A003
+    id = models.AutoField(primary_key=True)  # NOQA:A003
     priority = models.IntegerField()
     policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
     email = models.CharField(unique=True, max_length=255)

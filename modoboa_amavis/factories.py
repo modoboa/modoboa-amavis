@@ -88,7 +88,7 @@ class MaddrFactory(factory.DjangoModelFactory):
         model = models.Maddr
         django_get_or_create = ("email", )
 
-    id = factory.Sequence(lambda n: n)  # noqa:A003
+    id = factory.Sequence(lambda n: n)  # NOQA:A003
     email = factory.Sequence(lambda n: "user_{}@domain.test".format(n))
     domain = "test.domain"
 

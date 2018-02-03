@@ -135,7 +135,7 @@ class ManualLearningTestCase(ModoTestCase):
     """Check manual learning mode."""
 
     @classmethod
-    def setUpTestData(cls):  # noqa:N802
+    def setUpTestData(cls):  # NOQA:N802
         """Create test data."""
         super(ManualLearningTestCase, cls).setUpTestData()
         admin_factories.populate_database()
