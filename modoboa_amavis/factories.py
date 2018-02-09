@@ -12,7 +12,6 @@ import factory
 from . import models
 from .utils import smart_bytes
 
-
 SPAM_BODY = """X-Envelope-To: <{rcpt}>
 X-Envelope-To-Blocked: <{rcpt}>
 X-Quarantine-ID: <nq6ekd4wtXZg>
@@ -89,7 +88,7 @@ class MaddrFactory(factory.DjangoModelFactory):
         model = models.Maddr
         django_get_or_create = ("email", )
 
-    id = factory.Sequence(lambda n: n)  # noqa:A003
+    id = factory.Sequence(lambda n: n)  # NOQA:A003
     email = factory.Sequence(lambda n: "user_{}@domain.test".format(n))
     domain = "test.domain"
 

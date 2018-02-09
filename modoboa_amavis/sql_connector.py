@@ -13,7 +13,7 @@ from modoboa.admin.models import Domain
 from modoboa.lib.email_utils import decode
 
 from .lib import cleanup_email_address, make_query_args
-from .models import Quarantine, Msgrcpt, Maddr
+from .models import Maddr, Msgrcpt, Quarantine
 from .utils import ConvertFrom, fix_utf8_encoding, smart_bytes, smart_text
 
 
@@ -116,7 +116,8 @@ class SQLconnector(object):
                     nfilter = Q(mail__subject__icontains=pattern)
                 elif crit == "to":
                     if "str_email" not in self._annotations:
-                        self._annotations["str_email"] = ConvertFrom("rid__email")
+                        self._annotations["str_email"] = ConvertFrom(
+                            "rid__email")
                     nfilter = Q(str_email__icontains=pattern)
                 else:
                     continue
@@ -236,7 +237,7 @@ class SQLconnector(object):
         content_bytes = smart_bytes("").join([
             smart_bytes(qmail.mail_text)
             for qmail in Quarantine.objects.filter(
-                    mail=smart_bytes(mailid))
+                mail=smart_bytes(mailid))
         ])
         content = decode(
             content_bytes, "utf-8",

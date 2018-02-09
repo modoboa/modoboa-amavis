@@ -8,7 +8,6 @@ import collections
 
 from django.utils.translation import ugettext_lazy as _
 
-
 MESSAGE_TYPES = collections.OrderedDict((
     ("C", _("Clean")),
     ("S", _("Spam")),

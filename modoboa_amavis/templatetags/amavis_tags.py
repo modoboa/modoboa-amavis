@@ -7,13 +7,12 @@ Amavis frontend template tags.
 from __future__ import unicode_literals
 
 from django import template
-from django.urls import reverse
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 
-from .. import constants
-from .. import lib
+from .. import constants, lib
 
 register = template.Library()
 

@@ -10,9 +10,7 @@ from django.core.management import call_command
 from django.utils import timezone
 
 from modoboa.lib.tests import ModoTestCase
-
-from .. import factories
-from .. import models
+from .. import factories, models
 
 
 class ManagementCommandTestCase(ModoTestCase):

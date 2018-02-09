@@ -33,7 +33,8 @@ class AmavisRouter(object):
         database.
         """
         if app_label == "modoboa_amavis":
-            # modoboa_amavis migrations should be created in the amavis database.
+            # modoboa_amavis migrations should be created in the amavis
+            # database.
             return (db == "amavis")
         elif db == "amavis":
             # Don't create non modoboa_amavis migrations in the amavis database.

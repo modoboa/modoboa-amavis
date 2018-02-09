@@ -17,10 +17,8 @@ from django.utils.translation import ugettext_lazy
 from modoboa.admin.models import Domain
 from modoboa.core.extensions import ModoExtension, exts_pool
 from modoboa.parameters import tools as param_tools
-
-from . import __version__
+from . import __version__, forms
 from .lib import create_user_and_policy, create_user_and_use_policy
-from . import forms
 
 
 class Amavis(ModoExtension):
