@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 
 from modoboa.lib.email_utils import Email
 from .sql_connector import SQLconnector
-from .utils import smart_text
+from .utils import fix_utf8_encoding, smart_text
 
 
 class SQLemail(Email):
@@ -43,6 +43,7 @@ class SQLemail(Email):
     def body(self):
         if self._body is None:
             super(SQLemail, self).body
+            self._body = fix_utf8_encoding(self._body)
 
         # if there's no plain text version available attempt to make one by
         # sanitising the html version. The output isn't always pretty but it
@@ -57,6 +58,7 @@ class SQLemail(Email):
             self.contents["plain"] = smart_text(mail_text)
             self._post_process_plain()
             self._body = self.viewmail_plain()
+            self._body = fix_utf8_encoding(self._body)
 
         return self._body
 

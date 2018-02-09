@@ -6,15 +6,15 @@ from __future__ import unicode_literals
 
 import datetime
 
-import chardet
-
 from django.db.models import Q
 from django.utils import six
 
 from modoboa.admin.models import Domain
+from modoboa.lib.email_utils import decode
+
 from .lib import cleanup_email_address, make_query_args
 from .models import Maddr, Msgrcpt, Quarantine
-from .utils import ConvertFrom, fix_utf8_encoding, smart_bytes
+from .utils import ConvertFrom, fix_utf8_encoding, smart_bytes, smart_text
 
 
 def reverse_domain_names(domains):
@@ -234,19 +234,13 @@ class SQLconnector(object):
 
     def get_mail_content(self, mailid):
         """Retrieve the content of a message."""
-        content = smart_bytes("").join([
+        content_bytes = smart_bytes("").join([
             smart_bytes(qmail.mail_text)
             for qmail in Quarantine.objects.filter(
                 mail=smart_bytes(mailid))
         ])
-        try:
-            content = content.decode("utf-8")
-        except UnicodeDecodeError:
-            pass
-        else:
-            return content
-        try:
-            result = chardet.detect(content)
-        except UnicodeDecodeError:
-            raise
-        return content.decode(result["encoding"])
+        content = decode(
+            content_bytes, "utf-8",
+            append_to_error=("; mail_id=%s" % smart_text(mailid))
+        )
+        return content
