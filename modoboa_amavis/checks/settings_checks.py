@@ -7,7 +7,6 @@ from django.core.checks import Warning, register
 from django.db import connections
 from django.utils.translation import ugettext as _
 
-
 W001 = Warning(
     _("AMAVIS_DEFAULT_DATABASE_ENCODING does not match the character "
       "encoding used by the Amavis database."),

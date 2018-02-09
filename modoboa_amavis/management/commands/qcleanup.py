@@ -9,14 +9,13 @@ from django.core.management.base import BaseCommand
 from django.db.models import Count
 
 from modoboa.parameters import tools as param_tools
-
-from ...models import Msgrcpt, Msgs, Maddr
+from ...models import Maddr, Msgrcpt, Msgs
 from ...modo_extension import Amavis
 
 
 class Command(BaseCommand):
     args = ""
-    help = "Amavis quarantine cleanup"  # noqa:A003
+    help = "Amavis quarantine cleanup"  # NOQA:A003
 
     def add_arguments(self, parser):
         """Add extra arguments to command line."""
@@ -36,9 +35,9 @@ class Command(BaseCommand):
         Amavis().load()
         if options["debug"]:
             import logging
-            l = logging.getLogger("django.db.backends")
-            l.setLevel(logging.DEBUG)
-            l.addHandler(logging.StreamHandler())
+            log = logging.getLogger("django.db.backends")
+            log.setLevel(logging.DEBUG)
+            log.addHandler(logging.StreamHandler())
         self.verbose = options["verbose"]
 
         conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
