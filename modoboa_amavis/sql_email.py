@@ -56,7 +56,7 @@ class SQLemail(Email):
             h.images_to_alt = True
             mail_text = h.handle(self.contents["html"])
             self.contents["plain"] = smart_text(mail_text)
-            self._post_process_plain()
+            self._post_process_plain(self.contents["plain"])
             self._body = self.viewmail_plain()
             self._body = fix_utf8_encoding(self._body)
 
