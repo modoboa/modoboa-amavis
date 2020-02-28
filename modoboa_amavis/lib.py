@@ -85,8 +85,7 @@ secret_id=%s
 quar_type=Q
 recipient=%s
 
-""" % (mailid.decode("utf-8"), secretid.decode("utf-8"),
-       recipient.decode("utf-8"))))
+""" % (smart_text(mailid), smart_text(secretid), smart_text(recipient))))
         answer = self.sock.recv(1024)
         answer = self.decode(answer)
         if re.search(br"250 [\d\.]+ Ok", answer):
