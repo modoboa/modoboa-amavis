@@ -2,8 +2,6 @@
 
 """A collection of utility functions for working with the Amavis database."""
 
-from __future__ import unicode_literals
-
 import chardet
 
 from django.conf import settings
@@ -97,7 +95,7 @@ class ConvertFrom(Func):
     def as_mysql(self, compiler, connection):
         """MySQL implementation.
         See https://dev.mysql.com/doc/refman/5.5/en/cast-functions.html#function_convert"""   # NOQA:E501
-        return super(ConvertFrom, self).as_sql(
+        return super().as_sql(
             compiler, connection,
             function="CONVERT",
             template="%(function)s(%(expressions)s USING {})".format(
@@ -108,7 +106,7 @@ class ConvertFrom(Func):
     def as_sqlite(self, compiler, connection):
         """SQLite implementation.
         SQLite has no equivilant function, just return the field."""
-        return super(ConvertFrom, self).as_sql(
+        return super().as_sql(
             compiler, connection,
             template="%(expressions)s",
             arity=1,

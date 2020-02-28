@@ -2,8 +2,6 @@
 
 """Amavis tests."""
 
-from __future__ import unicode_literals
-
 import os
 
 from django.test import override_settings
@@ -18,6 +16,8 @@ from .. import factories, lib, models
 
 class DomainTestCase(ModoTestCase):
     """Check that database is populated."""
+
+    databases = '__all__'
 
     def setUp(self):
         """Initiate test context."""
@@ -133,6 +133,8 @@ class DomainTestCase(ModoTestCase):
 @override_settings(SA_LOOKUP_PATH=(os.path.dirname(__file__), ))
 class ManualLearningTestCase(ModoTestCase):
     """Check manual learning mode."""
+
+    databases = "__all__"
 
     @classmethod
     def setUpTestData(cls):  # NOQA:N802

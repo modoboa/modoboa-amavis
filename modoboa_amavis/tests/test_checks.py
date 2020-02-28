@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 from django.test import TestCase
 from django.test.utils import override_settings
 
@@ -9,6 +7,9 @@ from ..checks import settings_checks
 
 
 class CheckSessionCookieSecureTest(TestCase):
+
+    databases = '__all__'
+
     @override_settings(AMAVIS_DEFAULT_DATABASE_ENCODING="LATIN-1")
     def test_amavis_database_encoding_incorrect(self):
         """

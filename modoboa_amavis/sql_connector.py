@@ -2,8 +2,6 @@
 
 """SQL connector module."""
 
-from __future__ import unicode_literals
-
 import datetime
 
 from django.db.models import Q
@@ -14,7 +12,9 @@ from modoboa.lib.email_utils import decode
 
 from .lib import cleanup_email_address, make_query_args
 from .models import Maddr, Msgrcpt, Quarantine
-from .utils import ConvertFrom, fix_utf8_encoding, smart_bytes, smart_text
+from .utils import (
+    ConvertFrom, fix_utf8_encoding, smart_bytes, smart_text
+)
 
 
 def reverse_domain_names(domains):
@@ -22,7 +22,7 @@ def reverse_domain_names(domains):
     return [".".join(reversed(domain.split("."))) for domain in domains]
 
 
-class SQLconnector(object):
+class SQLconnector:
     """This class handles all database operations."""
 
     ORDER_TRANSLATION_TABLE = {
@@ -175,9 +175,9 @@ class SQLconnector(object):
                 "from": cleanup_email_address(
                     fix_utf8_encoding(qm["mail__from_addr"])
                 ),
-                "to": smart_bytes(qm["rid__email"]),
+                "to": smart_text(qm["rid__email"]),
                 "subject": fix_utf8_encoding(qm["mail__subject"]),
-                "mailid": smart_bytes(qm["mail__mail_id"]),
+                "mailid": smart_text(qm["mail__mail_id"]),
                 "date": datetime.datetime.fromtimestamp(qm["mail__time_num"]),
                 "type": qm["content"],
                 "score": qm["bspam_level"],
@@ -207,9 +207,11 @@ class SQLconnector(object):
         """
         assert isinstance(address, six.text_type),\
             "address should be of type %s" % six.text_type.__name__
-        addr = Maddr.objects\
-            .annotate(str_email=ConvertFrom("email"))\
+        addr = (
+            Maddr.objects
+            .annotate(str_email=ConvertFrom("email"))
             .get(str_email=address)
+        )
         self._exec(
             "UPDATE msgrcpt SET rs=%s WHERE mail_id=%s AND rid=%s",
             [status, mailid, addr.id]
@@ -237,7 +239,7 @@ class SQLconnector(object):
         content_bytes = smart_bytes("").join([
             smart_bytes(qmail.mail_text)
             for qmail in Quarantine.objects.filter(
-                mail=smart_bytes(mailid))
+                mail=mailid)
         ])
         content = decode(
             content_bytes, "utf-8",

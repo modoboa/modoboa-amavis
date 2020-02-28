@@ -16,6 +16,8 @@ from .. import factories, models
 class ManagementCommandTestCase(ModoTestCase):
     """Management commands tests."""
 
+    databases = '__all__'
+
     def test_qcleanup(self):
         """Test qcleanup command."""
         factories.create_spam("user@test.com", rs="D")

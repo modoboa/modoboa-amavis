@@ -12,8 +12,6 @@
 #
 # Original Amavis version : 2.6.2
 
-from __future__ import unicode_literals
-
 from django.db import models
 from django.utils.translation import ugettext_lazy
 

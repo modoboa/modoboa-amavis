@@ -99,7 +99,7 @@ class MsgsFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Msgs
 
-    mail_id = factory.Sequence(lambda n: smart_bytes("mailid{}".format(n)))
+    mail_id = factory.Sequence(lambda n: "mailid{}".format(n))
     secret_id = factory.Sequence(lambda n: smart_bytes("id{}".format(n)))
     sid = factory.SubFactory(MaddrFactory)
     client_addr = "127.0.0.1"
@@ -140,7 +140,7 @@ def create_quarantined_msg(rcpt, sender, rs, body, **kwargs):
     """Create a quarantined msg."""
     msgrcpt = MsgrcptFactory(
         rs=rs,
-        rid__email=smart_bytes(rcpt),
+        rid__email=rcpt,
         rid__domain="com.test",  # FIXME
         mail__sid__email=smart_bytes(sender),
         mail__sid__domain="",  # FIXME

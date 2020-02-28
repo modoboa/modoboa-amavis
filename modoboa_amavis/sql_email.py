@@ -4,8 +4,6 @@
 An email representation based on a database record.
 """
 
-from __future__ import unicode_literals
-
 from html2text import HTML2Text
 
 from django.template.loader import render_to_string
@@ -20,7 +18,7 @@ class SQLemail(Email):
     """The SQL version of the Email class."""
 
     def __init__(self, *args, **kwargs):
-        super(SQLemail, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.qtype = ""
         self.qreason = ""
 

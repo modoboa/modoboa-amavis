@@ -2,8 +2,6 @@
 
 """Amavis tests."""
 
-from __future__ import unicode_literals
-
 import os
 
 import mock
@@ -33,6 +31,8 @@ class TestDataMixin(object):
 @override_settings(SA_LOOKUP_PATH=(os.path.dirname(__file__), ))
 class ViewsTestCase(TestDataMixin, ModoTestCase):
     """Test views."""
+
+    databases = '__all__'
 
     @classmethod
     def setUpTestData(cls):  # NOQA:N802

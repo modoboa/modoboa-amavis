@@ -4,8 +4,6 @@
 Amavis quarantine views.
 """
 
-from __future__ import unicode_literals
-
 import six
 
 from django.contrib.auth.decorators import login_required
