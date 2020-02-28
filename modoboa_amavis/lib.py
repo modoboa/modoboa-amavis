@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 import os
 import re
 import socket
-import string
 import struct
 from email.utils import parseaddr
 from functools import wraps
@@ -73,7 +70,7 @@ class AMrelease(object):
 
     def decode(self, answer):
         def repl(match):
-            return struct.pack("B", string.atoi(match.group(0)[1:], 16))
+            return struct.pack("B", int(match.group(0)[1:], 16))
 
         return re.sub(br"%([0-9a-fA-F]{2})", repl, answer)
 
@@ -81,13 +78,15 @@ class AMrelease(object):
         self.sock.close()
 
     def sendreq(self, mailid, secretid, recipient, *others):
-        self.sock.send(smart_bytes("""request=release
+        self.sock.send(
+            smart_bytes("""request=release
 mail_id=%s
 secret_id=%s
 quar_type=Q
 recipient=%s
 
-""" % (mailid, secretid, recipient)))
+""" % (mailid.decode("utf-8"), secretid.decode("utf-8"),
+       recipient.decode("utf-8"))))
         answer = self.sock.recv(1024)
         answer = self.decode(answer)
         if re.search(br"250 [\d\.]+ Ok", answer):
