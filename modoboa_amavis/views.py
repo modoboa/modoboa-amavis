@@ -12,6 +12,7 @@ from django.shortcuts import render
 from django.template import loader
 from django.urls import reverse
 from django.utils.translation import ugettext as _, ungettext
+from django.views.decorators.csrf import csrf_exempt
 
 from modoboa.admin.models import Domain, Mailbox
 from modoboa.lib.exceptions import BadRequest
@@ -411,6 +412,7 @@ def mark_as_ham(request, mail_id):
 
 
 @login_required
+@csrf_exempt
 def process(request):
     """Process a selection of messages.
 
