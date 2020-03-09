@@ -208,3 +208,26 @@ class ManualLearningTestCase(ModoTestCase):
         saclient = lib.SpamassassinClient(user, recipient_db)
         result = saclient.learn_spam(rcpt, content)
         self.assertTrue(result)
+
+    def test_delete_catchall_alias(self):
+        """Check that Users record is not deleted."""
+        self.set_global_parameter("user_level_learning", True)
+
+        # Fake activation because we don't have test data yet for
+        # amavis...
+        lib.setup_manual_learning_for_mbox(
+            admin_models.Mailbox.objects.get(
+                address="admin", domain__name="test.com"))
+
+        values = {
+            "address": "@test.com",
+            "recipients": "admin@test.com",
+            "enabled": True
+        }
+        self.ajax_post(reverse("admin:alias_add"), values)
+
+        alias = admin_models.Alias.objects.get(address="@test.com")
+        self.ajax_post(
+            reverse("admin:alias_delete") + "?selection={}".format(alias.id)
+        )
+        self.assertTrue(models.Users.objects.get(email="@test.com"))

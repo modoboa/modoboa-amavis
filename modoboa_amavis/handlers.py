@@ -131,6 +131,9 @@ def on_mailboxalias_deleted(sender, instance, **kwargs):
     """Clean amavis database when an alias is removed."""
     if not param_tools.get_global_parameter("manual_learning"):
         return
+    if instance.address.startswith("@"):
+        # Catchall alias, do not remove domain entry accidentally...
+        return
     aliases = [instance.address]
     Users.objects.filter(email__in=aliases).delete()
 
