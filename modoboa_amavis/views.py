@@ -25,7 +25,7 @@ from .lib import (
     AMrelease, QuarantineNavigationParameters, SpamassassinClient,
     manual_learning_enabled, selfservice
 )
-from .models import Msgrcpt
+from .models import Msgrcpt, Msgs
 from .sql_connector import SQLconnector
 from .sql_email import SQLemail
 from .templatetags.amavis_tags import quar_menu, viewm_menu
@@ -290,12 +290,12 @@ def release(request, mail_id):
         r, i = mid.split()
         if valid_addresses and r not in valid_addresses:
             continue
-        msgrcpts += [connector.get_recipient_message(r, i)]
+        msgrcpts += [(i, connector.get_recipient_message(r, i))]
     if request.user.role == "SimpleUsers" and \
        not param_tools.get_global_parameter("user_can_release"):
-        for msgrcpt in msgrcpts:
+        for i, msgrcpt in msgrcpts:
             connector.set_msgrcpt_status(
-                smart_text(msgrcpt.rid.email), msgrcpt.mail.mail_id, "p"
+                smart_text(msgrcpt.rid.email), i, "p"
             )
         message = ungettext("%(count)d request sent",
                             "%(count)d requests sent",
@@ -307,13 +307,14 @@ def release(request, mail_id):
 
     amr = AMrelease()
     error = None
-    for rcpt in msgrcpts:
-        result = amr.sendreq(
-            rcpt.mail.mail_id, rcpt.mail.secret_id, rcpt.rid.email
-        )
+    for mid, rcpt in msgrcpts:
+        # we can't use the .mail relation on rcpt because it leads to
+        # an error on Postgres (memoryview pickle error).
+        mail = Msgs.objects.get(pk=i)
+        result = amr.sendreq(mid, mail.secret_id, rcpt.rid.email)
         if result:
             connector.set_msgrcpt_status(
-                smart_text(rcpt.rid.email), rcpt.mail.mail_id, "R")
+                smart_text(rcpt.rid.email), mid, "R")
         else:
             error = result
             break
