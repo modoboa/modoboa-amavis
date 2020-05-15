@@ -310,7 +310,7 @@ def release(request, mail_id):
     for mid, rcpt in msgrcpts:
         # we can't use the .mail relation on rcpt because it leads to
         # an error on Postgres (memoryview pickle error).
-        mail = Msgs.objects.get(pk=i)
+        mail = Msgs.objects.get(pk=mid)
         result = amr.sendreq(mid, mail.secret_id, rcpt.rid.email)
         if result:
             connector.set_msgrcpt_status(
