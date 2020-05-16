@@ -56,11 +56,32 @@ class Command(BaseCommand):
             "Deleting messages older than {} days...".format(
                 conf["max_messages_age"]))
         limit = int(time.time()) - (conf["max_messages_age"] * 24 * 3600)
-        Msgs.objects.filter(time_num__lt=limit).delete()
-
+        # Delete older messages in batches.
+        # This would avoid consuming too much RAM when
+        # having to delete many thousands of messages
+        # leading to process OOM kill or soft crash.
+        res = Msgs.objects.filter(time_num__lt=limit)[:5000]
+        while res.count() != 0:
+            for item in res:
+                item.delete()
+            res = Msgs.objects.filter(time_num__lt=limit)[:5000]
+        
+        
         self.__vprint("Deleting unreferenced e-mail addresses...")
-        Maddr.objects.annotate(
+        # Delete unreferenced email addresses in batches.
+        # This would avoid consuming too much RAM when
+        # having to delete many thousands of messages
+        # leading to process OOM kill or soft crash.
+        res = Maddr.objects.annotate(
             msgs_count=Count("msgs"), msgrcpt_count=Count("msgrcpt")
-        ).filter(msgs_count=0, msgrcpt_count=0).delete()
+        ).filter(msgs_count=0, msgrcpt_count=0)[:100000]
+        
+        while res.count() != 0:
+            for item in res:
+                item.delete()
+
+            res = Maddr.objects.annotate(
+                msgs_count=Count("msgs"), msgrcpt_count=Count("msgrcpt")
+            ).filter(msgs_count=0, msgrcpt_count=0)[:100000]
 
         self.__vprint("Done.")
