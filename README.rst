@@ -1,7 +1,7 @@
 modoboa-amavis
 ==============
 
- |codecov|
+|gha| |codecov|
 
 The `amavis <http://www.amavis.org/>`_ frontend of Modoboa.
 
