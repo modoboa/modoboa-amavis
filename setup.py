@@ -44,6 +44,11 @@ if __name__ == "__main__":
     with io.open(path.join(HERE, "README.rst"), encoding="utf-8") as readme:
         LONG_DESCRIPTION = readme.read()
 
+    def local_scheme(version):
+        """Skip the local version (eg. +xyz of 0.6.1.dev4+gdf99fe2)
+            to be able to upload to Test PyPI"""
+        return ""
+
     setup(
         name="modoboa-amavis",
         description="The amavis frontend of Modoboa",
@@ -60,9 +65,9 @@ if __name__ == "__main__":
             "License :: OSI Approved :: MIT License",
             "Operating System :: OS Independent",
             "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.5",
             "Programming Language :: Python :: 3.6",
             "Programming Language :: Python :: 3.7",
+            "Programming Language :: Python :: 3.8",
             "Topic :: Communications :: Email",
             "Topic :: Internet :: WWW/HTTP",
         ],
@@ -71,6 +76,6 @@ if __name__ == "__main__":
         include_package_data=True,
         zip_safe=False,
         install_requires=INSTALL_REQUIRES,
-        use_scm_version=True,
+        use_scm_version={"local_scheme": local_scheme},
         setup_requires=["setuptools_scm"],
     )
