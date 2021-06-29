@@ -81,7 +81,7 @@ X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*=0A
 """
 
 
-class MaddrFactory(factory.DjangoModelFactory):
+class MaddrFactory(factory.django.DjangoModelFactory):
     """Factory for Maddr."""
 
     class Meta:
@@ -93,7 +93,7 @@ class MaddrFactory(factory.DjangoModelFactory):
     domain = "test.domain"
 
 
-class MsgsFactory(factory.DjangoModelFactory):
+class MsgsFactory(factory.django.DjangoModelFactory):
     """Factory for Mailaddr."""
 
     class Meta:
@@ -112,7 +112,7 @@ class MsgsFactory(factory.DjangoModelFactory):
     size = 100
 
 
-class MsgrcptFactory(factory.DjangoModelFactory):
+class MsgrcptFactory(factory.django.DjangoModelFactory):
     """Factory for Msgrcpt."""
 
     class Meta:
@@ -126,7 +126,7 @@ class MsgrcptFactory(factory.DjangoModelFactory):
     rid = factory.SubFactory(MaddrFactory)
 
 
-class QuarantineFactory(factory.DjangoModelFactory):
+class QuarantineFactory(factory.django.DjangoModelFactory):
     """Factory for Quarantine."""
 
     class Meta:

@@ -3,8 +3,7 @@
 """Amavis tests."""
 
 import os
-
-import mock
+from unittest import mock
 
 from django.core import mail
 from django.core.management import call_command
