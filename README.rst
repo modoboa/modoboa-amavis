@@ -1,7 +1,7 @@
 modoboa-amavis
 ==============
 
-|travis| |codecov| |landscape|
+ |codecov|
 
 The `amavis <http://www.amavis.org/>`_ frontend of Modoboa.
 
@@ -40,7 +40,7 @@ Run the following commands to setup the database tables::
   $ python manage.py migrate
   $ python manage.py collectstatic
   $ python manage.py load_initial_data
-    
+
 Finally, restart the python process running modoboa (uwsgi, gunicorn,
 apache, whatever).
 
@@ -49,12 +49,8 @@ Note
 Notice that if you dont configure amavis and its database, Modoboa
 won't work. Check `docs/setup` for more information.
 
-.. |travis| image:: https://travis-ci.org/modoboa/modoboa-amavis.svg?branch=master
-   :target: https://travis-ci.org/modoboa/modoboa-amavis
-
-.. |landscape| image:: https://landscape.io/github/modoboa/modoboa-amavis/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/modoboa/modoboa-amavis/master
-   :alt: Code Health
+.. |gha| image:: https://github.com/modoboa/modoboa-amavis/actions/workflows/plugin.yml/badge.svg
+   :target: https://github.com/modoboa/modoboa-amavis/actions/workflows/plugin.yml
 
 .. |codecov| image:: https://codecov.io/gh/modoboa/modoboa-amavis/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/modoboa/modoboa-amavis
