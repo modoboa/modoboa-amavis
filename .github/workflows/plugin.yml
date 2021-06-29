@@ -1,4 +1,4 @@
-name: Modoboa DMARC plugin
+name: Modoboa amavis plugin
 
 on:
   push:
