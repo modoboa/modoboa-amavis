@@ -196,7 +196,7 @@ class SQLconnector:
 
         return Msgrcpt.objects\
             .annotate(str_email=ConvertFrom("rid__email"))\
-            .get(mail=mailid, str_email=address)
+            .get(mail=mailid.encode('ascii'), str_email=address)
 
     def set_msgrcpt_status(self, address, mailid, status):
         """Change the status (rs field) of a message recipient.

@@ -139,7 +139,7 @@ def getmailcontent_selfservice(request, mail_id):
 
 @selfservice(getmailcontent_selfservice)
 def getmailcontent(request, mail_id):
-    mail = SQLemail(mail_id, dformat="plain")
+    mail = SQLemail(mail_id.encode('ascii'), dformat="plain")
     return render(request, "common/viewmail.html", {
         "headers": mail.render_headers(),
         "mailbody": mail.body
@@ -257,7 +257,7 @@ def release_selfservice(request, mail_id):
         raise BadRequest(_("Invalid request"))
     connector = SQLconnector()
     try:
-        msgrcpt = connector.get_recipient_message(rcpt, mail_id)
+        msgrcpt = connector.get_recipient_message(rcpt, mail_id.encode('ascii'))
     except Msgrcpt.DoesNotExist:
         raise BadRequest(_("Invalid request"))
     if secret_id != smart_text(msgrcpt.mail.secret_id):
@@ -310,6 +310,7 @@ def release(request, mail_id):
     for mid, rcpt in msgrcpts:
         # we can't use the .mail relation on rcpt because it leads to
         # an error on Postgres (memoryview pickle error).
+        mid = mid.encode('ascii')
         mail = Msgs.objects.get(pk=mid)
         result = amr.sendreq(mid, mail.secret_id, rcpt.rid.email)
         if result:
