@@ -12,7 +12,6 @@ import idna
 from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
 from django.urls import reverse
-from django.utils import six
 from django.utils.translation import ugettext as _
 
 from modoboa.admin import models as admin_models
@@ -298,7 +297,7 @@ def create_user_and_use_policy(name, policy, priority=7):
     :param str name: user record name
     :param str policy: string or Policy instance
     """
-    if isinstance(policy, six.string_types):
+    if isinstance(policy, str):
         policy = Policy.objects.get(policy_name=policy[:32])
     Users.objects.get_or_create(
         email=name, fullname=name, priority=priority, policy=policy
@@ -401,8 +400,7 @@ def setup_manual_learning_for_mbox(mbox):
 
 def make_query_args(address, exact_extension=True, wildcard=None,
                     domain_search=False):
-    assert isinstance(address, six.text_type),\
-        "address should be of type %s" % six.text_type.__name__
+    assert isinstance(address, str), "address should be of type str"
     conf = dict(param_tools.get_global_parameters("modoboa_amavis"))
     local_part, domain = split_address(address)
     if not conf["localpart_is_case_sensitive"]:

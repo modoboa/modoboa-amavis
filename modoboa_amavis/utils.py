@@ -6,7 +6,6 @@ import chardet
 
 from django.conf import settings
 from django.db.models.expressions import Func
-from django.utils import six
 from django.utils.encoding import (
     smart_bytes as django_smart_bytes, smart_str as django_smart_str,
     smart_text as django_smart_text
@@ -57,8 +56,7 @@ def fix_utf8_encoding(value):
     https://docs.python.org/2/library/codecs.html?highlight=raw_unicode_escape#python-specific-encodings
     https://docs.python.org/3/library/codecs.html?highlight=raw_unicode_escape#python-specific-encodings
     """
-    assert isinstance(value, six.text_type), \
-        ("value should be of type %s" % six.text_type.__name__)
+    assert isinstance(value, str), "value should be of type str"
 
     if len(value) == 0:
         # short circuit for empty strings
