@@ -5,7 +5,6 @@
 import datetime
 
 from django.db.models import Q
-from django.utils import six
 
 from modoboa.admin.models import Domain
 from modoboa.lib.email_utils import decode
@@ -193,8 +192,7 @@ class SQLconnector:
     def get_recipient_message(self, address, mailid):
         """Retrieve a message for a given recipient.
         """
-        assert isinstance(address, six.text_type),\
-            "address should be of type %s" % six.text_type.__name__
+        assert isinstance(address, str), "address should be of type str"
 
         return Msgrcpt.objects\
             .annotate(str_email=ConvertFrom("rid__email"))\
@@ -205,8 +203,7 @@ class SQLconnector:
 
         :param string status: status
         """
-        assert isinstance(address, six.text_type),\
-            "address should be of type %s" % six.text_type.__name__
+        assert isinstance(address, str), "address should be of type str"
         addr = (
             Maddr.objects
             .annotate(str_email=ConvertFrom("email"))
