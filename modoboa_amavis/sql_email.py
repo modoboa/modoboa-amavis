@@ -40,7 +40,7 @@ class SQLemail(Email):
     @property
     def body(self):
         if self._body is None:
-            super(SQLemail, self).body
+            super().body
             self._body = fix_utf8_encoding(self._body)
 
         # if there's no plain text version available attempt to make one by

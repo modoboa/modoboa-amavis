@@ -196,9 +196,9 @@ class SQLconnector:
 
         return Msgrcpt.objects\
             .annotate(str_email=ConvertFrom("rid__email"))\
-            .get(mail=mailid, str_email=address)
+            .get(mail=mailid.encode('ascii'), str_email=address)
 
-    def set_msgrcpt_status(self, address, mailid, status):
+    def set_msgrcpt_status(self, address, mailid: str, status):
         """Change the status (rs field) of a message recipient.
 
         :param string status: status
@@ -211,7 +211,7 @@ class SQLconnector:
         )
         self._exec(
             "UPDATE msgrcpt SET rs=%s WHERE mail_id=%s AND rid=%s",
-            [status, mailid, addr.id]
+            [status, mailid.encode("ascii"), addr.id]
         )
 
     def get_domains_pending_requests(self, domains):
@@ -236,7 +236,7 @@ class SQLconnector:
         content_bytes = smart_bytes("").join([
             smart_bytes(qmail.mail_text)
             for qmail in Quarantine.objects.filter(
-                mail=mailid)
+                    mail=mailid)
         ])
         content = decode(
             content_bytes, "utf-8",

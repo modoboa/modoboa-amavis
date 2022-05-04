@@ -53,7 +53,6 @@ def fix_utf8_encoding(value):
     these fields are accesses.
 
     Didn't even know the raw_unicode_escape encoding existed :)
-    https://docs.python.org/2/library/codecs.html?highlight=raw_unicode_escape#python-specific-encodings
     https://docs.python.org/3/library/codecs.html?highlight=raw_unicode_escape#python-specific-encodings
     """
     assert isinstance(value, str), "value should be of type str"

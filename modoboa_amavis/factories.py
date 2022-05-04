@@ -99,7 +99,7 @@ class MsgsFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Msgs
 
-    mail_id = factory.Sequence(lambda n: "mailid{}".format(n))
+    mail_id = factory.Sequence(lambda n: "mailid{}".format(n).encode("ascii"))
     secret_id = factory.Sequence(lambda n: smart_bytes("id{}".format(n)))
     sid = factory.SubFactory(MaddrFactory)
     client_addr = "127.0.0.1"

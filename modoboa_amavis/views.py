@@ -130,7 +130,7 @@ def index(request):
 
 
 def getmailcontent_selfservice(request, mail_id):
-    mail = SQLemail(mail_id, dformat="plain")
+    mail = SQLemail(mail_id.encode("ascii"), dformat="plain")
     return render(request, "common/viewmail.html", {
         "headers": mail.render_headers(),
         "mailbody": mail.body
@@ -139,7 +139,7 @@ def getmailcontent_selfservice(request, mail_id):
 
 @selfservice(getmailcontent_selfservice)
 def getmailcontent(request, mail_id):
-    mail = SQLemail(mail_id, dformat="plain")
+    mail = SQLemail(mail_id.encode("ascii"), dformat="plain")
     return render(request, "common/viewmail.html", {
         "headers": mail.render_headers(),
         "mailbody": mail.body
@@ -182,7 +182,7 @@ def viewmail(request, mail_id):
 @login_required
 def viewheaders(request, mail_id):
     """Display message headers."""
-    email = SQLemail(mail_id)
+    email = SQLemail(mail_id.encode("ascii"))
     headers = []
     for name in email.msg.keys():
         headers.append((name, email.get_header(email.msg, name)))
@@ -310,7 +310,7 @@ def release(request, mail_id):
     for mid, rcpt in msgrcpts:
         # we can't use the .mail relation on rcpt because it leads to
         # an error on Postgres (memoryview pickle error).
-        mail = Msgs.objects.get(pk=mid)
+        mail = Msgs.objects.get(pk=mid.encode("ascii"))
         result = amr.sendreq(mid, mail.secret_id, rcpt.rid.email)
         if result:
             connector.set_msgrcpt_status(
@@ -349,12 +349,14 @@ def mark_messages(request, selection, mtype, recipient_db=None):
     saclient = SpamassassinClient(request.user, recipient_db)
     for item in selection:
         rcpt, mail_id = item.split()
-        content = connector.get_mail_content(mail_id)
+        content = connector.get_mail_content(mail_id.encode("ascii"))
         result = saclient.learn_spam(rcpt, content) if mtype == "spam" \
             else saclient.learn_ham(rcpt, content)
         if not result:
             break
-        connector.set_msgrcpt_status(rcpt, mail_id, mtype[0].upper())
+        connector.set_msgrcpt_status(
+            rcpt, mail_id, mtype[0].upper()
+        )
     if saclient.error is None:
         saclient.done()
         message = ungettext("%(count)d message processed successfully",

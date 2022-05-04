@@ -2,12 +2,10 @@
 
 """Tests for sql_email."""
 
-from __future__ import unicode_literals
-
 import os
 
 from django.test import TestCase
-from django.utils.encoding import smart_bytes, smart_text
+from django.utils.encoding import smart_text
 
 from ..sql_email import SQLemail
 
@@ -22,7 +20,7 @@ class EmailTestImplementation(SQLemail):
         assert os.path.isfile(message_path), "%s does not exist." % message_path
 
         with open(message_path, "rb") as fp:
-            mail_text = smart_bytes(fp.read())
+            mail_text = fp.read()
 
         return mail_text
 
