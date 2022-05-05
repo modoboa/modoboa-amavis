@@ -1,4 +1,4 @@
-modoboa>=1.15.0
+modoboa>=2.0.0
 chardet
 html2text
 idna
