@@ -56,11 +56,21 @@ class Command(BaseCommand):
             "Deleting messages older than {} days...".format(
                 conf["max_messages_age"]))
         limit = int(time.time()) - (conf["max_messages_age"] * 24 * 3600)
-        Msgs.objects.filter(time_num__lt=limit).delete()
+        while True:
+            qset = Msgs.objects.filter(
+                pk__in=list(Msgs.objects.filter(time_num__lt=limit).values_list("pk", flat=True)[:5000])
+            )
+            if not qset.exists():
+                break
+            qset.delete()
 
         self.__vprint("Deleting unreferenced e-mail addresses...")
-        Maddr.objects.annotate(
-            msgs_count=Count("msgs"), msgrcpt_count=Count("msgrcpt")
-        ).filter(msgs_count=0, msgrcpt_count=0).delete()
+        while True:
+            res = Maddr.objects.annotate(
+                msgs_count=Count("msgs"), msgrcpt_count=Count("msgrcpt")
+            ).filter(msgs_count=0, msgrcpt_count=0).values_list("id", flat=True)[:100000]
+            if not res.exists():
+                break
+            Maddr.objects.filter(id__in=list(res)).delete()
 
         self.__vprint("Done.")
