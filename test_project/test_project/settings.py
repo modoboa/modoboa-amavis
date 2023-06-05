@@ -78,6 +78,7 @@ MODOBOA_APPS = (
     "modoboa.maillog",
     "modoboa.pdfcredentials",
     "modoboa.dmarc",
+    "modoboa.imap_migration",
     # Modoboa extensions here.
     "modoboa_amavis",
 )
