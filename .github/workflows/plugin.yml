@@ -53,7 +53,7 @@ jobs:
         run: |
           sudo apt-get update -y && sudo apt-get install -y librrd-dev rrdtool
           python -m pip install --upgrade pip
-          pip install -e git+https://github.com/modoboa/modoboa.git#egg=modoboa
+          #pip install -e git+https://github.com/modoboa/modoboa.git#egg=modoboa
           pip install -r requirements.txt
           pip install -r test-requirements.txt
           python setup.py develop
