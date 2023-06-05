@@ -227,7 +227,7 @@ class ManualLearningTestCase(ModoTestCase):
         self.ajax_post(reverse("admin:alias_add"), values)
 
         alias = admin_models.Alias.objects.get(address="@test.com")
-        self.ajax_post(
+        self.ajax_delete(
             reverse("admin:alias_delete") + "?selection={}".format(alias.id)
         )
         self.assertTrue(models.Users.objects.get(email="@test.com"))
