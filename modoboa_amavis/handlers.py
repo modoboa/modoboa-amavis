@@ -182,7 +182,7 @@ def check_for_pending_requests(sender, include_all, **kwargs):
 @receiver(admin_signals.extra_domain_forms)
 def extra_domain_form(sender, user, domain, **kwargs):
     """Return domain config form."""
-    if not user.has_perm("admin.view_domains"):
+    if not user.has_perm("admin.view_domain"):
         return []
     return [{
         "id": "amavis", "title": _("Content filter"),
@@ -194,6 +194,6 @@ def extra_domain_form(sender, user, domain, **kwargs):
 @receiver(admin_signals.get_domain_form_instances)
 def fill_domain_instances(sender, user, domain, **kwargs):
     """Return domain instance."""
-    if not user.has_perm("admin.view_domains"):
+    if not user.has_perm("admin.view_domain"):
         return {}
     return {"amavis": domain}

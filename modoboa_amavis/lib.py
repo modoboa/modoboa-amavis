@@ -355,7 +355,7 @@ def manual_learning_enabled(user):
     if not conf["manual_learning"]:
         return False
     if user.role != "SuperAdmins":
-        if user.has_perm("admin.view_domains"):
+        if user.has_perm("admin.view_domain"):
             manual_learning = (
                 conf["domain_level_learning"] or conf["user_level_learning"])
         else:
