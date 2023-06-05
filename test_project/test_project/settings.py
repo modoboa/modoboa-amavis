@@ -76,6 +76,8 @@ MODOBOA_APPS = (
     "modoboa.parameters",
     "modoboa.dnstools",
     "modoboa.maillog",
+    "modoboa.pdfcredentials",
+    "modoboa.dmarc",
     # Modoboa extensions here.
     "modoboa_amavis",
 )
