@@ -13,7 +13,7 @@
 # Original Amavis version : 2.6.2
 
 from django.db import models
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy
 
 
 class Maddr(models.Model):
@@ -94,34 +94,34 @@ class Policy(models.Model):
     banned_files_lover = models.CharField(max_length=3, blank=True, null=True)
     bad_header_lover = models.CharField(max_length=3, blank=True, null=True)
     bypass_virus_checks = models.CharField(
-        ugettext_lazy("Virus filter"), default="", null=True,
-        choices=(("N", ugettext_lazy("yes")),
-                 ("Y", ugettext_lazy("no")),
-                 ("", ugettext_lazy("default"))),
+        gettext_lazy("Virus filter"), default="", null=True,
+        choices=(("N", gettext_lazy("yes")),
+                 ("Y", gettext_lazy("no")),
+                 ("", gettext_lazy("default"))),
         max_length=3,
-        help_text=ugettext_lazy(
+        help_text=gettext_lazy(
             "Bypass virus checks or not. Choose 'default' to use global "
             "settings."
         )
     )
     bypass_spam_checks = models.CharField(
-        ugettext_lazy("Spam filter"), default="", null=True,
-        choices=(("N", ugettext_lazy("yes")),
-                 ("Y", ugettext_lazy("no")),
-                 ("", ugettext_lazy("default"))),
+        gettext_lazy("Spam filter"), default="", null=True,
+        choices=(("N", gettext_lazy("yes")),
+                 ("Y", gettext_lazy("no")),
+                 ("", gettext_lazy("default"))),
         max_length=3,
-        help_text=ugettext_lazy(
+        help_text=gettext_lazy(
             "Bypass spam checks or not. Choose 'default' to use global "
             "settings."
         )
     )
     bypass_banned_checks = models.CharField(
-        ugettext_lazy("Banned filter"), default="", null=True,
-        choices=(("N", ugettext_lazy("yes")),
-                 ("Y", ugettext_lazy("no")),
-                 ("", ugettext_lazy("default"))),
+        gettext_lazy("Banned filter"), default="", null=True,
+        choices=(("N", gettext_lazy("yes")),
+                 ("Y", gettext_lazy("no")),
+                 ("", gettext_lazy("default"))),
         max_length=3,
-        help_text=ugettext_lazy(
+        help_text=gettext_lazy(
             "Bypass banned checks or not. Choose 'default' to use global "
             "settings."
         )
@@ -186,9 +186,9 @@ class Policy(models.Model):
     spam_admin = models.CharField(max_length=192, blank=True, null=True)
     spam_subject_tag = models.CharField(max_length=192, blank=True, null=True)
     spam_subject_tag2 = models.CharField(
-        ugettext_lazy("Spam marker"), default=None,
+        gettext_lazy("Spam marker"), default=None,
         max_length=192, blank=True, null=True,
-        help_text=ugettext_lazy(
+        help_text=gettext_lazy(
             "Modify spam subject using the specified text. "
             "Choose 'default' to use global settings."
         )

@@ -12,7 +12,7 @@ from modoboa.lib.email_utils import decode
 from .lib import cleanup_email_address, make_query_args
 from .models import Maddr, Msgrcpt, Quarantine
 from .utils import (
-    ConvertFrom, fix_utf8_encoding, smart_bytes, smart_text
+    ConvertFrom, fix_utf8_encoding, smart_bytes, smart_str
 )
 
 
@@ -174,9 +174,9 @@ class SQLconnector:
                 "from": cleanup_email_address(
                     fix_utf8_encoding(qm["mail__from_addr"])
                 ),
-                "to": smart_text(qm["rid__email"]),
+                "to": smart_str(qm["rid__email"]),
                 "subject": fix_utf8_encoding(qm["mail__subject"]),
-                "mailid": smart_text(qm["mail__mail_id"]),
+                "mailid": smart_str(qm["mail__mail_id"]),
                 "date": datetime.datetime.fromtimestamp(qm["mail__time_num"]),
                 "type": qm["content"],
                 "score": qm["bspam_level"],
@@ -240,6 +240,6 @@ class SQLconnector:
         ])
         content = decode(
             content_bytes, "utf-8",
-            append_to_error=("; mail_id=%s" % smart_text(mailid))
+            append_to_error=("; mail_id=%s" % smart_str(mailid))
         )
         return content
