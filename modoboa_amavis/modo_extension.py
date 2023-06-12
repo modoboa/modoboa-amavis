@@ -12,7 +12,7 @@ Provides:
 
 from __future__ import unicode_literals
 
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy
 
 from modoboa.admin.models import Domain
 from modoboa.core.extensions import ModoExtension, exts_pool
@@ -25,16 +25,16 @@ class Amavis(ModoExtension):
     """The Amavis extension."""
 
     name = "modoboa_amavis"
-    label = ugettext_lazy("Amavis frontend")
+    label = gettext_lazy("Amavis frontend")
     version = __version__
-    description = ugettext_lazy("Simple amavis management frontend")
+    description = gettext_lazy("Simple amavis management frontend")
     url = "quarantine"
     available_for_topredirection = True
 
     def load(self):
         param_tools.registry.add("global", forms.ParametersForm, "Amavis")
         param_tools.registry.add(
-            "user", forms.UserSettings, ugettext_lazy("Quarantine"))
+            "user", forms.UserSettings, gettext_lazy("Quarantine"))
 
     def load_initial_data(self):
         """Create records for existing domains and co."""

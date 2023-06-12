@@ -5,7 +5,7 @@
 import os
 
 from django.test import TestCase
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 from ..sql_email import SQLemail
 
@@ -44,7 +44,7 @@ class EmailTests(TestCase):
 
         with open(message_path, "rb") as fp:
             # output should always be unicode (py2) or str (py3)
-            mail_text = smart_text(fp.read())
+            mail_text = smart_str(fp.read())
 
         return mail_text
 

@@ -11,7 +11,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import loader
 from django.urls import reverse
-from django.utils.translation import ugettext as _, ungettext
+from django.utils.translation import gettext as _, ngettext
 from django.views.decorators.csrf import csrf_exempt
 
 from modoboa.admin.models import Domain, Mailbox
@@ -29,7 +29,7 @@ from .models import Msgrcpt, Msgs
 from .sql_connector import SQLconnector
 from .sql_email import SQLemail
 from .templatetags.amavis_tags import quar_menu, viewm_menu
-from .utils import smart_text
+from .utils import smart_str
 
 
 def empty_quarantine():
@@ -240,7 +240,7 @@ def delete(request, mail_id):
         if valid_addresses and r not in valid_addresses:
             continue
         connector.set_msgrcpt_status(r, i, "D")
-    message = ungettext("%(count)d message deleted successfully",
+    message = ngettext("%(count)d message deleted successfully",
                         "%(count)d messages deleted successfully",
                         len(mail_id)) % {"count": len(mail_id)}
     return render_to_json_response({
@@ -260,7 +260,7 @@ def release_selfservice(request, mail_id):
         msgrcpt = connector.get_recipient_message(rcpt, mail_id)
     except Msgrcpt.DoesNotExist:
         raise BadRequest(_("Invalid request"))
-    if secret_id != smart_text(msgrcpt.mail.secret_id):
+    if secret_id != smart_str(msgrcpt.mail.secret_id):
         raise BadRequest(_("Invalid request"))
     if not param_tools.get_global_parameter("user_can_release"):
         connector.set_msgrcpt_status(rcpt, mail_id, "p")
@@ -295,9 +295,9 @@ def release(request, mail_id):
        not param_tools.get_global_parameter("user_can_release"):
         for i, msgrcpt in msgrcpts:
             connector.set_msgrcpt_status(
-                smart_text(msgrcpt.rid.email), i, "p"
+                smart_str(msgrcpt.rid.email), i, "p"
             )
-        message = ungettext("%(count)d request sent",
+        message = ngettext("%(count)d request sent",
                             "%(count)d requests sent",
                             len(mail_id)) % {"count": len(mail_id)}
         return render_to_json_response({
@@ -314,13 +314,13 @@ def release(request, mail_id):
         result = amr.sendreq(mid, mail.secret_id, rcpt.rid.email)
         if result:
             connector.set_msgrcpt_status(
-                smart_text(rcpt.rid.email), mid, "R")
+                smart_str(rcpt.rid.email), mid, "R")
         else:
             error = result
             break
 
     if not error:
-        message = ungettext("%(count)d message released successfully",
+        message = ngettext("%(count)d message released successfully",
                             "%(count)d messages released successfully",
                             len(mail_id)) % {"count": len(mail_id)}
     else:
@@ -359,7 +359,7 @@ def mark_messages(request, selection, mtype, recipient_db=None):
         )
     if saclient.error is None:
         saclient.done()
-        message = ungettext("%(count)d message processed successfully",
+        message = ngettext("%(count)d message processed successfully",
                             "%(count)d messages processed successfully",
                             len(selection)) % {"count": len(selection)}
     else:

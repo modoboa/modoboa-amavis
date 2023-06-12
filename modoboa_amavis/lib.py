@@ -12,7 +12,7 @@ import idna
 from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
 from django.urls import reverse
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from modoboa.admin import models as admin_models
 from modoboa.lib.email_utils import (
@@ -23,7 +23,7 @@ from modoboa.lib.sysutils import exec_cmd
 from modoboa.lib.web_utils import NavigationParameters
 from modoboa.parameters import tools as param_tools
 from .models import Policy, Users
-from .utils import smart_bytes, smart_text
+from .utils import smart_bytes, smart_str
 
 
 def selfservice(ssfunc=None):
@@ -84,7 +84,7 @@ secret_id=%s
 quar_type=Q
 recipient=%s
 
-""" % (smart_text(mailid), smart_text(secretid), smart_text(recipient))))
+""" % (smart_str(mailid), smart_str(secretid), smart_str(recipient))))
         answer = self.sock.recv(1024)
         answer = self.decode(answer)
         if re.search(br"250 [\d\.]+ Ok", answer):
@@ -129,7 +129,7 @@ class SpamassassinClient(object):
         """Find path to binary."""
         code, output = exec_cmd("which {}".format(name))
         if not code:
-            return smart_text(output).strip()
+            return smart_str(output).strip()
         known_paths = getattr(settings, "SA_LOOKUP_PATH", ("/usr/bin", ))
         for path in known_paths:
             bpath = os.path.join(path, name)
@@ -207,7 +207,7 @@ class SpamassassinClient(object):
             cmd, pinput=smart_bytes(msg), **self._learn_cmd_kwargs)
         if code in self._expected_exit_codes:
             return True
-        self.error = smart_text(output)
+        self.error = smart_str(output)
         return False
 
     def learn_spam(self, rcpt, msg):

@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 
 from modoboa.lib.email_utils import Email
 from .sql_connector import SQLconnector
-from .utils import fix_utf8_encoding, smart_text
+from .utils import fix_utf8_encoding, smart_str
 
 
 class SQLemail(Email):
@@ -54,7 +54,7 @@ class SQLemail(Email):
             h.images_to_alt = True
             mail_text = h.handle(self.contents["html"])
             self.contents["plain"] = self._post_process_plain(
-                smart_text(mail_text))
+                smart_str(mail_text))
             self._body = self.viewmail_plain()
             self._body = fix_utf8_encoding(self._body)
 

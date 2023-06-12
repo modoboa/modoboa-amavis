@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:11
+        image: postgres:12
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -40,7 +40,7 @@ jobs:
     strategy:
       matrix:
         database: ['postgres', 'mysql']
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.8, 3.9, '3.10']
       fail-fast: false
 
     steps:
@@ -56,20 +56,25 @@ jobs:
           #pip install -e git+https://github.com/modoboa/modoboa.git#egg=modoboa
           pip install -r requirements.txt
           pip install -r test-requirements.txt
+          cd ..
+          git clone https://github.com/modoboa/modoboa.git
+          cd modoboa
+          python setup.py develop
+          cd ../modoboa-amavis
           python setup.py develop
       - name: Install postgres requirements
         if: ${{ matrix.database == 'postgres' }}
         run: |
-          pip install 'psycopg2-binary>=2.8,<2.9'
+          pip install 'psycopg[binary]>=3.1'
           pip install coverage
           echo "DB=postgres" >> $GITHUB_ENV
       - name: Install mysql requirements
         if: ${{ matrix.database == 'mysql' }}
         run: |
-          pip install 'mysqlclient<2.0.4'
+          pip install 'mysqlclient<2.1.2'
           echo "DB=mysql" >> $GITHUB_ENV
       - name: Test with pytest
-        if: ${{ matrix.python-version != '3.9' || matrix.database != 'postgres' }}
+        if: ${{ matrix.python-version != '3.10' || matrix.database != 'postgres' }}
         run: |
           cd test_project
           python3 manage.py test modoboa_amavis
@@ -82,10 +87,12 @@ jobs:
           MYSQL_USER: root
 
       - name: Test with pytest and coverage
-        if: ${{ matrix.python-version == '3.9' && matrix.database == 'postgres' }}
+        if: ${{ matrix.python-version == '3.10' && matrix.database == 'postgres' }}
         run: |
           cd test_project
           coverage run --source ../modoboa_amavis manage.py test modoboa_amavis
+          coverage xml
+          coverage report
         env:
           # use localhost for the host here because we are running the job on the VM.
           # If we were running the job on in a container this would be postgres
@@ -94,44 +101,38 @@ jobs:
           MYSQL_PORT: ${{ job.services.mysql.ports[3306] }} # get randomly assigned published port
           MYSQL_USER: root
       - name: Upload coverage result
-        if: ${{ matrix.python-version == '3.9' }}
-        uses: actions/upload-artifact@v2
+        if: ${{ matrix.python-version == '3.10' && matrix.database == 'postgres' }}
+        uses: actions/upload-artifact@v3
         with:
           name: coverage-results
-          path: test_project/.coverage
+          path: test_project/coverage.xml
 
   coverage:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      - name: Install dependencies
-        run: |
-          pip install codecov
       - name: Download coverage results
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: coverage-results
-      - name: Report coverage
-        run: |
-          coverage report
-          codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
 
   release:
+    if: github.event_name != 'pull_request'
     needs: coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set up Python 3.9
+      - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
       - name: Build packages
         run: |
           sudo apt-get install librrd-dev rrdtool libssl-dev gettext

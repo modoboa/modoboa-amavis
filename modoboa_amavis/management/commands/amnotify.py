@@ -7,7 +7,7 @@ from django.core import mail
 from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from modoboa.admin.models import Domain
 from modoboa.core.models import User

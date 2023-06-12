@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db.models.expressions import Func
 from django.utils.encoding import (
     smart_bytes as django_smart_bytes, smart_str as django_smart_str,
-    smart_text as django_smart_text
+    smart_str as django_smart_str
 )
 
 
@@ -22,7 +22,7 @@ PostgreSQL uses `bytea` fields which psycopg2 maps to `memoryview`,
 Djangos smart_* functions don't work as expected, you must call `tobytes()` on
 the memoryview for them to work.
 
-For convenience use smart_bytes and smart_text from this file in modoboa_amavis
+For convenience use smart_bytes and smart_str from this file in modoboa_amavis
 to avoid any headaches.
 """
 
@@ -39,10 +39,10 @@ def smart_str(value, *args, **kwargs):
     return django_smart_str(value, *args, **kwargs)
 
 
-def smart_text(value, *args, **kwargs):
+def smart_str(value, *args, **kwargs):
     if isinstance(value, memoryview):
         value = value.tobytes()
-    return django_smart_text(value, *args, **kwargs)
+    return django_smart_str(value, *args, **kwargs)
 
 
 def fix_utf8_encoding(value):
