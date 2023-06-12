@@ -122,6 +122,7 @@ jobs:
           files: ./coverage.xml
 
   release:
+    if: github.event_name != 'pull_request'
     needs: coverage
     runs-on: ubuntu-latest
     steps:
