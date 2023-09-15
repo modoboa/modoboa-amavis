@@ -1,4 +1,4 @@
 factory-boy>=2.4
-testfixtures==7.1.0
+testfixtures==7.2.0
 psycopg[binary]>=3.1
 mysqlclient<2.2.1
