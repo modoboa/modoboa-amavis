@@ -189,6 +189,21 @@ REST_FRAMEWORK = {
 
 MODOBOA_API_URL = "https://api.modoboa.org/1/"
 
+# REDIS
+
+REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
+REDIS_PORT = os.environ.get('REDIS_PORT', 6379)
+REDIS_QUOTA_DB = 0
+REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_QUOTA_DB)
+
+# RQ
+
+RQ_QUEUES = {
+    'default': {
+        'URL': REDIS_URL,
+    },
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
