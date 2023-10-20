@@ -60,7 +60,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          sudo apt-get update -y && sudo apt-get install -y librrd-dev rrdtool
+          sudo apt-get update -y && sudo apt-get install -y librrd-dev rrdtool redis-server
           python -m pip install --upgrade pip
           #pip install -e git+https://github.com/modoboa/modoboa.git#egg=modoboa
           pip install -r requirements.txt
