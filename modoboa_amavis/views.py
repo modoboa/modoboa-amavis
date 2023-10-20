@@ -14,7 +14,10 @@ from django.urls import reverse
 from django.utils.translation import gettext as _, ngettext
 from django.views.decorators.csrf import csrf_exempt
 
+import django_rq
+
 from modoboa.admin.models import Domain, Mailbox
+from modoboa_amavis import tasks
 from modoboa.lib.exceptions import BadRequest
 from modoboa.lib.paginator import Paginator
 from modoboa.lib.web_utils import getctx, render_to_json_response
@@ -22,7 +25,7 @@ from modoboa.parameters import tools as param_tools
 from . import constants
 from .forms import LearningRecipientForm
 from .lib import (
-    AMrelease, QuarantineNavigationParameters, SpamassassinClient,
+    AMrelease, QuarantineNavigationParameters,
     manual_learning_enabled, selfservice
 )
 from .models import Msgrcpt, Msgs
@@ -192,7 +195,7 @@ def viewheaders(request, mail_id):
     return render(request, "modoboa_amavis/viewheader.html", context)
 
 
-def check_mail_id(request, mail_id):
+def check_mail_id(request, mail_id) -> list:
     if isinstance(mail_id, six.string_types):
         if "rcpt" in request.POST:
             mail_id = ["%s %s" % (request.POST["rcpt"], mail_id)]
@@ -345,29 +348,17 @@ def mark_messages(request, selection, mtype, recipient_db=None):
             "user" if request.user.role == "SimpleUsers" else "global"
         )
     selection = check_mail_id(request, selection)
-    connector = SQLconnector()
-    saclient = SpamassassinClient(request.user, recipient_db)
-    for item in selection:
-        rcpt, mail_id = item.split()
-        content = connector.get_mail_content(mail_id.encode("ascii"))
-        result = saclient.learn_spam(rcpt, content) if mtype == "spam" \
-            else saclient.learn_ham(rcpt, content)
-        if not result:
-            break
-        connector.set_msgrcpt_status(
-            rcpt, mail_id, mtype[0].upper()
-        )
-    if saclient.error is None:
-        saclient.done()
-        message = ngettext("%(count)d message processed successfully",
-                            "%(count)d messages processed successfully",
-                            len(selection)) % {"count": len(selection)}
-    else:
-        message = saclient.error
-    status = 400 if saclient.error else 200
+
+    queue = django_rq.get_queue("default")
+    queue.enqueue(tasks.manual_learning,
+                  request.user.pk,
+                  mtype,
+                  selection,
+                  recipient_db)
+
     return render_to_json_response({
-        "message": message, "reload": True
-    }, status=status)
+        "message": _("Your request is being processed..."), "reload": True
+    })
 
 
 @login_required
