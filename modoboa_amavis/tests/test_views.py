@@ -5,10 +5,14 @@
 import os
 from unittest import mock
 
+from rq import SimpleWorker
+
 from django.core import mail
 from django.core.management import call_command
 from django.test import override_settings
 from django.urls import reverse
+
+import django_rq
 
 from modoboa.admin import factories as admin_factories
 from modoboa.core import models as core_models
@@ -226,7 +230,10 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         data = {"rcpt": smart_str(self.msgrcpt.rid.email)}
         response = self.ajax_post(url, data)
         self.assertEqual(
-            response["message"], "1 message processed successfully")
+            response["message"], "Your request is being processed...")
+        queue = django_rq.get_queue("default")
+        worker = SimpleWorker([queue], connection=queue.connection)
+        worker.work(burst=True)
         self.msgrcpt.refresh_from_db()
         self.assertEqual(self.msgrcpt.rs, status)
 
@@ -235,7 +242,8 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         self.set_global_parameter("sa_is_local", False)
         response = self.ajax_post(url, data)
         self.assertEqual(
-            response["message"], "1 message processed successfully")
+            response["message"], "Your request is being processed...")
+        worker.work(burst=True)
         self.msgrcpt.refresh_from_db()
         self.assertEqual(self.msgrcpt.rs, status)
 
@@ -289,7 +297,7 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         self._test_mark_message("ham", "H")
 
     @mock.patch("socket.socket")
-    def test_process(self, mock_socket):
+    def test_process_release(self, mock_socket):
         """Test process mode (bulk)."""
         # Initiate session
         url = reverse("modoboa_amavis:_mail_list")
@@ -305,8 +313,9 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
                 smart_str(msgrcpt.rid.email),
                 smart_str(msgrcpt.mail.mail_id)),
         ]
-        mock_socket.return_value.recv.side_effect = (
-            b"250 1234 Ok\r\n", b"250 1234 Ok\r\n")
+        mock_socket.return_value.recv.side_effect = [
+            b"250 1234 Ok\r\n", b"250 1234 Ok\r\n"
+        ]
         data = {
             "action": "release",
             "rcpt": smart_str(self.msgrcpt.rid.email),
@@ -317,15 +326,36 @@ class ViewsTestCase(TestDataMixin, ModoTestCase):
         self.assertEqual(
             response["message"], "2 messages released successfully")
 
+    def test_process_all(self):
+        """Test process mode (bulk)."""
+        # Initiate session
+        url = reverse("modoboa_amavis:_mail_list")
+        response = self.ajax_get(url)
+
+        msgrcpt = factories.create_spam("user@test.com")
+        url = reverse("modoboa_amavis:mail_process")
+        selection = [
+            "{} {}".format(
+                smart_str(self.msgrcpt.rid.email),
+                smart_str(self.msgrcpt.mail.mail_id)),
+            "{} {}".format(
+                smart_str(msgrcpt.rid.email),
+                smart_str(msgrcpt.mail.mail_id)),
+        ]
+        data = {
+            "rcpt": smart_str(self.msgrcpt.rid.email),
+            "selection": ",".join(selection)
+        }
+
         data["action"] = "mark_as_spam"
         response = self.ajax_post(url, data)
         self.assertEqual(
-            response["message"], "2 messages processed successfully")
+            response["message"], "Your request is being processed...")
 
         data["action"] = "mark_as_ham"
         response = self.ajax_post(url, data)
         self.assertEqual(
-            response["message"], "2 messages processed successfully")
+            response["message"], "Your request is being processed...")
 
         data = {
             "action": "delete",
