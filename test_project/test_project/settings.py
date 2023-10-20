@@ -199,7 +199,7 @@ REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_QUOTA_DB)
 # RQ
 
 RQ_QUEUES = {
-    'dkim': {
+    'default': {
         'URL': REDIS_URL,
     },
 }
